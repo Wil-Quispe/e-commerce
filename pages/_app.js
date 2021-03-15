@@ -5,6 +5,8 @@ import Comments from '../components/organisms/Comments'
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
+import { Provider } from 'react-redux'
+import store from '../redux/store'
 
 const promiseStripe = loadStripe(process.env.STRIPE)
 
@@ -17,10 +19,12 @@ function MyApp({ Component, pageProps }) {
   return (
     <ApolloProvider client={client}>
       <Elements stripe={promiseStripe}>
-        <Navbar />
-        <Component {...pageProps} />
-        <Comments />
-        <Footer />
+        <Provider store={store}>
+          <Navbar />
+          <Component {...pageProps} />
+          <Comments />
+          <Footer />
+        </Provider>
       </Elements>
     </ApolloProvider>
   )

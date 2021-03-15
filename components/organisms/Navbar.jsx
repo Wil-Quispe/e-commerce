@@ -1,9 +1,9 @@
 import Link from 'next/link'
-import { useContext } from 'react'
 import { Badge, Button } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
+import { connect } from 'react-redux'
 
-const Navbar = () => {
+const Navbar = ({ cartLength }) => {
   return (
     <nav
       className="navbar"
@@ -61,7 +61,7 @@ const Navbar = () => {
             <div className="buttons">
               <Link href="/cart">
                 <a>
-                  <Badge count={0}>
+                  <Badge count={cartLength}>
                     <Button
                       type="primary"
                       icon={<ShoppingCartOutlined />}
@@ -81,4 +81,8 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+const mapStateToProps = state => ({
+  cartLength: state.cart.length,
+})
+
+export default connect(mapStateToProps, {})(Navbar)

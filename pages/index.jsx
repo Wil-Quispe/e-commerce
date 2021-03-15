@@ -92,7 +92,7 @@ const index = () => {
         <div className="container">
           <div className="columns">
             <div className="column">
-              <Row justify="center" gutter={[16, 16]}>
+              <Row justify="center" gutter={[16, 0]}>
                 <Col>
                   <Link href="#">
                     <Avatar size={100} icon={<UserOutlined />} />

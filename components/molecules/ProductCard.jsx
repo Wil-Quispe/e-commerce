@@ -1,8 +1,17 @@
 import Link from 'next/link'
 import { Button } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
+import { connect } from 'react-redux'
+import { addToCart, removeFromCart } from '../../redux/actionCreator'
 
-const ProductCard = ({ product, path, cols }) => {
+const ProductCard = ({
+  product,
+  path,
+  cols,
+  cartList,
+  removeFromCartView,
+  addToCartView,
+}) => {
   return (
     <div className={`column is-${cols || 3}`}>
       <div className="card">
@@ -24,7 +33,20 @@ const ProductCard = ({ product, path, cols }) => {
               <p className="title is-4">{product.brand}</p>
               <p className="subtitle is-6">{product.model}</p>
             </div>
-            <Button type="primary" icon={<ShoppingCartOutlined />} />
+            {cartList.find(c => c === product) ? (
+              <Button
+                onClick={() => removeFromCartView(product)}
+                type="primary"
+                danger
+                icon={<ShoppingCartOutlined />}
+              />
+            ) : (
+              <Button
+                onClick={() => addToCartView(product)}
+                type="primary"
+                icon={<ShoppingCartOutlined />}
+              />
+            )}
           </div>
           <div className="content">
             {product.description}{' '}
@@ -40,4 +62,18 @@ const ProductCard = ({ product, path, cols }) => {
   )
 }
 
-export default ProductCard
+const mapStateToProps = state => ({
+  cartList: state.cart,
+})
+const mapDispatchToProps = dispatch => {
+  return {
+    addToCartView(product) {
+      dispatch(addToCart(product))
+    },
+    removeFromCartView(product) {
+      dispatch(removeFromCart(product))
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductCard)
