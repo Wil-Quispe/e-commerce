@@ -1,12 +1,8 @@
 import Link from 'next/link'
-import { useContext } from 'react'
 import { Button } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import CartContext from '../molecules/cart/cartContext'
 
 const ProductCard = ({ product, path, cols }) => {
-  const [state, dispatch] = useContext(CartContext)
-
   return (
     <div className={`column is-${cols || 3}`}>
       <div className="card">
@@ -28,32 +24,7 @@ const ProductCard = ({ product, path, cols }) => {
               <p className="title is-4">{product.brand}</p>
               <p className="subtitle is-6">{product.model}</p>
             </div>
-            {state.cart.find(c => c === product) ? (
-              <Button
-                type="primary"
-                danger
-                size="small"
-                icon={<ShoppingCartOutlined />}
-                onClick={() =>
-                  dispatch({
-                    type: 'REMOVE_FROM_CART',
-                    products: product,
-                  })
-                }
-              />
-            ) : (
-              <Button
-                type="primary"
-                size="small"
-                icon={<ShoppingCartOutlined />}
-                onClick={() =>
-                  dispatch({
-                    type: 'ADD_TO_CART',
-                    products: product,
-                  })
-                }
-              />
-            )}
+            <Button type="primary" icon={<ShoppingCartOutlined />} />
           </div>
           <div className="content">
             {product.description}{' '}

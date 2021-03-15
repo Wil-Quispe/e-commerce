@@ -5,7 +5,6 @@ import Comments from '../components/organisms/Comments'
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
-import CartProvider from '../components/molecules/cart/CartProvider'
 
 const promiseStripe = loadStripe(process.env.STRIPE)
 
@@ -18,12 +17,10 @@ function MyApp({ Component, pageProps }) {
   return (
     <ApolloProvider client={client}>
       <Elements stripe={promiseStripe}>
-        <CartProvider>
-          <Navbar />
-          <Component {...pageProps} />
-          <Comments />
-          <Footer />
-        </CartProvider>
+        <Navbar />
+        <Component {...pageProps} />
+        <Comments />
+        <Footer />
       </Elements>
     </ApolloProvider>
   )

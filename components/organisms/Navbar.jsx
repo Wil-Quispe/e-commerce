@@ -2,11 +2,8 @@ import Link from 'next/link'
 import { useContext } from 'react'
 import { Badge, Button } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import CartContext from '../molecules/cart/cartContext'
 
 const Navbar = () => {
-  const [state] = useContext(CartContext)
-
   return (
     <nav
       className="navbar"
@@ -64,7 +61,7 @@ const Navbar = () => {
             <div className="buttons">
               <Link href="/cart">
                 <a>
-                  <Badge count={state.cart.length}>
+                  <Badge count={0}>
                     <Button
                       type="primary"
                       icon={<ShoppingCartOutlined />}
