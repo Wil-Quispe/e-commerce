@@ -17,9 +17,7 @@ const ProductCard = ({
       <div className={`column is-${cols || 3}`}>
         <div className="card">
           <div className="card-image">
-            <Link
-              href={`/products/${path}/${product._id}?name=${product.model}`}
-            >
+            <Link href={`/products/${path}/${product._id}`}>
               <figure className="image is-4by3">
                 <img src={`${product.imgs[0]}`} alt="Placeholder image" />
               </figure>
@@ -53,7 +51,7 @@ const ProductCard = ({
             </div>
             <div className="content">
               {product.description}{' '}
-              <Link href="#">
+              <Link href={`/products/${path}/${product._id}`}>
                 <a>mas detalles</a>
               </Link>
               .

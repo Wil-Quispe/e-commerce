@@ -16,7 +16,6 @@ const Pid = ({ product }) => {
   const [stripe] = useMutation(STRIPE)
   const stripeJS = useStripe()
   const elements = useElements()
-  console.log(product)
 
   const handleSubmit = async () => {
     const { error, paymentMethod } = await stripeJS.createPaymentMethod({
@@ -93,11 +92,13 @@ const Pid = ({ product }) => {
                 <Descriptions.Item label="material">
                   {product.material}
                 </Descriptions.Item>
-                <Descriptions.Item label="tallas">
-                  {product.size.map((p, i) => (
-                    <Tag key={i}>{p}</Tag>
-                  ))}
-                </Descriptions.Item>
+                {product.size && (
+                  <Descriptions.Item label="tallas">
+                    {product.size.map((p, i) => (
+                      <Tag key={i}>{p}</Tag>
+                    ))}
+                  </Descriptions.Item>
+                )}
               </Descriptions>
 
               <Row justify="center" style={{ display: `${buy}` }}>
