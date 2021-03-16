@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
-import { Row, Button, Col, Image, Card, Descriptions, Form } from 'antd'
+import { Row, Tag, Button, Col, Image, Card, Descriptions, Form } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 
@@ -16,6 +16,7 @@ const Pid = ({ product }) => {
   const [stripe] = useMutation(STRIPE)
   const stripeJS = useStripe()
   const elements = useElements()
+  console.log(product)
 
   const handleSubmit = async () => {
     const { error, paymentMethod } = await stripeJS.createPaymentMethod({
@@ -70,7 +71,7 @@ const Pid = ({ product }) => {
               hoverable={true}
               style={{ width: 600 }}
             >
-              <Card type="inner" title="Product description ">
+              <Card type="inner" title="Descrición del producto">
                 <p>{product.description}</p>
               </Card>
               <Descriptions title="Informarción del producto">
@@ -91,6 +92,11 @@ const Pid = ({ product }) => {
                 </Descriptions.Item>
                 <Descriptions.Item label="material">
                   {product.material}
+                </Descriptions.Item>
+                <Descriptions.Item label="tallas">
+                  {product.size.map((p, i) => (
+                    <Tag key={i}>{p}</Tag>
+                  ))}
                 </Descriptions.Item>
               </Descriptions>
 

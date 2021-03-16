@@ -9,7 +9,6 @@ const cart = ({ cartList }) => {
       <section className="section">
         <div className="container">
           <div className="columns">
-            {/* <Row> */}
             {cartList.length > 0 ? (
               cartList?.map((d, i) => {
                 if (i > 4) {
@@ -25,7 +24,6 @@ const cart = ({ cartList }) => {
             ) : (
               <h1>Aun no tines nada en el carrito de compras</h1>
             )}
-            {/* </Row> */}
           </div>
         </div>
       </section>
