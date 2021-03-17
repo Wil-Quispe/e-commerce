@@ -69,10 +69,14 @@ const Navbar = ({ cartLength }) => {
                   </Badge>
                 </a>
               </Link>
-              <Button type="primary" style={{ margin: '0 .5em 0 1em' }}>
-                Registrarse
-              </Button>
-              <Button type="primary">Iniciar Sesion</Button>
+              <Link href="/signup">
+                <Button type="primary" style={{ margin: '0 .5em 0 1em' }}>
+                  Registrarse
+                </Button>
+              </Link>
+              <Link href="/login">
+                <Button type="primary">Iniciar Sesion</Button>
+              </Link>
             </div>
           </div>
         </div>

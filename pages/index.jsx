@@ -1,5 +1,4 @@
-import { Avatar, Row, Col } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { Avatar, Tooltip, Row, Col } from 'antd'
 import Slider from '../components/organisms/Slider'
 import Link from 'next/link'
 import { gql, useQuery } from '@apollo/client'
@@ -94,23 +93,63 @@ const index = () => {
             <div className="column">
               <Row justify="center" gutter={[16, 0]}>
                 <Col>
-                  <Link href="#">
-                    <Avatar size={100} icon={<UserOutlined />} />
+                  <Link href="/products/shoes">
+                    <Tooltip title="Zapatos">
+                      <Avatar
+                        size={100}
+                        src="/sneakers.svg"
+                        style={{
+                          // border: '1px solid #1890ff',
+                          background: 'rgba(0, 0, 0, 0.19)',
+                          padding: '1em',
+                        }}
+                      />
+                    </Tooltip>
                   </Link>
                 </Col>
                 <Col>
-                  <Link href="#">
-                    <Avatar size={100} icon={<UserOutlined />} />
+                  <Link href="/products/tshirt">
+                    <Tooltip title="Polos">
+                      <Avatar
+                        size={100}
+                        src="/shirt.svg"
+                        style={{
+                          // border: '1px solid #1890ff',
+                          background: 'rgba(0, 0, 0, 0.19)',
+                          padding: '1em',
+                        }}
+                      />
+                    </Tooltip>
                   </Link>
                 </Col>
                 <Col>
-                  <Link href="#">
-                    <Avatar size={100} icon={<UserOutlined />} />
+                  <Link href="/products/pants">
+                    <Tooltip title="Pantalones">
+                      <Avatar
+                        size={100}
+                        src="/pants.svg"
+                        style={{
+                          // border: '1px solid #1890ff',
+                          background: 'rgba(0, 0, 0, 0.19)',
+                          padding: '1em',
+                        }}
+                      />
+                    </Tooltip>
                   </Link>
                 </Col>
                 <Col>
-                  <Link href="#">
-                    <Avatar size={100} icon={<UserOutlined />} />
+                  <Link href="/products/hats">
+                    <Tooltip title="Gorros">
+                      <Avatar
+                        size={100}
+                        src="/cap.svg"
+                        style={{
+                          // border: '1px solid #1890ff',
+                          background: 'rgba(0, 0, 0, 0.19)',
+                          padding: '1em',
+                        }}
+                      />
+                    </Tooltip>
                   </Link>
                 </Col>
               </Row>
