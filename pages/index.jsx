@@ -91,7 +91,7 @@ const index = () => {
         <div className="container">
           <div className="columns">
             <div className="column">
-              <Row justify="center" gutter={[16, 0]}>
+              <Row justify="center" gutter={[16, 16]}>
                 <Col>
                   <Link href="/products/shoes">
                     <Tooltip title="Zapatos">
@@ -99,7 +99,6 @@ const index = () => {
                         size={100}
                         src="/sneakers.svg"
                         style={{
-                          // border: '1px solid #1890ff',
                           background: 'rgba(0, 0, 0, 0.19)',
                           padding: '1em',
                         }}

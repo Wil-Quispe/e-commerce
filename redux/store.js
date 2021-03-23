@@ -1,10 +1,11 @@
-import { createStore } from 'redux'
+import { combineReducers, createStore } from 'redux'
+import { composeWithDevTools } from 'redux-devtools-extension'
 
-const initialState = {
+const cartInitialState = {
   cart: [],
 }
 
-const cartReducer = (state = initialState, { type, product }) => {
+const cartReducer = (state = cartInitialState, { type, product }) => {
   switch (type) {
     case 'ADD_TO_CART':
       return {
@@ -21,4 +22,38 @@ const cartReducer = (state = initialState, { type, product }) => {
   return state
 }
 
-export default createStore(cartReducer)
+const userInitialState = {
+  user: [],
+}
+
+const userReducer = (state = userInitialState, action) => {
+  let typeUser = typeof window !== 'undefined' && localStorage.getItem('redux')
+  // console.log(action)
+  // console.log(typeUser)
+  switch (action.type) {
+    case 'ADD_USER_INFO':
+      if (state.user[0]) return state
+      else if (action.userInfo)
+        switch (typeUser) {
+          case 'thirdUser':
+            // console.log('third added')
+            return {
+              user: state.user.concat(action.userInfo.thirdUser),
+            }
+          case 'user':
+            return {
+              user: state.user.concat(action.userInfo.user),
+            }
+          case 'admin':
+            return {
+              user: state.user.concat(action.userInfo.admin),
+            }
+        }
+  }
+  return state
+}
+
+export default createStore(
+  combineReducers({ cartReducer, userReducer }),
+  composeWithDevTools()
+)

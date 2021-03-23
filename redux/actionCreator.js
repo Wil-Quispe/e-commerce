@@ -1,10 +1,14 @@
-const addToCart = product => ({
+export const addToCart = product => ({
   type: 'ADD_TO_CART',
   product,
 })
-const removeFromCart = product => ({
+
+export const removeFromCart = product => ({
   type: 'REMOVE_FROM_CART',
   product,
 })
 
-export { addToCart, removeFromCart }
+export const addtUserInfo = userInfo => ({
+  type: 'ADD_USER_INFO',
+  userInfo,
+})

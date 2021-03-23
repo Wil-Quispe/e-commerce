@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import ProductCard from '../components/molecules/ProductCard'
 
 const cart = ({ cartList }) => {
-  console.log(cartList)
   return (
     <main>
       <section className="section">
@@ -32,7 +31,7 @@ const cart = ({ cartList }) => {
 }
 
 const mapStateToProps = state => ({
-  cartList: state.cart,
+  cartList: state.cartReducer.cart,
 })
 
 export default connect(mapStateToProps, {})(cart)

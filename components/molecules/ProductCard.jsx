@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { connect } from 'react-redux'
 import { addToCart, removeFromCart } from '../../redux/actionCreator'
@@ -12,6 +12,16 @@ const ProductCard = ({
   removeFromCartView,
   addToCartView,
 }) => {
+  const addToCartBtn = product => {
+    if (typeof window !== 'undefined') {
+      if (localStorage.getItem('token')) {
+        addToCartView(product)
+      } else {
+        message.info('tienes que registrarte')
+      }
+    }
+  }
+
   return (
     <>
       <div className={`column is-${cols || 3}`}>
@@ -34,7 +44,7 @@ const ProductCard = ({
                 <p className="title is-4">{product.brand}</p>
                 <p className="subtitle is-6">{product.model}</p>
               </div>
-              {cartList.find(c => c === product) ? (
+              {cartList && cartList.find(c => c === product) ? (
                 <Button
                   onClick={() => removeFromCartView(product)}
                   type="primary"
@@ -43,7 +53,7 @@ const ProductCard = ({
                 />
               ) : (
                 <Button
-                  onClick={() => addToCartView(product)}
+                  onClick={() => addToCartBtn(product)}
                   type="primary"
                   icon={<ShoppingCartOutlined />}
                 />
@@ -65,7 +75,7 @@ const ProductCard = ({
 }
 
 const mapStateToProps = state => ({
-  cartList: state.cart,
+  cartList: state.cartReducer.cart,
 })
 const mapDispatchToProps = dispatch => {
   return {

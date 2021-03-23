@@ -1,13 +1,44 @@
 import { Form, Input, Button, Row, Col, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import Link from 'next/link'
+import { saveInLocalStrgAndRedirect } from '../utils/index'
 import { useMutation, gql } from '@apollo/client'
+import { GoogleLogin } from 'react-google-login'
 
 const LOGIN = gql`
   mutation($email: String!, $password: String!) {
     loginUser(email: $email, password: $password) {
       user {
+        _id
         name
+        email
+      }
+      token
+    }
+  }
+`
+
+const SIGNUPTHIRDSERVICES = gql`
+  mutation(
+    $name: String!
+    $lastName: String
+    $nickName: String
+    $email: String!
+    $img: String!
+  ) {
+    loginThirdServices(
+      data: {
+        name: $name
+        lastName: $lastName
+        nickName: $nickName
+        email: $email
+        img: $img
+      }
+    ) {
+      thirdServices {
+        _id
+        name
+        email
       }
       token
     }
@@ -16,14 +47,56 @@ const LOGIN = gql`
 
 const login = () => {
   const [loginUser] = useMutation(LOGIN)
+  const [loginThirdService] = useMutation(SIGNUPTHIRDSERVICES)
+
+  const responseGoogle = async response => {
+    try {
+      const {
+        name,
+        familyName,
+        givenName,
+        email,
+        imageUrl,
+      } = response.profileObj
+      const data = await loginThirdService({
+        variables: {
+          name,
+          lastName: familyName,
+          nickName: givenName,
+          email,
+          img: imageUrl,
+        },
+      })
+      saveInLocalStrgAndRedirect(
+        [
+          { token: data.data.loginThirdServices.token },
+          { typeUser: 'THIRDUSER' },
+          { redux: 'thirdUser' },
+          { _id: data.data.loginThirdServices.thirdServices._id },
+        ],
+        '/'
+      )
+    } catch (err) {
+      message.error(`${err}`)
+    }
+  }
   const onFinish = async values => {
-    if (values.password.length < 6) return message.error('contraseña incorrecta')
+    if (values.password.length < 6)
+      return message.error('contraseña incorrecta')
     const { email, password } = values
     try {
       const data = await loginUser({
         variables: { email, password },
       })
-      console.log(data)
+      saveInLocalStrgAndRedirect(
+        [
+          { token: data.data.loginUser.token },
+          { typeUser: 'USER' },
+          { redux: 'user' },
+          { _id: data.data.loginUser.user._id },
+        ],
+        '/'
+      )
     } catch (err) {
       message.error(`${err}`)
     }
@@ -33,6 +106,15 @@ const login = () => {
       <div className="container">
         <Row justify="center">
           <Col style={{ width: '300px' }}>
+            <Row justify="center" style={{ margin: '0 0 1em' }}>
+              <GoogleLogin
+                clientId="1086856703745-ng0rgthsjdc280e9tg3si0fqft05bkfa.apps.googleusercontent.com"
+                buttonText="Inicia Sesion con Google"
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={'single_host_origin'}
+              />
+            </Row>
             <Form
               name="normal_login"
               className="login-form"

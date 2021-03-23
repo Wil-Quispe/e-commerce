@@ -25,7 +25,7 @@ const Pid = ({ product }) => {
     if (paymentMethod) {
       const { id } = paymentMethod
       const data = await stripe({
-        variables: { id: id, amount: Number(product.price * 100) },
+        variables: { id, amount: Number(product.price * 100) },
       })
 
       if (data) {
@@ -38,7 +38,6 @@ const Pid = ({ product }) => {
       if (typeof window !== 'undefined') {
         window.location = '/payment/error'
       }
-      console.log(error)
     }
   }
   return (

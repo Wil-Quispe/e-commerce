@@ -1,11 +1,13 @@
 import { Form, Input, Button, Row, Col, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { useMutation, gql } from '@apollo/client'
+import { saveInLocalStrgAndRedirect } from '../utils/index'
 
 const LOGIN = gql`
   mutation($email: String!, $password: String!) {
     loginAdmin(email: $email, password: $password) {
       admin {
+        _id
         name
       }
       token
@@ -23,7 +25,15 @@ const login = () => {
       const data = await loginAdmin({
         variables: { email, password },
       })
-      console.log(data)
+      saveInLocalStrgAndRedirect(
+        [
+          { token: data.data.loginAdmin.token },
+          { typeUser: 'ADMIN' },
+          { redux: 'admin' },
+          { _id: data.data.loginAdmin.admin._id },
+        ],
+        '/'
+      )
     } catch (err) {
       message.error(`${err}`)
     }

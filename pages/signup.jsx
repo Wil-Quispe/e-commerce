@@ -2,11 +2,42 @@ import { Form, Input, Button, Row, Col, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { useMutation, gql } from '@apollo/client'
 import Link from 'next/link'
+import { saveInLocalStrgAndRedirect } from '../utils/index'
+
+import { GoogleLogin } from 'react-google-login'
 
 const SIGNUP = gql`
   mutation($name: String!, $email: String!, $password: String!) {
     signUpUser(data: { name: $name, email: $email, password: $password }) {
       user {
+        _id
+        name
+        email
+      }
+      token
+    }
+  }
+`
+
+const SIGNUPTHIRDSERVICES = gql`
+  mutation(
+    $name: String!
+    $lastName: String
+    $nickName: String
+    $email: String!
+    $img: String!
+  ) {
+    loginThirdServices(
+      data: {
+        name: $name
+        lastName: $lastName
+        nickName: $nickName
+        email: $email
+        img: $img
+      }
+    ) {
+      thirdServices {
+        _id
         name
         email
       }
@@ -17,7 +48,38 @@ const SIGNUP = gql`
 
 const signup = () => {
   const [signUpUser] = useMutation(SIGNUP)
-  // const [form] = Form.useForm()
+  const [loginThirdServices] = useMutation(SIGNUPTHIRDSERVICES)
+  const responseGoogle = async response => {
+    try {
+      const {
+        name,
+        familyName,
+        givenName,
+        email,
+        imageUrl,
+      } = response.profileObj
+      const data = await loginThirdServices({
+        variables: {
+          name,
+          lastName: familyName,
+          nickName: givenName,
+          email,
+          img: imageUrl,
+        },
+      })
+      saveInLocalStrgAndRedirect(
+        [
+          { token: data.data.loginThirdServices.token },
+          { typeUser: 'THIRDUSER' },
+          { redux: 'thirdUser' },
+          { _id: data.data.loginThirdServices.thirdServices._id },
+        ],
+        '/'
+      )
+    } catch (err) {
+      message.error(`${err}`)
+    }
+  }
 
   const onFinish = async values => {
     const { email, password, confirm, name } = values
@@ -26,7 +88,15 @@ const signup = () => {
 
     try {
       const data = await signUpUser({ variables: { name, email, password } })
-      console.log(data)
+      saveInLocalStrgAndRedirect(
+        [
+          { token: data.data.signUpUser.token },
+          { typeUser: 'USER' },
+          { redux: 'user' },
+          { _id: data.data.signUpUser.user._id },
+        ],
+        '/'
+      )
     } catch (err) {
       message.error(`${err}`)
     }
@@ -37,6 +107,15 @@ const signup = () => {
       <div className="container">
         <Row justify="center">
           <Col style={{ width: '300px' }}>
+            <Row justify="center" style={{ margin: '0 0 1em' }}>
+              <GoogleLogin
+                clientId="1086856703745-ng0rgthsjdc280e9tg3si0fqft05bkfa.apps.googleusercontent.com"
+                buttonText="Registrate con Google"
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={'single_host_origin'}
+              />
+            </Row>
             <Form
               // form={form}
               name="register"
