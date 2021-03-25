@@ -1,23 +1,151 @@
 import { useState } from 'react'
+import { connect } from 'react-redux'
 import { gql, useMutation } from '@apollo/client'
-import { Row, Tag, Button, Col, Image, Card, Descriptions, Form } from 'antd'
+import {
+  message,
+  Row,
+  Tag,
+  Button,
+  Col,
+  Image,
+  Card,
+  Descriptions,
+  Form,
+  Input,
+  Checkbox,
+  Divider,
+} from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 
+const USERUPDATE = gql`
+  mutation(
+    $id: ID!
+    $phoneNumber: String!
+    $city: String!
+    $district: String!
+    $addressHome: String!
+    $reference: String!
+    $sendEmail: Boolean
+  ) {
+    userUpdate(
+      _id: $id
+      data: {
+        phoneNumber: $phoneNumber
+        city: $city
+        district: $district
+        addressHome: $addressHome
+        reference: $reference
+        sendEmail: $sendEmail
+      }
+    ) {
+      name
+    }
+  }
+`
+const THIRDUSERUPDATE = gql`
+  mutation(
+    $id: ID!
+    $phoneNumber: String!
+    $city: String!
+    $district: String!
+    $addressHome: String!
+    $reference: String!
+    $sendEmail: Boolean
+  ) {
+    thirdServicesUpdate(
+      _id: $id
+      data: {
+        phoneNumber: $phoneNumber
+        city: $city
+        district: $district
+        addressHome: $addressHome
+        reference: $reference
+        sendEmail: $sendEmail
+      }
+    ) {
+      name
+    }
+  }
+`
 const STRIPE = gql`
   mutation Stripe($id: ID!, $amount: Int!) {
     stripe(data: { id: $id, amount: $amount })
   }
 `
+const formItemLayout = {
+  labelCol: {
+    xs: {
+      span: 24,
+    },
+    sm: {
+      span: 8,
+    },
+  },
+  wrapperCol: {
+    xs: {
+      span: 24,
+    },
+    sm: {
+      span: 16,
+    },
+  },
+}
 
-const Pid = ({ product }) => {
+const Pid = ({ product, userInfo }) => {
   const [buy, setBuy] = useState('')
+  const [empty, setEmpty] = useState(true)
   const [formBuy, setFormBuy] = useState('none')
   const [stripe] = useMutation(STRIPE)
+  const [userUpdate] = useMutation(USERUPDATE)
+  const [thirdServicesUpdate] = useMutation(THIRDUSERUPDATE)
   const stripeJS = useStripe()
   const elements = useElements()
 
-  const handleSubmit = async () => {
+  const handleSubmit = async values => {
+    const {
+      phoneNumber,
+      city,
+      district,
+      addressHome,
+      reference,
+      sendEmail,
+    } = values
+    if (userInfo.__typename === 'User') {
+      try {
+        const result = await userUpdate({
+          variables: {
+            id: userInfo._id,
+            phoneNumber,
+            city,
+            district,
+            addressHome,
+            reference,
+            sendEmail,
+          },
+        })
+      } catch (error) {
+        message.error(error)
+      }
+    }
+    if (userInfo.__typename === 'UserThirdServices') {
+      try {
+        const result = await thirdServicesUpdate({
+          variables: {
+            id: userInfo._id,
+            phoneNumber,
+            city,
+            district,
+            addressHome,
+            reference,
+            sendEmail,
+          },
+        })
+      } catch (error) {
+        message.error(error)
+      }
+    }
+    if (empty) return message.info('Ingrese su Numero de tarjeta')
     const { error, paymentMethod } = await stripeJS.createPaymentMethod({
       type: 'card',
       card: elements.getElement(CardElement),
@@ -46,14 +174,19 @@ const Pid = ({ product }) => {
         <Row justify="center" gutter={[16, 16]}>
           <Col span={8}>
             <Image.PreviewGroup>
-              <Row>
+              <Row justify="center">
                 <Image width={200} src={`${product.imgs[0]}`} />
               </Row>
-              <Row>
+              <Row justify="center">
                 {product.imgs.map((pi, i) => {
                   if (i === 0) return null
                   return (
-                    <Col key={i}>
+                    <Col
+                      key={i}
+                      style={{
+                        margin: '.5em .5em 0 0',
+                      }}
+                    >
                       <Image width={50} src={`${pi}`} />
                     </Col>
                   )
@@ -94,7 +227,9 @@ const Pid = ({ product }) => {
                 {product.size && (
                   <Descriptions.Item label="tallas">
                     {product.size.map((p, i) => (
-                      <Tag key={i}>{p}</Tag>
+                      <Tag color="#108ee9" key={i}>
+                        {p}
+                      </Tag>
                     ))}
                   </Descriptions.Item>
                 )}
@@ -106,7 +241,14 @@ const Pid = ({ product }) => {
                   shape="round"
                   icon={<ShoppingCartOutlined />}
                   onClick={() => {
-                    setBuy('none'), setFormBuy('block')
+                    if (
+                      typeof window !== 'undefined' &&
+                      localStorage.getItem('token')
+                    ) {
+                      setBuy('none'), setFormBuy('block')
+                    } else {
+                      message.info('Tienes que Iniciar Session o Registrarte')
+                    }
                   }}
                 >
                   Comprar
@@ -115,22 +257,93 @@ const Pid = ({ product }) => {
             </Card>
           </Col>
           <Row>
-            <Form
-              style={{ width: '400px', display: `${formBuy}` }}
-              onFinish={handleSubmit}
-            >
-              <CardElement />
-              <Row justify="center">
-                <Button
-                  type="primary"
-                  shape="round"
-                  htmlType="submit"
-                  icon={<ShoppingCartOutlined />}
+            <Card hoverable>
+              {userInfo && (
+                <Form
+                  {...formItemLayout}
+                  style={{ width: '400px', display: `${formBuy}` }}
+                  onFinish={handleSubmit}
+                  initialValues={{
+                    phoneNumber: userInfo.phoneNumber || '',
+                    city: userInfo.city || '',
+                    district: userInfo.district || '',
+                    addressHome: userInfo.addressHome || '',
+                    reference: userInfo.reference || '',
+                    sendEmail: userInfo.sendEmail,
+                  }}
                 >
-                  Comprar
-                </Button>
-              </Row>
-            </Form>
+                  <CardElement
+                    onChange={e => {
+                      if (!e.empty) {
+                        setEmpty(false)
+                      } else {
+                        setEmpty(true)
+                      }
+                    }}
+                  />
+                  <Divider>Datos Correctos?</Divider>
+                  <Form.Item
+                    label="Celular"
+                    name="phoneNumber"
+                    rules={[{ required: true, message: 'Campo requerido' }]}
+                  >
+                    <Input addonBefore="+51" />
+                  </Form.Item>
+                  <Form.Item
+                    label="Ciudad"
+                    name="city"
+                    rules={[{ required: true, message: 'Campo requerido' }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Distrito"
+                    name="district"
+                    rules={[{ required: true, message: 'Campo requerido' }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Direccion"
+                    name="addressHome"
+                    rules={[{ required: true, message: 'Campo requerido' }]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item
+                    label="Referencia"
+                    name="reference"
+                    rules={[{ required: true, message: 'Campo requerido' }]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  {userInfo.sendEmail ? null : (
+                    <Row justify="center">
+                      <Form.Item
+                        name="sendEmail"
+                        valuePropName="checked"
+                        style={{
+                          textAlign: 'center',
+                        }}
+                      >
+                        <Checkbox>recibire emails de nuevos productos</Checkbox>
+                      </Form.Item>
+                    </Row>
+                  )}
+                  <Row justify="center">
+                    <Button
+                      type="primary"
+                      shape="round"
+                      htmlType="submit"
+                      icon={<ShoppingCartOutlined />}
+                    >
+                      Comprar
+                    </Button>
+                  </Row>
+                </Form>
+              )}
+            </Card>
           </Row>
         </Row>
       </div>
@@ -138,4 +351,8 @@ const Pid = ({ product }) => {
   )
 }
 
-export default Pid
+const mapStateToProps = state => ({
+  userInfo: state.userReducer.user[0],
+})
+
+export default connect(mapStateToProps, {})(Pid)
