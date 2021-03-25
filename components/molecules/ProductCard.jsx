@@ -29,7 +29,11 @@ const ProductCard = ({
           <div className="card-image">
             <Link href={`/products/${path}/${product._id}`}>
               <figure className="image is-4by3">
-                <img src={`${product.imgs[0]}`} alt="Placeholder image" />
+                <img
+                  src={`${product.imgs[0]}`}
+                  alt="Placeholder image"
+                  style={{ objectFit: 'cover' }}
+                />
               </figure>
             </Link>
           </div>
