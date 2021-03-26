@@ -46,7 +46,6 @@ const index = () => {
   return (
     <main>
       <Slider />
-
       <section className="section">
         <div className="container">
           <div className="columns">
@@ -56,7 +55,6 @@ const index = () => {
           </div>
         </div>
       </section>
-
       <section className="section">
         <div className="container">
           <div className="columns">
@@ -66,7 +64,6 @@ const index = () => {
           </div>
         </div>
       </section>
-
       <section className="section">
         <div className="container">
           <div className="columns">
@@ -76,7 +73,6 @@ const index = () => {
           </div>
         </div>
       </section>
-
       <section className="section">
         <div className="container">
           <div className="columns">
