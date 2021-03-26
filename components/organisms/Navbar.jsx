@@ -23,6 +23,14 @@ const USER = gql`
       addressHome
       reference
       sendEmail
+      shopping {
+        _id
+        productType
+      }
+      cart {
+        _id
+        productType
+      }
     }
   }
 `
@@ -41,7 +49,11 @@ const ADMIN = gql`
       phoneNumber
       email
       gender
-      # sales: [String]
+      sales {
+        _id
+        productType
+      }
+      products
     }
   }
 `
@@ -63,6 +75,14 @@ const THIRDUSER = gql`
       addressHome
       reference
       sendEmail
+      shopping {
+        _id
+        productType
+      }
+      cart {
+        _id
+        productType
+      }
     }
   }
 `
@@ -157,7 +177,7 @@ const Navbar = ({ cartLength, addUserInfoView, userInfos }) => {
               ) : (
                 <Link href="/cart">
                   <a>
-                    <Badge count={cartLength ? cartLength : null}>
+                    <Badge count={userInfos && userInfos.cart.length}>
                       <Button
                         type="primary"
                         icon={<ShoppingCartOutlined />}

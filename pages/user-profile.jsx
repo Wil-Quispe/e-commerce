@@ -360,19 +360,30 @@ const profile = ({ userInfos }) => {
                     {userInfos.admin ? (
                       <Row>
                         <Col>
-                          <Tag color="#108ee9">ventas: 23</Tag>
+                          <Tag color="#108ee9">
+                            ventas: {userInfos.sales.length}
+                          </Tag>
                         </Col>
                         <Col>
-                          <Tag color="#108ee9">productos: 23</Tag>
+                          <Tag color="#108ee9">
+                            productos:{' '}
+                            {userInfos.products === null
+                              ? 0
+                              : userInfos.product}
+                          </Tag>
                         </Col>
                       </Row>
                     ) : (
                       <Row>
                         <Col>
-                          <Tag color="#108ee9">Compras: 23</Tag>
+                          <Tag color="#108ee9">
+                            Compras: {userInfos.shopping.length}
+                          </Tag>
                         </Col>
                         <Col>
-                          <Tag color="#108ee9">Carrito: 23</Tag>
+                          <Tag color="#108ee9">
+                            Carrito: {userInfos.cart.length}
+                          </Tag>
                         </Col>
                       </Row>
                     )}

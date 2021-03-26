@@ -73,6 +73,29 @@ const STRIPE = gql`
     stripe(data: { id: $id, amount: $amount })
   }
 `
+const USERSHOPPINGINC = gql`
+  mutation($id: ID!, $pId: ID!, $prodType: String!) {
+    userShoppingInc(_id: $id, data: { _id: $pId, productType: $prodType }) {
+      _id
+    }
+  }
+`
+const THIRDUSERSHOPPINGINC = gql`
+  mutation($id: ID!, $pId: ID!, $prodType: String!) {
+    thirdUserShoppingInc(
+      _id: $id
+      data: { _id: $pId, productType: $prodType }
+    ) {
+      _id
+    }
+  }
+`
+const ADMINSALESINC = gql`
+  mutation($id: ID!, $prodType: String!) {
+    adminSalesInc(data: { _id: $id, productType: $prodType })
+  }
+`
+
 const formItemLayout = {
   labelCol: {
     xs: {
@@ -99,6 +122,9 @@ const Pid = ({ product, userInfo }) => {
   const [stripe] = useMutation(STRIPE)
   const [userUpdate] = useMutation(USERUPDATE)
   const [thirdServicesUpdate] = useMutation(THIRDUSERUPDATE)
+  const [userShoppingInc] = useMutation(USERSHOPPINGINC)
+  const [thirdUserShoppingInc] = useMutation(THIRDUSERSHOPPINGINC)
+  const [adminSalesInc] = useMutation(ADMINSALESINC)
   const stripeJS = useStripe()
   const elements = useElements()
 
@@ -146,6 +172,7 @@ const Pid = ({ product, userInfo }) => {
       }
     }
     if (empty) return message.info('Ingrese su Numero de tarjeta')
+
     const { error, paymentMethod } = await stripeJS.createPaymentMethod({
       type: 'card',
       card: elements.getElement(CardElement),
@@ -154,6 +181,26 @@ const Pid = ({ product, userInfo }) => {
       const { id } = paymentMethod
       const data = await stripe({
         variables: { id, amount: Number(product.price * 100) },
+      })
+      if (userInfo.__typename === 'User') {
+        await userShoppingInc({
+          variables: {
+            id: userInfo._id,
+            pId: product._id,
+            prodType: product.__typename,
+          },
+        })
+      } else {
+        await thirdUserShoppingInc({
+          variables: {
+            id: userInfo._id,
+            pId: product._id,
+            prodType: product.__typename,
+          },
+        })
+      }
+      await adminSalesInc({
+        variables: { id: product._id, prodType: product.__typename },
       })
 
       if (data) {
