@@ -173,16 +173,18 @@ const Navbar = ({ cartLength, addUserInfoView, userInfos }) => {
         <div className="navbar-end">
           <div className="navbar-item">
             <div className="buttons">
-              <Tooltip title="Contactate con Nosotros">
-                <Button
-                  style={{ margin: '0 .5em' }}
-                  icon={<WhatsAppOutlined />}
-                  type="primary"
-                  shape="circle"
-                  target="_blank"
-                  href="https://wa.link/9p5nyn"
-                />
-              </Tooltip>
+              {userInfos && userInfos.sales ? null : (
+                <Tooltip title="Contactate con Nosotros">
+                  <Button
+                    style={{ margin: '0 .5em' }}
+                    icon={<WhatsAppOutlined />}
+                    type="primary"
+                    shape="circle"
+                    target="_blank"
+                    href="https://wa.link/9p5nyn"
+                  />
+                </Tooltip>
+              )}
               {typeof window !== 'undefined' &&
               localStorage.getItem('typeUser') === 'ADMIN' ? (
                 <Tooltip title="Administrador">

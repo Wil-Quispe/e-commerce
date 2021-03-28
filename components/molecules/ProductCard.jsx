@@ -114,7 +114,7 @@ const ProductCard = ({
                 <p className="title is-4">{product.brand}</p>
                 <p className="subtitle is-6">{product.model}</p>
               </div>
-              {cartList && cartList.cart.find(c => c._id === product._id) ? (
+              {cartList && cartList.cart?.find(c => c._id === product._id) ? (
                 <Button
                   onClick={() => removeFromCartViewBtn(product)}
                   type="primary"
