@@ -208,6 +208,12 @@ const profile = ({ userInfos }) => {
   const { data: queryTshirts } = useQuery(QUERYTSHIRTS)
   const { data: queryHats } = useQuery(QUERYHATS)
 
+  const productsLength =
+    queryShoes.shoes.length +
+    queryPants.pants.length +
+    queryTshirts.tshirt.length +
+    queryHats.hats.length
+
   let onFinish = null
   if (typeUser === 'THIRDUSER') {
     const [thirdServicesUpdate] = useMutation(THIRDUSERUPDATE)
@@ -365,12 +371,7 @@ const profile = ({ userInfos }) => {
                           </Tag>
                         </Col>
                         <Col>
-                          <Tag color="#108ee9">
-                            productos:{' '}
-                            {userInfos.products === null
-                              ? 0
-                              : userInfos.product}
-                          </Tag>
+                          <Tag color="#108ee9">productos: {productsLength}</Tag>
                         </Col>
                       </Row>
                     ) : (
