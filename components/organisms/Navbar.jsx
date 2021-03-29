@@ -132,6 +132,11 @@ const Navbar = ({ cartLength, addUserInfoView, userInfos, addSellsView }) => {
   }
 
   // console.log(userInfos)
+  const nav =
+    typeof window !== 'undefined' && document.getElementById('navbar-menu')
+  const navVisible = () => {
+    nav.classList.toggle('is-active')
+  }
 
   return (
     <nav
@@ -159,6 +164,7 @@ const Navbar = ({ cartLength, addUserInfoView, userInfos, addSellsView }) => {
           aria-label="menu"
           aria-expanded="true"
           data-target="navbarBasicExample"
+          onClick={navVisible}
         >
           <span aria-hidden="true" />
           <span aria-hidden="true" />
@@ -166,7 +172,7 @@ const Navbar = ({ cartLength, addUserInfoView, userInfos, addSellsView }) => {
         </a>
       </div>
 
-      <div className="navbar-menu">
+      <div className="navbar-menu" id="navbar-menu">
         <div className="navbar-start">
           <Link href="/">
             <a className="navbar-item">Inicio</a>
