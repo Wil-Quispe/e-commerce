@@ -77,8 +77,13 @@ const signup = () => {
         '/'
       )
     } catch (err) {
+      console.log('eroor bor')
       message.error(`${err}`)
     }
+  }
+  const failGoogle = async response => {
+    response &&
+      message.info('Las cookies no están habilitadas en el entorno actual')
   }
 
   const onFinish = async values => {
@@ -112,7 +117,7 @@ const signup = () => {
                 clientId="1086856703745-ng0rgthsjdc280e9tg3si0fqft05bkfa.apps.googleusercontent.com"
                 buttonText="Registrate con Google"
                 onSuccess={responseGoogle}
-                onFailure={responseGoogle}
+                onFailure={failGoogle}
                 cookiePolicy={'single_host_origin'}
               />
             </Row>
