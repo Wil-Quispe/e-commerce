@@ -53,7 +53,23 @@ const userReducer = (state = userInitialState, action) => {
   return state
 }
 
+const sellsInitialState = {
+  sells: [],
+}
+
+const sellsReducer = (state = sellsInitialState, action) => {
+  // console.log(action.sells)
+  switch (action.type) {
+    case 'ADD_SELLS':
+      return {
+        ...state,
+        sells: state.sells.concat(action.sells),
+      }
+  }
+  return state
+}
+
 export default createStore(
-  combineReducers({ cartReducer, userReducer }),
+  combineReducers({ cartReducer, userReducer, sellsReducer }),
   composeWithDevTools()
 )

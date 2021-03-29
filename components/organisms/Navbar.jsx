@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import { Badge, Button, Avatar, Tooltip } from 'antd'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery, useSubscription } from '@apollo/client'
 import {
   ShoppingCartOutlined,
   UserOutlined,
   WhatsAppOutlined,
 } from '@ant-design/icons'
 import { connect } from 'react-redux'
-import { addtUserInfo } from '../../redux/actionCreator'
+import { addtUserInfo, addSells } from '../../redux/actionCreator'
 
 const USER = gql`
   query($id: ID!) {
@@ -90,8 +90,26 @@ const THIRDUSER = gql`
     }
   }
 `
+const SELLS = gql`
+  subscription {
+    sells {
+      name
+      imgUser
+      phoneNumber
+      email
+      brand
+      model
+      price
+      imgProduct
+    }
+  }
+`
 
-const Navbar = ({ cartLength, addUserInfoView, userInfos }) => {
+const Navbar = ({ cartLength, addUserInfoView, userInfos, addSellsView }) => {
+  const { data: subscriptionData } = useSubscription(SELLS)
+  if (subscriptionData) {
+    addSellsView(subscriptionData)
+  }
   if (typeof window !== 'undefined') {
     if (localStorage.getItem('typeUser') === 'USER') {
       const { data } = useQuery(USER, {
@@ -250,6 +268,9 @@ const mapDispatchToProps = dispatch => {
   return {
     addUserInfoView(userInfo) {
       dispatch(addtUserInfo(userInfo))
+    },
+    addSellsView(sells) {
+      dispatch(addSells(sells))
     },
   }
 }

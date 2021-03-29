@@ -19,6 +19,7 @@ import { connect } from 'react-redux'
 import { gql, useMutation, useQuery } from '@apollo/client'
 import AddProduct from '../components/Atoms/AddProduct'
 import UpdateProduct from '../components/Atoms/UpdateProduct'
+import LastSells from '../components/Atoms/LastSells'
 
 const THIRDUSERUPDATE = gql`
   mutation(
@@ -120,8 +121,8 @@ const ADMINUPDATE = gql`
   }
 `
 const QUERYSHOES = gql`
-  query {
-    shoes {
+  query($id: ID) {
+    shoes(_id: $id) {
       _id
       brand
       model
@@ -137,8 +138,8 @@ const QUERYSHOES = gql`
   }
 `
 const QUERYPANTS = gql`
-  query {
-    pants {
+  query($id: ID) {
+    pants(_id: $id) {
       _id
       brand
       model
@@ -154,8 +155,8 @@ const QUERYPANTS = gql`
   }
 `
 const QUERYTSHIRTS = gql`
-  query {
-    tshirt {
+  query($id: ID) {
+    tshirt(_id: $id) {
       _id
       brand
       model
@@ -171,8 +172,8 @@ const QUERYTSHIRTS = gql`
   }
 `
 const QUERYHATS = gql`
-  query {
-    hats {
+  query($id: ID) {
+    hats(_id: $id) {
       _id
       brand
       model
@@ -202,17 +203,17 @@ const logOut = () => {
   }
 }
 
-const profile = ({ userInfos }) => {
+const profile = ({ userInfos, lastSells }) => {
   const { data: queryShoes } = useQuery(QUERYSHOES)
   const { data: queryPants } = useQuery(QUERYPANTS)
   const { data: queryTshirts } = useQuery(QUERYTSHIRTS)
   const { data: queryHats } = useQuery(QUERYHATS)
 
   const productsLength =
-    queryShoes.shoes.length +
-    queryPants.pants.length +
-    queryTshirts.tshirt.length +
-    queryHats.hats.length
+    queryShoes?.shoes.length +
+    queryPants?.pants.length +
+    queryTshirts?.tshirt.length +
+    queryHats?.hats.length
 
   let onFinish = null
   if (typeUser === 'THIRDUSER') {
@@ -338,9 +339,9 @@ const profile = ({ userInfos }) => {
       },
     },
   }
+  // console.log(subsUser)
+  // console.log(subsProd)
 
-  // console.log({ queryShoes })
-  // console.log({ userInfos })
   return (
     <section className="section">
       <div className="container">
@@ -578,6 +579,16 @@ const profile = ({ userInfos }) => {
 
             {userInfos.admin && (
               <>
+                {lastSells.length > 0 && (
+                  <>
+                    <Divider>Ultimas Ventas</Divider>
+                    <Row justify="center" gutter={[16, 16]}>
+                      {lastSells?.map((s, i) => (
+                        <LastSells sell={s.sells} key={i} />
+                      ))}
+                    </Row>
+                  </>
+                )}
                 <Divider>Crear Productos</Divider>
                 <Row justify="center">
                   <Collapse
@@ -641,6 +652,7 @@ const profile = ({ userInfos }) => {
 
 const mapStateToProps = state => ({
   userInfos: state.userReducer.user[0],
+  lastSells: state.sellsReducer.sells,
 })
 
 export default connect(mapStateToProps, {})(profile)

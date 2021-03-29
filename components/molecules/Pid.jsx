@@ -69,8 +69,32 @@ const THIRDUSERUPDATE = gql`
   }
 `
 const STRIPE = gql`
-  mutation Stripe($id: ID!, $amount: Int!) {
-    stripe(data: { id: $id, amount: $amount })
+  mutation Stripe(
+    $id: ID!
+    $amount: Int!
+    $name: String
+    $imgUser: String
+    $phoneNumber: String
+    $email: String
+    $brand: String
+    $model: String
+    $price: Int
+    $imgProduct: String
+  ) {
+    stripe(
+      data: {
+        id: $id
+        amount: $amount
+        name: $name
+        imgUser: $imgUser
+        phoneNumber: $phoneNumber
+        email: $email
+        brand: $brand
+        model: $model
+        price: $price
+        imgProduct: $imgProduct
+      }
+    )
   }
 `
 const USERSHOPPINGINC = gql`
@@ -180,7 +204,18 @@ const Pid = ({ product, userInfo }) => {
     if (paymentMethod) {
       const { id } = paymentMethod
       const data = await stripe({
-        variables: { id, amount: Number(product.price * 100) },
+        variables: {
+          id,
+          amount: Number(product.price * 100),
+          name: userInfo.name,
+          imgUser: userInfo.img,
+          phoneNumber: userInfo.phoneNumber,
+          email: userInfo.email,
+          brand: product.brand,
+          model: product.model,
+          price: product.price,
+          imgProduct: product.imgs[0],
+        },
       })
       if (userInfo.__typename === 'User') {
         await userShoppingInc({
