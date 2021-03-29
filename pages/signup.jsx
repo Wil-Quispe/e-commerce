@@ -3,6 +3,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { useMutation, gql } from '@apollo/client'
 import Link from 'next/link'
 import { saveInLocalStrgAndRedirect } from '../utils/index'
+import FacebookLogin from 'react-facebook-login'
 
 import { GoogleLogin } from 'react-google-login'
 
@@ -49,6 +50,29 @@ const SIGNUPTHIRDSERVICES = gql`
 const signup = () => {
   const [signUpUser] = useMutation(SIGNUP)
   const [loginThirdServices] = useMutation(SIGNUPTHIRDSERVICES)
+  const responseFacebook = async response => {
+    try {
+      const { email, name } = response
+      const data = await loginThirdServices({
+        variables: {
+          email,
+          name,
+          img: response.picture.data.url,
+        },
+      })
+      saveInLocalStrgAndRedirect(
+        [
+          { token: data.data.loginThirdServices.token },
+          { typeUser: 'THIRDUSER' },
+          { redux: 'thirdUser' },
+          { _id: data.data.loginThirdServices.thirdServices._id },
+        ],
+        '/'
+      )
+    } catch (error) {
+      message.error(`${error}`)
+    }
+  }
   const responseGoogle = async response => {
     try {
       const {
@@ -112,20 +136,31 @@ const signup = () => {
       <div className="container">
         <Row justify="center">
           <Col style={{ width: '300px' }}>
-            <Row justify="center" style={{ margin: '0 0 1em' }}>
-              <GoogleLogin
-                clientId="1086856703745-ng0rgthsjdc280e9tg3si0fqft05bkfa.apps.googleusercontent.com"
-                buttonText="Registrate con Google"
-                onSuccess={responseGoogle}
-                onFailure={failGoogle}
-                cookiePolicy={'single_host_origin'}
-              />
+            <Row justify="center">
+              <h3>Inicia Sesion con</h3>
             </Row>
-            <Form
-              // form={form}
-              name="register"
-              onFinish={onFinish}
-            >
+            <Row justify="center" style={{ margin: '0 0 1em' }}>
+              <Col>
+                <Row style={{ margin: '1em' }} justify="center">
+                  <GoogleLogin
+                    clientId="1086856703745-ng0rgthsjdc280e9tg3si0fqft05bkfa.apps.googleusercontent.com"
+                    buttonText="Google"
+                    onSuccess={responseGoogle}
+                    onFailure={failGoogle}
+                    cookiePolicy={'single_host_origin'}
+                  />
+                </Row>
+                <Row style={{ margin: '1em' }}>
+                  <FacebookLogin
+                    appId="151368343545938"
+                    fields="name,email,picture"
+                    callback={responseFacebook}
+                    textButton="Facebook"
+                  />
+                </Row>
+              </Col>
+            </Row>
+            <Form name="register" onFinish={onFinish}>
               <Form.Item
                 name="name"
                 rules={[

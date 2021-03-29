@@ -1,11 +1,10 @@
-import { Form, Input, Button, Row, Col, message, Image } from 'antd'
+import { Form, Input, Button, Row, Col, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import { saveInLocalStrgAndRedirect } from '../utils/index'
 import { useMutation, gql } from '@apollo/client'
 import { GoogleLogin } from 'react-google-login'
 import FacebookLogin from 'react-facebook-login'
-// import ReactWhatsapp from 'react-whatsapp'
 
 const LOGIN = gql`
   mutation($email: String!, $password: String!) {
@@ -83,7 +82,7 @@ const login = () => {
         email,
         imageUrl,
       } = response.profileObj
-      const data = await loginThirdService({
+      const data = await loginThirdServices({
         variables: {
           name,
           lastName: familyName,
@@ -104,6 +103,10 @@ const login = () => {
     } catch (err) {
       message.error(`${err}`)
     }
+  }
+  const failGoogle = response => {
+    response &&
+      message.info('Las cookies no están habilitadas en el entorno actual')
   }
   const onFinish = async values => {
     if (values.password.length < 6)
@@ -141,7 +144,7 @@ const login = () => {
                     clientId="1086856703745-ng0rgthsjdc280e9tg3si0fqft05bkfa.apps.googleusercontent.com"
                     buttonText="Google"
                     onSuccess={responseGoogle}
-                    onFailure={responseGoogle}
+                    onFailure={failGoogle}
                     cookiePolicy={'single_host_origin'}
                   />
                 </Row>
