@@ -5,6 +5,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <title>Goshop</title>
           <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
