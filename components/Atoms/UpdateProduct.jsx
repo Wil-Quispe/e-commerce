@@ -1,4 +1,13 @@
-import { Row, Col, Collapse, Form, Input, InputNumber, Button } from 'antd'
+import {
+  Row,
+  Col,
+  Collapse,
+  Form,
+  Input,
+  InputNumber,
+  Button,
+  Popconfirm,
+} from 'antd'
 import { gql, useMutation } from '@apollo/client'
 import { DeleteFilled } from '@ant-design/icons'
 
@@ -297,7 +306,23 @@ const UpdateProduct = ({ product }) => {
     <Collapse>
       <Panel
         header={`${product.brand} ${product.model}`}
-        extra={<DeleteFilled onClick={deleteProduct} />}
+        extra={
+          <Popconfirm
+            title="Seguro que quieres Eliminar?"
+            okText="Si"
+            cancelText="Cancelar"
+            onConfirm={deleteProduct}
+            onCancel={e => {
+              e.stopPropagation()
+            }}
+          >
+            <DeleteFilled
+              onClick={e => {
+                e.stopPropagation()
+              }}
+            />
+          </Popconfirm>
+        }
       >
         <Form
           {...formItemLayout}
