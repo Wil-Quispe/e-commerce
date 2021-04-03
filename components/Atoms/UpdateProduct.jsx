@@ -212,11 +212,9 @@ const UpdateProduct = ({ product }) => {
           size,
         },
       })
-      console.log(result)
       typeof window !== 'undefined' && location.reload()
     }
     if (product.product === 'pants') {
-      // console.log(product);
       const result = await pantsUpdate({
         variables: {
           id: product._id,
@@ -231,7 +229,6 @@ const UpdateProduct = ({ product }) => {
           size,
         },
       })
-      console.log(result)
       typeof window !== 'undefined' && location.reload()
     }
     if (product.product === 'tshirt') {
@@ -249,7 +246,6 @@ const UpdateProduct = ({ product }) => {
           size,
         },
       })
-      console.log(result)
       typeof window !== 'undefined' && location.reload()
     }
     if (product.product === 'hats') {
@@ -267,7 +263,6 @@ const UpdateProduct = ({ product }) => {
           size,
         },
       })
-      console.log(result)
       typeof window !== 'undefined' && location.reload()
     }
   }
