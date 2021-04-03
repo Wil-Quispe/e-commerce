@@ -134,6 +134,7 @@ const QUERYSHOES = gql`
       material
       size
       product
+      imgs
     }
   }
 `
@@ -150,6 +151,7 @@ const QUERYPANTS = gql`
       type
       material
       size
+      imgs
       product
     }
   }
@@ -167,6 +169,7 @@ const QUERYTSHIRTS = gql`
       type
       material
       size
+      imgs
       product
     }
   }
@@ -184,6 +187,7 @@ const QUERYHATS = gql`
       type
       material
       size
+      imgs
       product
     }
   }
@@ -592,7 +596,7 @@ const profile = ({ userInfos, lastSells }) => {
                 <Divider>Crear Productos</Divider>
                 <Row justify="center">
                   <Collapse
-                    defaultActiveKey={['0']}
+                    // defaultActiveKey={['0']}
                     style={{ width: '592.5px' }}
                   >
                     <Panel header="Agregar Zapatos">

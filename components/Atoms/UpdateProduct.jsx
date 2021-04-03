@@ -7,9 +7,13 @@ import {
   InputNumber,
   Button,
   Popconfirm,
+  Upload,
+  Tooltip,
+  message,
 } from 'antd'
+import { useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
-import { DeleteFilled } from '@ant-design/icons'
+import { DeleteFilled, UploadOutlined } from '@ant-design/icons'
 
 const SHOESUPDATE = gql`
   mutation(
@@ -38,7 +42,8 @@ const SHOESUPDATE = gql`
         size: $size
       }
     ) {
-      brand
+      _id
+      __typename
     }
   }
 `
@@ -69,7 +74,8 @@ const PANTSUPDATE = gql`
         size: $size
       }
     ) {
-      brand
+      _id
+      __typename
     }
   }
 `
@@ -100,7 +106,8 @@ const TSHIRTSUPDATE = gql`
         size: $size
       }
     ) {
-      brand
+      _id
+      __typename
     }
   }
 `
@@ -131,7 +138,8 @@ const HATSUPDATE = gql`
         size: $size
       }
     ) {
-      brand
+      _id
+      __typename
     }
   }
 `
@@ -163,6 +171,22 @@ const HATSDELETE = gql`
     }
   }
 `
+const UPLOAD_FILE = gql`
+  mutation($file: Upload!, $id: ID!, $type: String!) {
+    singleUpload(file: $file, _id: $id, typeProduct: $type) {
+      path
+    }
+  }
+`
+const DELETEIMGUPLOADED = gql`
+  mutation($path: String!, $prodId: ID!, $typeProd: String!) {
+    deleteImgUploaded(
+      pathImg: $path
+      productId: $prodId
+      typeProduct: $typeProd
+    )
+  }
+`
 
 const { Panel } = Collapse
 const formItemLayout = {
@@ -185,6 +209,7 @@ const formItemLayout = {
 }
 
 const UpdateProduct = ({ product }) => {
+  const [imgList, setImgList] = useState([])
   const [shoesUpdate] = useMutation(SHOESUPDATE)
   const [pantsUpdate] = useMutation(PANTSUPDATE)
   const [tshirtUpdate] = useMutation(TSHIRTSUPDATE)
@@ -193,6 +218,10 @@ const UpdateProduct = ({ product }) => {
   const [pantsDelete] = useMutation(PANTSDELETE)
   const [tshirtDelete] = useMutation(TSHIRTSDELETE)
   const [hatsDelete] = useMutation(HATSDELETE)
+  const [deleteImgUploaded] = useMutation(DELETEIMGUPLOADED)
+  const [singleUpload] = useMutation(UPLOAD_FILE, {
+    onCompleted: data => console.log(data),
+  })
 
   const updateProduct = async values => {
     const size = values.size.split()
@@ -221,6 +250,15 @@ const UpdateProduct = ({ product }) => {
           size,
         },
       })
+      imgList.map(async f => {
+        await singleUpload({
+          variables: {
+            file: f,
+            id: result.data.shoesUpdate._id,
+            type: result.data.shoesUpdate.__typename,
+          },
+        })
+      })
       typeof window !== 'undefined' && location.reload()
     }
     if (product.product === 'pants') {
@@ -237,6 +275,15 @@ const UpdateProduct = ({ product }) => {
           material,
           size,
         },
+      })
+      imgList.map(async f => {
+        await singleUpload({
+          variables: {
+            file: f,
+            id: result.data.pantsUpdate._id,
+            type: result.data.pantsUpdate.__typename,
+          },
+        })
       })
       typeof window !== 'undefined' && location.reload()
     }
@@ -255,6 +302,15 @@ const UpdateProduct = ({ product }) => {
           size,
         },
       })
+      imgList.map(async f => {
+        await singleUpload({
+          variables: {
+            file: f,
+            id: result.data.tshirtUpdate._id,
+            type: result.data.tshirtUpdate.__typename,
+          },
+        })
+      })
       typeof window !== 'undefined' && location.reload()
     }
     if (product.product === 'hats') {
@@ -271,6 +327,15 @@ const UpdateProduct = ({ product }) => {
           material,
           size,
         },
+      })
+      imgList.map(async f => {
+        await singleUpload({
+          variables: {
+            file: f,
+            id: result.data.hatsUpdate._id,
+            type: result.data.hatsUpdate.__typename,
+          },
+        })
       })
       typeof window !== 'undefined' && location.reload()
     }
@@ -302,6 +367,53 @@ const UpdateProduct = ({ product }) => {
 
   const size = product.size.join(' ')
   // console.log(product)
+
+  const imgs = []
+
+  product.imgs.map((img, i) => {
+    imgs.push({ uid: i, status: 'done', url: img })
+  })
+
+  let c = 0
+  const props = {
+    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+    defaultFileList: [...imgs],
+    showUploadList: {
+      removeIcon: (
+        <Tooltip title="Eliminar imagen">
+          <Button type="link" icon={<DeleteFilled />} />
+        </Tooltip>
+      ),
+    },
+    onRemove: async file => {
+      try {
+        await deleteImgUploaded({
+          variables: {
+            path: file.url,
+            typeProd: product.__typename,
+            prodId: product._id,
+          },
+        })
+        message.info('Eliminado correctamente')
+      } catch (error) {
+        message.error('fallo al eliminar la imagen')
+      }
+    },
+    beforeUpload: async (file, fileList) => {
+      if (c > 0) return
+      let imgs = []
+      fileList.map(f => {
+        const fileRules = /jpeg|jpg|png/
+        if (!fileRules.test(f.type)) return message.info('Eliga un imagen pls')
+        if (!f) return
+        imgs.push(f)
+        // singleUpload({ variables: { file: f } })
+      })
+      c++
+      setImgList(imgs)
+    },
+  }
+
   return (
     <Collapse>
       <Panel
@@ -341,35 +453,51 @@ const UpdateProduct = ({ product }) => {
         >
           <Row>
             <Col>
-              <Form.Item label="Marca" name="brand">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Modelo" name="model">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Descripcion" name="description">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Precio" name="price">
-                <InputNumber />
-              </Form.Item>
-              <Form.Item label="Stock" name="stock">
-                <InputNumber />
-              </Form.Item>
-            </Col>
-            <Col>
-              <Form.Item label="Genero" name="gender">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Tipo" name="type">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Material" name="material">
-                <Input />
-              </Form.Item>
-              <Form.Item label="Tallas" name="size">
-                <Input />
-              </Form.Item>
+              <Row>
+                <Col>
+                  <Form.Item label="Marca" name="brand">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item label="Modelo" name="model">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item label="Descripcion" name="description">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item label="Precio" name="price">
+                    <InputNumber />
+                  </Form.Item>
+                  <Form.Item label="Stock" name="stock">
+                    <InputNumber />
+                  </Form.Item>
+                </Col>
+                <Col>
+                  <Form.Item label="Genero" name="gender">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item label="Tipo" name="type">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item label="Material" name="material">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item label="Tallas" name="size">
+                    <Input />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row justify="center">
+                <Form.Item name="img">
+                  <Upload
+                    {...props}
+                    multiple
+                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    listType="picture-card"
+                  >
+                    {imgs.length >= 8 ? null : <UploadOutlined />}
+                  </Upload>
+                </Form.Item>
+              </Row>
             </Col>
           </Row>
           <Row justify="center">
