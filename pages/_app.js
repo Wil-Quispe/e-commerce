@@ -15,6 +15,7 @@ import { createUploadLink } from 'apollo-upload-client'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
 import { Provider } from 'react-redux'
+import { useEffect, useState } from 'react'
 
 import store from '../redux/store'
 
@@ -54,17 +55,27 @@ const client = new ApolloClient({
 })
 
 function MyApp({ Component, pageProps }) {
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    setLoading(false)
+  }, [])
   return (
-    <ApolloProvider client={client}>
-      <Elements stripe={promiseStripe}>
-        <Provider store={store}>
-          <Navbar />
-          <Component {...pageProps} />
-          <Comments />
-          <Footer />
-        </Provider>
-      </Elements>
-    </ApolloProvider>
+    <>
+      {loading ? (
+        <h1>Cargando...</h1>
+      ) : (
+        <ApolloProvider client={client}>
+          <Elements stripe={promiseStripe}>
+            <Provider store={store}>
+              <Navbar />
+              <Component {...pageProps} />
+              <Comments />
+              <Footer />
+            </Provider>
+          </Elements>
+        </ApolloProvider>
+      )}
+    </>
   )
 }
 
