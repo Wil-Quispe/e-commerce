@@ -1,5 +1,8 @@
 import { gql, useQuery } from '@apollo/client'
 import ProductCard from '../../../components/molecules/ProductCard'
+import { connect } from 'react-redux'
+import { navMobileNotSee } from '../../../redux/actionCreator'
+import { useEffect } from 'react'
 
 const HATS = gql`
   query {
@@ -14,8 +17,11 @@ const HATS = gql`
   }
 `
 
-const index = () => {
+const index = ({ navNotSeeView }) => {
   const { data } = useQuery(HATS)
+  useEffect(() => {
+    navNotSeeView()
+  }, [])
   return (
     <>
       <div>
@@ -33,4 +39,13 @@ const index = () => {
   )
 }
 
-export default index
+const mapStateToProps = () => {}
+const mapDispatchToProps = dispatch => {
+  return {
+    navNotSeeView() {
+      dispatch(navMobileNotSee())
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(index)

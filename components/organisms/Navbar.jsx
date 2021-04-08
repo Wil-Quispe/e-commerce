@@ -7,7 +7,12 @@ import {
   WhatsAppOutlined,
 } from '@ant-design/icons'
 import { connect } from 'react-redux'
-import { addtUserInfo, addSells } from '../../redux/actionCreator'
+import {
+  addtUserInfo,
+  addSells,
+  navMobileSee,
+  navMobileNotSee,
+} from '../../redux/actionCreator'
 
 const USER = gql`
   query($id: ID!) {
@@ -32,8 +37,13 @@ const USER = gql`
         productType
       }
       cart {
-        _id
+        img1
+        img2
+        brand
+        model
+        description
         productType
+        productId
       }
     }
   }
@@ -84,8 +94,13 @@ const THIRDUSER = gql`
         productType
       }
       cart {
-        _id
+        img1
+        img2
+        brand
+        model
+        description
         productType
+        productId
       }
     }
   }
@@ -105,7 +120,14 @@ const SELLS = gql`
   }
 `
 
-const Navbar = ({ cartLength, addUserInfoView, userInfos, addSellsView }) => {
+const Navbar = ({
+  addUserInfoView,
+  userInfos,
+  addSellsView,
+  navMobileState,
+  navSeeView,
+  navNotSeeView,
+}) => {
   const { data: subscriptionData } = useSubscription(SELLS)
   if (subscriptionData) {
     addSellsView(subscriptionData)
@@ -131,11 +153,18 @@ const Navbar = ({ cartLength, addUserInfoView, userInfos, addSellsView }) => {
     }
   }
 
-  // console.log(userInfos)
+  const cartCounter = userInfos && userInfos.cart.length
+
   const nav =
     typeof window !== 'undefined' && document.getElementById('navbar-menu')
   const navVisible = () => {
-    nav.classList.toggle('is-active')
+    if (localStorage.getItem('navMobile') !== 'is-active') {
+      localStorage.setItem('navMobile', 'is-active')
+      navSeeView()
+    } else {
+      localStorage.setItem('navMobile', '')
+      navNotSeeView()
+    }
   }
 
   return (
@@ -172,7 +201,7 @@ const Navbar = ({ cartLength, addUserInfoView, userInfos, addSellsView }) => {
         </a>
       </div>
 
-      <div className="navbar-menu" id="navbar-menu">
+      <div className={`navbar-menu ${navMobileState.nav}`} id="navbar-menu">
         <div className="navbar-start">
           <Link href="/">
             <a className="navbar-item">Inicio</a>
@@ -217,7 +246,8 @@ const Navbar = ({ cartLength, addUserInfoView, userInfos, addSellsView }) => {
               ) : (
                 <Link href="/cart">
                   <a>
-                    <Badge count={userInfos && userInfos.cart.length}>
+                    {/* <Badge dot> */}
+                    <Badge count={cartCounter}>
                       <Button
                         type="primary"
                         icon={<ShoppingCartOutlined />}
@@ -268,10 +298,17 @@ const Navbar = ({ cartLength, addUserInfoView, userInfos, addSellsView }) => {
 const mapStateToProps = state => ({
   userInfos: state.userReducer.user[0],
   cartLength: state.cartReducer.cart.length,
+  navMobileState: state.navMobileReducer,
 })
 
 const mapDispatchToProps = dispatch => {
   return {
+    navSeeView() {
+      dispatch(navMobileSee())
+    },
+    navNotSeeView() {
+      dispatch(navMobileNotSee())
+    },
     addUserInfoView(userInfo) {
       dispatch(addtUserInfo(userInfo))
     },
@@ -282,4 +319,3 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar)
-// export default Navbar

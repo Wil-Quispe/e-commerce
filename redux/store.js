@@ -1,10 +1,29 @@
 import { combineReducers, createStore } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
+const navInitialState = {
+  nav: '',
+}
+const navMobileReducer = (state = navInitialState, action) => {
+  switch (action.type) {
+    case 'NAV_MOBILE_SEE':
+      localStorage.setItem('navMobile', 'is-active')
+      return {
+        nav: state.nav.replace('', 'is-active'),
+      }
+    case 'NAV_MOBILE_NOT_SEE':
+      localStorage.setItem('navMobile', '')
+      return {
+        nav: state.nav.replace('is-active', ''),
+      }
+  }
+  console.log(action)
+  return state
+}
+
 const cartInitialState = {
   cart: [],
 }
-
 const cartReducer = (state = cartInitialState, { type, product }) => {
   switch (type) {
     case 'ADD_TO_CART':
@@ -25,7 +44,6 @@ const cartReducer = (state = cartInitialState, { type, product }) => {
 const userInitialState = {
   user: [],
 }
-
 const userReducer = (state = userInitialState, action) => {
   let typeUser = typeof window !== 'undefined' && localStorage.getItem('redux')
   // console.log(action)
@@ -56,7 +74,6 @@ const userReducer = (state = userInitialState, action) => {
 const sellsInitialState = {
   sells: [],
 }
-
 const sellsReducer = (state = sellsInitialState, action) => {
   // console.log(action.sells)
   switch (action.type) {
@@ -70,6 +87,6 @@ const sellsReducer = (state = sellsInitialState, action) => {
 }
 
 export default createStore(
-  combineReducers({ cartReducer, userReducer, sellsReducer }),
+  combineReducers({ cartReducer, userReducer, sellsReducer, navMobileReducer }),
   composeWithDevTools()
 )

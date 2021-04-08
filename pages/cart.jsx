@@ -1,37 +1,36 @@
 import { Row } from 'antd'
 import { connect } from 'react-redux'
-import ProductCard from '../components/molecules/ProductCard'
+import { navMobileNotSee } from '../redux/actionCreator'
+import { useEffect } from 'react'
+import CartProductCard from '../components/molecules/CartProductCard'
 
-const cart = ({ cartList }) => {
+const cart = ({ cartList, navNotSeeView }) => {
+  useEffect(() => {
+    navNotSeeView()
+  }, [])
   return (
-    <main>
-      <section className="section">
-        <div className="container">
-          <div className="columns">
-            {cartList.length > 0 ? (
-              cartList?.map((d, i) => {
-                if (i > 4) {
-                  console.log('mayor')
-                  return (
-                    <Row wrap>
-                      <ProductCard key={i} product={d} path="shoes" />
-                    </Row>
-                  )
-                }
-                return <ProductCard key={i} product={d} path="shoes" />
-              })
-            ) : (
-              <h1>Aun no tines nada en el carrito de compras</h1>
-            )}
-          </div>
-        </div>
-      </section>
-    </main>
+    <Row justify="center" gutter={[16, 16]} style={{ margin: '1.5em 3em' }}>
+      {cartList?.cart.length > 0 ? (
+        cartList.cart.map((p, i) => {
+          return <CartProductCard p={p} key={i} />
+        })
+      ) : (
+        <h1>Tu Carrito esta bacio</h1>
+      )}
+    </Row>
   )
 }
 
 const mapStateToProps = state => ({
-  cartList: state.cartReducer.cart,
+  cartList: state.userReducer.user[0],
 })
 
-export default connect(mapStateToProps, {})(cart)
+const mapDispatchToProps = dispatch => {
+  return {
+    navNotSeeView() {
+      dispatch(navMobileNotSee())
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(cart)

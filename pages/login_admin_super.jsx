@@ -2,6 +2,9 @@ import { Form, Input, Button, Row, Col, message } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { useMutation, gql } from '@apollo/client'
 import { saveInLocalStrgAndRedirect } from '../utils/index'
+import { connect } from 'react-redux'
+import { navMobileNotSee } from '../redux/actionCreator'
+import { useEffect } from 'react'
 
 const LOGIN = gql`
   mutation($email: String!, $password: String!) {
@@ -15,8 +18,11 @@ const LOGIN = gql`
   }
 `
 
-const login = () => {
+const login = ({ navNotSeeView }) => {
   const [loginAdmin] = useMutation(LOGIN)
+  useEffect(() => {
+    navNotSeeView()
+  }, [])
   const onFinish = async values => {
     if (values.password.length < 6)
       return message.error('contraseña incorrecta')
@@ -96,4 +102,14 @@ const login = () => {
   )
 }
 
-export default login
+const mapStateToProps = () => {}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    navNotSeeView() {
+      dispatch(navMobileNotSee())
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(login)

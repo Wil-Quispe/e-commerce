@@ -20,6 +20,8 @@ import { gql, useMutation, useQuery } from '@apollo/client'
 import AddProduct from '../components/Atoms/AddProduct'
 import UpdateProduct from '../components/Atoms/UpdateProduct'
 import LastSells from '../components/Atoms/LastSells'
+import { useEffect } from 'react'
+import { navMobileNotSee } from '../redux/actionCreator'
 
 const THIRDUSERUPDATE = gql`
   mutation(
@@ -207,11 +209,14 @@ const logOut = () => {
   }
 }
 
-const profile = ({ userInfos, lastSells }) => {
+const profile = ({ userInfos, lastSells, navNotSeeView }) => {
   const { data: queryShoes } = useQuery(QUERYSHOES)
   const { data: queryPants } = useQuery(QUERYPANTS)
   const { data: queryTshirts } = useQuery(QUERYTSHIRTS)
   const { data: queryHats } = useQuery(QUERYHATS)
+  useEffect(() => {
+    navNotSeeView()
+  }, [])
 
   const productsLength =
     queryShoes?.shoes.length +
@@ -659,4 +664,12 @@ const mapStateToProps = state => ({
   lastSells: state.sellsReducer.sells,
 })
 
-export default connect(mapStateToProps, {})(profile)
+const mapDispatchToProps = dispatch => {
+  return {
+    navNotSeeView() {
+      dispatch(navMobileNotSee())
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(profile)

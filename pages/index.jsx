@@ -3,6 +3,9 @@ import Slider from '../components/organisms/Slider'
 import Link from 'next/link'
 import { gql, useQuery } from '@apollo/client'
 import ProductCard from '../components/molecules/ProductCard'
+import { connect } from 'react-redux'
+import { navMobileNotSee } from '../redux/actionCreator'
+import { useEffect } from 'react'
 
 const PRODUCTS = gql`
   query {
@@ -41,8 +44,12 @@ const PRODUCTS = gql`
   }
 `
 
-const index = () => {
+const index = ({ navNotSeeView }) => {
   const { data } = useQuery(PRODUCTS)
+  useEffect(() => {
+    navNotSeeView()
+  }, [])
+
   return (
     <main>
       <Slider />
@@ -156,4 +163,13 @@ const index = () => {
   )
 }
 
-export default index
+const mapStateToProps = () => {}
+const mapDispatchToProps = dispatch => {
+  return {
+    navNotSeeView() {
+      dispatch(navMobileNotSee())
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(index)

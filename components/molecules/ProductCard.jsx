@@ -2,27 +2,93 @@ import Link from 'next/link'
 import { Button, message } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { connect } from 'react-redux'
-import { addToCart, removeFromCart } from '../../redux/actionCreator'
-import { gql, useMutation } from '@apollo/client'
+import { addToCart } from '../../redux/actionCreator'
+import { gql, useMutation, useLazyQuery } from '@apollo/client'
+import { useState, useEffect } from 'react'
+import { addtUserInfo } from '../../redux/actionCreator'
 
 const USERCARTINC = gql`
-  mutation($id: ID!, $pId: ID!, $productType: String!) {
-    userCartInc(_id: $id, data: { _id: $pId, productType: $productType })
+  mutation(
+    $id: ID!
+    $img1: String!
+    $img2: String!
+    $brand: String!
+    $model: String!
+    $description: String!
+    $productType: String!
+    $productId: ID!
+  ) {
+    userCartInc(
+      _id: $id
+      data: {
+        img1: $img1
+        img2: $img2
+        brand: $brand
+        model: $model
+        description: $description
+        productType: $productType
+        productId: $productId
+      }
+    )
   }
 `
 const THIRDUSERCARTINC = gql`
-  mutation($id: ID!, $pId: ID!, $productType: String!) {
-    thirdUserCartInc(_id: $id, data: { _id: $pId, productType: $productType })
+  mutation(
+    $id: ID!
+    $img1: String!
+    $img2: String!
+    $brand: String!
+    $model: String!
+    $description: String!
+    $productType: String!
+    $productId: ID!
+  ) {
+    thirdUserCartInc(
+      _id: $id
+      data: {
+        img1: $img1
+        img2: $img2
+        brand: $brand
+        model: $model
+        description: $description
+        productType: $productType
+        productId: $productId
+      }
+    )
   }
 `
-const USERCARTDEC = gql`
-  mutation($id: ID!, $pId: ID!) {
-    userCartDec(_id: $id, productId: $pId)
-  }
-`
-const THIRDUSERCARTDEC = gql`
-  mutation($id: ID!, $pId: ID!) {
-    thirdUserCartDec(_id: $id, productId: $pId)
+const THIRDUSER = gql`
+  query($id: ID!) {
+    thirdUser(_id: $id) {
+      _id
+      name
+      nickName
+      lastName
+      age
+      phoneNumber
+      img
+      email
+      gender
+      country
+      city
+      district
+      addressHome
+      reference
+      sendEmail
+      shopping {
+        _id
+        productType
+      }
+      cart {
+        img1
+        img2
+        brand
+        model
+        description
+        productType
+        productId
+      }
+    }
   }
 `
 
@@ -30,14 +96,21 @@ const ProductCard = ({
   product,
   path,
   cols,
-  cartList,
-  removeFromCartView,
   addToCartView,
+  addUserInfoView,
 }) => {
+  const [thirdUser, { data }] = useLazyQuery(THIRDUSER)
   const [userCartInc] = useMutation(USERCARTINC)
   const [thirdUserCartInc] = useMutation(THIRDUSERCARTINC)
-  const [userCartDec] = useMutation(USERCARTDEC)
-  const [thirdUserCartDec] = useMutation(THIRDUSERCARTDEC)
+  const [Counter, setCounter] = useState(0)
+  useEffect(async () => {
+    thirdUser({
+      variables: { id: localStorage.getItem('_id') },
+      pollInterval: 500,
+    })
+    addUserInfoView(data)
+  }, [Counter])
+
   const addToCartBtn = async product => {
     if (typeof window !== 'undefined') {
       if (localStorage.getItem('token')) {
@@ -45,8 +118,13 @@ const ProductCard = ({
           await userCartInc({
             variables: {
               id: localStorage.getItem('_id'),
-              pId: product._id,
+              img1: product.imgs[0],
+              img2: product.imgs[1],
+              brand: product.brand,
+              model: product.model,
+              description: product.description,
               productType: product.__typename,
+              productId: product._id,
             },
           })
         }
@@ -54,40 +132,25 @@ const ProductCard = ({
           await thirdUserCartInc({
             variables: {
               id: localStorage.getItem('_id'),
-              pId: product._id,
+              img1: product.imgs[0],
+              img2: product.imgs[1],
+              brand: product.brand,
+              model: product.model,
+              description: product.description,
               productType: product.__typename,
+              productId: product._id,
             },
           })
         }
+        setCounter(Counter + 1)
         addToCartView(product)
+        message.info('Agregado al Carrito')
       } else {
         message.info('tienes que registrarte')
       }
     }
   }
-  const removeFromCartViewBtn = async product => {
-    if (typeof window !== 'undefined') {
-      if (localStorage.getItem('typeUser') === 'USER') {
-        await userCartDec({
-          variables: {
-            id: localStorage.getItem('_id'),
-            pId: product._id,
-          },
-        })
-      }
-      if (localStorage.getItem('typeUser') === 'THIRDUSER') {
-        console.log('deleted thirdudser')
-        await thirdUserCartDec({
-          variables: {
-            id: localStorage.getItem('_id'),
-            pId: product._id,
-          },
-        })
-      }
-    }
-    removeFromCartView(product)
-  }
-  // console.log(cartList)
+
   return (
     <>
       <div className={`column is-${cols || 3}`}>
@@ -96,7 +159,7 @@ const ProductCard = ({
             <Link href={`/products/${path}/${product._id}`}>
               <figure className="image is-4by3">
                 <img
-                  src={`${product.imgs[0]}`}
+                  src={`${product.imgs[0] || product.img1}`}
                   alt="Placeholder image"
                   style={{ objectFit: 'cover' }}
                 />
@@ -107,27 +170,21 @@ const ProductCard = ({
             <div className="media">
               <div className="media-left">
                 <figure className="image is-48x48">
-                  <img src={`${product.imgs[1]}`} alt="Placeholder image" />
+                  <img
+                    src={`${product.imgs[1] || product.img2}`}
+                    alt="Placeholder image"
+                  />
                 </figure>
               </div>
               <div className="media-content">
                 <p className="title is-4">{product.brand}</p>
                 <p className="subtitle is-6">{product.model}</p>
               </div>
-              {cartList && cartList.cart?.find(c => c._id === product._id) ? (
-                <Button
-                  onClick={() => removeFromCartViewBtn(product)}
-                  type="primary"
-                  danger
-                  icon={<ShoppingCartOutlined />}
-                />
-              ) : (
-                <Button
-                  onClick={() => addToCartBtn(product)}
-                  type="primary"
-                  icon={<ShoppingCartOutlined />}
-                />
-              )}
+              <Button
+                onClick={() => addToCartBtn(product)}
+                type="primary"
+                icon={<ShoppingCartOutlined />}
+              />
             </div>
             <div className="content">
               {product.description}{' '}
@@ -149,11 +206,11 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => {
   return {
+    addUserInfoView(userInfo) {
+      dispatch(addtUserInfo(userInfo))
+    },
     addToCartView(product) {
       dispatch(addToCart(product))
-    },
-    removeFromCartView(product) {
-      dispatch(removeFromCart(product))
     },
   }
 }

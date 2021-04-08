@@ -4,8 +4,10 @@ import { useMutation, gql } from '@apollo/client'
 import Link from 'next/link'
 import { saveInLocalStrgAndRedirect } from '../utils/index'
 import FacebookLogin from 'react-facebook-login'
-
 import { GoogleLogin } from 'react-google-login'
+import { connect } from 'react-redux'
+import { navMobileNotSee } from '../redux/actionCreator'
+import { useEffect } from 'react'
 
 const SIGNUP = gql`
   mutation($name: String!, $email: String!, $password: String!) {
@@ -47,9 +49,12 @@ const SIGNUPTHIRDSERVICES = gql`
   }
 `
 
-const signup = () => {
+const signup = ({ navNotSeeView }) => {
   const [signUpUser] = useMutation(SIGNUP)
   const [loginThirdServices] = useMutation(SIGNUPTHIRDSERVICES)
+  useEffect(() => {
+    navNotSeeView()
+  }, [])
   const responseFacebook = async response => {
     try {
       const { email, name } = response
@@ -255,4 +260,14 @@ const signup = () => {
   )
 }
 
-export default signup
+const mapStateToProps = () => {}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    navNotSeeView() {
+      dispatch(navMobileNotSee())
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(signup)

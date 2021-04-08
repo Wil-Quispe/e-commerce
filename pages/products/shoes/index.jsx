@@ -1,5 +1,8 @@
 import { gql, useQuery } from '@apollo/client'
 import ProductCard from '../../../components/molecules/ProductCard'
+import { connect } from 'react-redux'
+import { navMobileNotSee } from '../../../redux/actionCreator'
+import { useEffect } from 'react'
 
 const SHOES = gql`
   query {
@@ -14,8 +17,11 @@ const SHOES = gql`
   }
 `
 
-const index = () => {
+const index = ({ navNotSeeView }) => {
   const { data } = useQuery(SHOES)
+  useEffect(() => {
+    navNotSeeView()
+  }, [])
   return (
     <div>
       <section className="section">
@@ -31,4 +37,13 @@ const index = () => {
   )
 }
 
-export default index
+const mapStateToProps = () => {}
+const mapDispatchToProps = dispatch => {
+  return {
+    navNotSeeView() {
+      dispatch(navMobileNotSee())
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(index)
