@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { gql, useQuery } from '@apollo/client'
 import ProductCard from '../components/molecules/ProductCard'
 import { connect } from 'react-redux'
-import { navMobileNotSee } from '../redux/actionCreator'
+import { navMobileNotSee, loadingFalse } from '../redux/actionCreator'
 import { useEffect } from 'react'
 
 const PRODUCTS = gql`
@@ -44,10 +44,11 @@ const PRODUCTS = gql`
   }
 `
 
-const index = ({ navNotSeeView }) => {
+const index = ({ navNotSeeView, loadingFalse }) => {
   const { data } = useQuery(PRODUCTS)
   useEffect(() => {
     navNotSeeView()
+    loadingFalse()
   }, [])
 
   return (
@@ -166,6 +167,9 @@ const index = ({ navNotSeeView }) => {
 const mapStateToProps = () => {}
 const mapDispatchToProps = dispatch => {
   return {
+    loadingFalse() {
+      dispatch(loadingFalse())
+    },
     navNotSeeView() {
       dispatch(navMobileNotSee())
     },

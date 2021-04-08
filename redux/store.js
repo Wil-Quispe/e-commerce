@@ -17,7 +17,25 @@ const navMobileReducer = (state = navInitialState, action) => {
         nav: state.nav.replace('is-active', ''),
       }
   }
-  console.log(action)
+  return state
+}
+
+const initialStates = {
+  loading: false,
+}
+
+const stateReducer = (state = initialStates, action) => {
+  switch (action.type) {
+    case 'LOADING_TRUE':
+      return {
+        loading: (state.loading = true),
+      }
+
+    case 'LOADING_FALSE':
+      return {
+        loading: (state.loading = false),
+      }
+  }
   return state
 }
 
@@ -87,6 +105,12 @@ const sellsReducer = (state = sellsInitialState, action) => {
 }
 
 export default createStore(
-  combineReducers({ cartReducer, userReducer, sellsReducer, navMobileReducer }),
+  combineReducers({
+    cartReducer,
+    userReducer,
+    sellsReducer,
+    navMobileReducer,
+    stateReducer,
+  }),
   composeWithDevTools()
 )

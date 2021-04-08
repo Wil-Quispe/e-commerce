@@ -18,6 +18,7 @@ import { Provider } from 'react-redux'
 import { useEffect, useState } from 'react'
 
 import store from '../redux/store'
+import Spinner from '../components/Atoms/Spinner'
 
 const promiseStripe = loadStripe(process.env.STRIPE)
 
@@ -62,7 +63,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       {loading ? (
-        <h1>Cargando...</h1>
+        <Spinner />
       ) : (
         <ApolloProvider client={client}>
           <Elements stripe={promiseStripe}>

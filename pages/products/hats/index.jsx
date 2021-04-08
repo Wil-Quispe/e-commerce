@@ -1,7 +1,7 @@
 import { gql, useQuery } from '@apollo/client'
 import ProductCard from '../../../components/molecules/ProductCard'
 import { connect } from 'react-redux'
-import { navMobileNotSee } from '../../../redux/actionCreator'
+import { navMobileNotSee, loadingFalse } from '../../../redux/actionCreator'
 import { useEffect } from 'react'
 
 const HATS = gql`
@@ -17,31 +17,31 @@ const HATS = gql`
   }
 `
 
-const index = ({ navNotSeeView }) => {
+const index = ({ navNotSeeView, loadingFalse }) => {
   const { data } = useQuery(HATS)
   useEffect(() => {
+    loadingFalse()
     navNotSeeView()
   }, [])
   return (
-    <>
-      <div>
-        <section className="section">
-          <div className="container">
-            <div className="columns is-multiline">
-              {data?.hats.map((d, i) => (
-                <ProductCard key={i} product={d} path="hats" />
-              ))}
-            </div>
-          </div>
-        </section>
+    <section className="section">
+      <div className="container">
+        <div className="columns is-multiline">
+          {data?.hats.map((d, i) => (
+            <ProductCard key={i} product={d} path="hats" />
+          ))}
+        </div>
       </div>
-    </>
+    </section>
   )
 }
 
 const mapStateToProps = () => {}
 const mapDispatchToProps = dispatch => {
   return {
+    loadingFalse() {
+      dispatch(loadingFalse())
+    },
     navNotSeeView() {
       dispatch(navMobileNotSee())
     },

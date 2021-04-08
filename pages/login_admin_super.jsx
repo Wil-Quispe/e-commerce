@@ -3,7 +3,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { useMutation, gql } from '@apollo/client'
 import { saveInLocalStrgAndRedirect } from '../utils/index'
 import { connect } from 'react-redux'
-import { navMobileNotSee } from '../redux/actionCreator'
+import { navMobileNotSee, loadingFalse } from '../redux/actionCreator'
 import { useEffect } from 'react'
 
 const LOGIN = gql`
@@ -18,10 +18,11 @@ const LOGIN = gql`
   }
 `
 
-const login = ({ navNotSeeView }) => {
+const login = ({ navNotSeeView, loadingFalse }) => {
   const [loginAdmin] = useMutation(LOGIN)
   useEffect(() => {
     navNotSeeView()
+    loadingFalse()
   }, [])
   const onFinish = async values => {
     if (values.password.length < 6)
@@ -106,6 +107,9 @@ const mapStateToProps = () => {}
 
 const mapDispatchToProps = dispatch => {
   return {
+    loadingFalse() {
+      dispatch(loadingFalse())
+    },
     navNotSeeView() {
       dispatch(navMobileNotSee())
     },

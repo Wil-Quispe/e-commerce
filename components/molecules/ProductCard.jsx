@@ -6,6 +6,7 @@ import { addToCart } from '../../redux/actionCreator'
 import { gql, useMutation, useLazyQuery } from '@apollo/client'
 import { useState, useEffect } from 'react'
 import { addtUserInfo } from '../../redux/actionCreator'
+import LinkCustom from '../Atoms/LinkCustom'
 
 const USERCARTINC = gql`
   mutation(
@@ -189,7 +190,9 @@ const ProductCard = ({
             <div className="content">
               {product.description}{' '}
               <Link href={`/products/${path}/${product._id}`}>
-                <a>mas detalles</a>
+                <a>
+                  <LinkCustom text="mas detalles" />
+                </a>
               </Link>
               .
               <br />

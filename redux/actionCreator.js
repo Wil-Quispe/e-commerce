@@ -25,3 +25,11 @@ export const navMobileSee = () => ({
 export const navMobileNotSee = () => ({
   type: 'NAV_MOBILE_NOT_SEE',
 })
+
+export const loadingTrue = () => ({
+  type: 'LOADING_TRUE',
+})
+
+export const loadingFalse = () => ({
+  type: 'LOADING_FALSE',
+})

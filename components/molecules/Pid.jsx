@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { gql, useMutation } from '@apollo/client'
 import {
@@ -17,6 +17,7 @@ import {
 } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
+import { loadingFalse } from '../../redux/actionCreator'
 
 const USERUPDATE = gql`
   mutation(
@@ -141,7 +142,7 @@ const formItemLayout = {
 
 const { Meta } = Card
 
-const Pid = ({ product, userInfo }) => {
+const Pid = ({ product, userInfo, loadingFalse }) => {
   const [buy, setBuy] = useState('')
   const [empty, setEmpty] = useState(true)
   const [formBuy, setFormBuy] = useState('none')
@@ -153,6 +154,9 @@ const Pid = ({ product, userInfo }) => {
   const [adminSalesInc] = useMutation(ADMINSALESINC)
   const stripeJS = useStripe()
   const elements = useElements()
+  useEffect(() => {
+    loadingFalse()
+  }, [])
 
   const handleSubmit = async values => {
     const {
@@ -445,4 +449,12 @@ const mapStateToProps = state => ({
   userInfo: state.userReducer.user[0],
 })
 
-export default connect(mapStateToProps, {})(Pid)
+const mapDispatchToProps = dispatch => {
+  return {
+    loadingFalse() {
+      dispatch(loadingFalse())
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Pid)

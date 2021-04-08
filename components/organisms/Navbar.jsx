@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Badge, Button, Avatar, Tooltip } from 'antd'
+import { Badge, Button, Avatar, Tooltip, Spin } from 'antd'
 import { gql, useQuery, useSubscription } from '@apollo/client'
 import {
   ShoppingCartOutlined,
@@ -13,6 +13,7 @@ import {
   navMobileSee,
   navMobileNotSee,
 } from '../../redux/actionCreator'
+import LinkCustom from '../Atoms/LinkCustom'
 
 const USER = gql`
   query($id: ID!) {
@@ -127,6 +128,7 @@ const Navbar = ({
   navMobileState,
   navSeeView,
   navNotSeeView,
+  loaderState,
 }) => {
   const { data: subscriptionData } = useSubscription(SELLS)
   if (subscriptionData) {
@@ -155,8 +157,6 @@ const Navbar = ({
 
   const cartCounter = userInfos && userInfos.cart.length
 
-  const nav =
-    typeof window !== 'undefined' && document.getElementById('navbar-menu')
   const navVisible = () => {
     if (localStorage.getItem('navMobile') !== 'is-active') {
       localStorage.setItem('navMobile', 'is-active')
@@ -204,22 +204,34 @@ const Navbar = ({
       <div className={`navbar-menu ${navMobileState.nav}`} id="navbar-menu">
         <div className="navbar-start">
           <Link href="/">
-            <a className="navbar-item">Inicio</a>
+            <a className="navbar-item">
+              <LinkCustom text="Inicio" />
+            </a>
           </Link>
           <Link href="/products/shoes">
-            <a className="navbar-item">Zapatos</a>
+            <a class="navbar-item">
+              <LinkCustom text="Zapatos" />
+            </a>
           </Link>
           <Link href="/products/pants">
-            <a className="navbar-item">Pantalones</a>
+            <a className="navbar-item">
+              <LinkCustom text="Pantalones" />
+            </a>
           </Link>
           <Link href="/products/tshirt">
-            <a className="navbar-item">Polos</a>
+            <a className="navbar-item">
+              <LinkCustom text="Polos" />
+            </a>
           </Link>
           <Link href="/products/hats">
-            <a className="navbar-item">Gorros</a>
+            <a className="navbar-item">
+              <LinkCustom text="Gorros" />
+            </a>
           </Link>
           <Link href="/login_admin_super">
-            <a className="navbar-item">Admin</a>
+            <a className="navbar-item">
+              <LinkCustom text="Admin" />
+            </a>
           </Link>
         </div>
 
@@ -286,7 +298,7 @@ const Navbar = ({
                   </Link>
                 </>
               )}
-              {}
+              {loaderState && <Spin style={{ margin: '0 .5em' }} />}
             </div>
           </div>
         </div>
@@ -299,6 +311,7 @@ const mapStateToProps = state => ({
   userInfos: state.userReducer.user[0],
   cartLength: state.cartReducer.cart.length,
   navMobileState: state.navMobileReducer,
+  loaderState: state.stateReducer.loading,
 })
 
 const mapDispatchToProps = dispatch => {
