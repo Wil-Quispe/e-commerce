@@ -107,7 +107,6 @@ const ProductCard = ({
   useEffect(async () => {
     thirdUser({
       variables: { id: localStorage.getItem('_id') },
-      pollInterval: 500,
     })
     addUserInfoView(data)
   }, [Counter])
