@@ -47,7 +47,6 @@ const PRODUCTS = gql`
 
 const index = ({ navNotSeeView, loadingFalse }) => {
   const { data } = useQuery(PRODUCTS)
-  console.log(process.env.SITE_NAME)
   useEffect(() => {
     navNotSeeView()
     loadingFalse()

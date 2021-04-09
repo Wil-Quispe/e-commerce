@@ -219,6 +219,12 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
     navNotSeeView()
   }, [])
 
+  if (typeof window !== 'undefined') {
+    if (!localStorage.getItem('token')) {
+      window.location.replace('/')
+    }
+  }
+
   const productsLength =
     queryShoes?.shoes.length +
     queryPants?.pants.length +
