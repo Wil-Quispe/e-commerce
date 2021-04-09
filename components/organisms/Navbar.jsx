@@ -172,7 +172,12 @@ const Navbar = ({
       className="navbar"
       role="navigation"
       aria-label="main navigation"
-      style={{ background: '#F0F0F0' }}
+      style={{
+        background: '#F0F0F0',
+        position: '-webkit-sticky',
+        position: 'sticky',
+        top: '0',
+      }}
     >
       <div className="navbar-brand">
         <Link href="/">
@@ -253,7 +258,7 @@ const Navbar = ({
               {typeof window !== 'undefined' &&
               localStorage.getItem('typeUser') === 'ADMIN' ? (
                 <Tooltip title="Administrador">
-                  <Avatar size={20} src="/estrella.svg" />
+                  <Avatar size={20} src="/admin.svg" />
                 </Tooltip>
               ) : (
                 <Link href="/cart">
