@@ -155,7 +155,7 @@ const Navbar = ({
     }
   }
 
-  const cartCounter = userInfos && userInfos.cart.length
+  const cartCounter = userInfos && userInfos.cart?.length
 
   const navVisible = () => {
     if (localStorage.getItem('navMobile') !== 'is-active') {

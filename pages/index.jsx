@@ -1,6 +1,7 @@
 import { Avatar, Tooltip, Row, Col } from 'antd'
 import Slider from '../components/organisms/Slider'
 import Link from 'next/link'
+import Head from 'next/head'
 import { gql, useQuery } from '@apollo/client'
 import ProductCard from '../components/molecules/ProductCard'
 import { connect } from 'react-redux'
@@ -46,6 +47,7 @@ const PRODUCTS = gql`
 
 const index = ({ navNotSeeView, loadingFalse }) => {
   const { data } = useQuery(PRODUCTS)
+  console.log(process.env.SITE_NAME)
   useEffect(() => {
     navNotSeeView()
     loadingFalse()
@@ -53,6 +55,9 @@ const index = ({ navNotSeeView, loadingFalse }) => {
 
   return (
     <main>
+      <Head>
+        <title>Inicio | {process.env.SITE_NAME}</title>
+      </Head>
       <Slider />
       <section className="section">
         <div className="container">

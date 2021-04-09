@@ -3,6 +3,7 @@ import ProductCard from '../../../components/molecules/ProductCard'
 import { connect } from 'react-redux'
 import { loadingFalse, navMobileNotSee } from '../../../redux/actionCreator'
 import { useEffect } from 'react'
+import Head from 'next/head'
 
 const TSHIRT = gql`
   query {
@@ -24,15 +25,20 @@ const index = ({ navNotSeeView, loadingFalse }) => {
     loadingFalse()
   }, [])
   return (
-    <section className="section">
-      <div className="container">
-        <div className="columns is-multiline">
-          {data?.tshirt.map((d, i) => (
-            <ProductCard key={i} product={d} path="tshirt" />
-          ))}
+    <>
+      <Head>
+        <title>Polos | {process.env.SITE_NAME}</title>
+      </Head>
+      <section className="section">
+        <div className="container">
+          <div className="columns is-multiline">
+            {data?.tshirt.map((d, i) => (
+              <ProductCard key={i} product={d} path="tshirt" />
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }
 

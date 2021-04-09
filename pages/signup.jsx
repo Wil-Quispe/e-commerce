@@ -8,6 +8,7 @@ import { GoogleLogin } from 'react-google-login'
 import { connect } from 'react-redux'
 import { navMobileNotSee } from '../redux/actionCreator'
 import { useEffect } from 'react'
+import Head from 'next/head'
 
 const SIGNUP = gql`
   mutation($name: String!, $email: String!, $password: String!) {
@@ -137,126 +138,131 @@ const signup = ({ navNotSeeView }) => {
   }
 
   return (
-    <section className="section">
-      <div className="container">
-        <Row justify="center">
-          <Col style={{ width: '300px' }}>
-            <Row justify="center">
-              <h3>Inicia Sesion con</h3>
-            </Row>
-            <Row justify="center" style={{ margin: '0 0 1em' }}>
-              <Col>
-                <Row style={{ margin: '1em' }} justify="center">
-                  <GoogleLogin
-                    clientId="1086856703745-ng0rgthsjdc280e9tg3si0fqft05bkfa.apps.googleusercontent.com"
-                    buttonText="Google"
-                    onSuccess={responseGoogle}
-                    onFailure={failGoogle}
-                    cookiePolicy={'single_host_origin'}
-                  />
-                </Row>
-                <Row style={{ margin: '1em' }}>
-                  <FacebookLogin
-                    appId="151368343545938"
-                    fields="name,email,picture"
-                    callback={responseFacebook}
-                    textButton="Facebook"
-                  />
-                </Row>
-              </Col>
-            </Row>
-            <Form name="register" onFinish={onFinish}>
-              <Form.Item
-                name="name"
-                rules={[
-                  {
-                    required: true,
-                    message: 'campo requerido!',
-                  },
-                ]}
-              >
-                <Input
-                  prefix={<UserOutlined className="site-form-item-icon" />}
-                  placeholder="Nombre de Usuario"
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="email"
-                rules={[
-                  {
-                    type: 'email',
-                    message: 'Contraseña incorrecta!',
-                  },
-                  {
-                    required: true,
-                    message: 'ingrese su correo!',
-                  },
-                ]}
-              >
-                <Input
-                  prefix={<UserOutlined className="site-form-item-icon" />}
-                  placeholder="correo electronico"
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: 'ingrese su contraseña!',
-                  },
-                ]}
-                hasFeedback
-              >
-                <Input.Password
-                  prefix={<LockOutlined className="site-form-item-icon" />}
-                  placeholder="contraseña"
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="confirm"
-                dependencies={['password']}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: 'ingrese su contraseña!',
-                  },
-                  ({ getFieldValue }) => ({
-                    validator(_, value) {
-                      if (!value || getFieldValue('password') === value) {
-                        return Promise.resolve()
-                      }
-
-                      return Promise.reject(
-                        new Error('las contraseñas no coinciden!')
-                      )
-                    },
-                  }),
-                ]}
-              >
-                <Input.Password
-                  prefix={<LockOutlined className="site-form-item-icon" />}
-                  placeholder="confirmar contraseña"
-                />
-              </Form.Item>
-
+    <>
+      <Head>
+        <title>Registrarse | {process.env.SITE_NAME}</title>
+      </Head>
+      <section className="section">
+        <div className="container">
+          <Row justify="center">
+            <Col style={{ width: '300px' }}>
               <Row justify="center">
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Registrarse
-                  </Button>
-                  {'  '} O <Link href="/login">Iniciar Sesion</Link>
-                </Form.Item>
+                <h3>Inicia Sesion con</h3>
               </Row>
-            </Form>
-          </Col>
-        </Row>
-      </div>
-    </section>
+              <Row justify="center" style={{ margin: '0 0 1em' }}>
+                <Col>
+                  <Row style={{ margin: '1em' }} justify="center">
+                    <GoogleLogin
+                      clientId="1086856703745-ng0rgthsjdc280e9tg3si0fqft05bkfa.apps.googleusercontent.com"
+                      buttonText="Google"
+                      onSuccess={responseGoogle}
+                      onFailure={failGoogle}
+                      cookiePolicy={'single_host_origin'}
+                    />
+                  </Row>
+                  <Row style={{ margin: '1em' }}>
+                    <FacebookLogin
+                      appId="151368343545938"
+                      fields="name,email,picture"
+                      callback={responseFacebook}
+                      textButton="Facebook"
+                    />
+                  </Row>
+                </Col>
+              </Row>
+              <Form name="register" onFinish={onFinish}>
+                <Form.Item
+                  name="name"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'campo requerido!',
+                    },
+                  ]}
+                >
+                  <Input
+                    prefix={<UserOutlined className="site-form-item-icon" />}
+                    placeholder="Nombre de Usuario"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="email"
+                  rules={[
+                    {
+                      type: 'email',
+                      message: 'Contraseña incorrecta!',
+                    },
+                    {
+                      required: true,
+                      message: 'ingrese su correo!',
+                    },
+                  ]}
+                >
+                  <Input
+                    prefix={<UserOutlined className="site-form-item-icon" />}
+                    placeholder="correo electronico"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'ingrese su contraseña!',
+                    },
+                  ]}
+                  hasFeedback
+                >
+                  <Input.Password
+                    prefix={<LockOutlined className="site-form-item-icon" />}
+                    placeholder="contraseña"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="confirm"
+                  dependencies={['password']}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: 'ingrese su contraseña!',
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue('password') === value) {
+                          return Promise.resolve()
+                        }
+
+                        return Promise.reject(
+                          new Error('las contraseñas no coinciden!')
+                        )
+                      },
+                    }),
+                  ]}
+                >
+                  <Input.Password
+                    prefix={<LockOutlined className="site-form-item-icon" />}
+                    placeholder="confirmar contraseña"
+                  />
+                </Form.Item>
+
+                <Row justify="center">
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                      Registrarse
+                    </Button>
+                    {'  '} O <Link href="/login">Iniciar Sesion</Link>
+                  </Form.Item>
+                </Row>
+              </Form>
+            </Col>
+          </Row>
+        </div>
+      </section>
+    </>
   )
 }
 
