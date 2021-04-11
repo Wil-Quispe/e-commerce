@@ -1,4 +1,4 @@
-import { Carousel, Row, Col } from 'antd'
+import { Carousel } from 'antd'
 
 const Slider = () => {
   const contentStyle = {}
@@ -21,7 +21,6 @@ const Slider = () => {
         </Carousel>
       </div>
     </section>
-    // _@stripe@19#_-
   )
 }
 

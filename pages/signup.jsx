@@ -266,7 +266,7 @@ const signup = ({ navNotSeeView }) => {
   )
 }
 
-const mapStateToProps = () => {}
+const mapStateToProps = () => ({})
 
 const mapDispatchToProps = dispatch => {
   return {

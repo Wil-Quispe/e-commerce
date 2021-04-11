@@ -42,7 +42,7 @@ const index = ({ navNotSeeView, loadingFalse }) => {
   )
 }
 
-const mapStateToProps = () => {}
+const mapStateToProps = () => ({})
 const mapDispatchToProps = dispatch => {
   return {
     loadingFalse() {

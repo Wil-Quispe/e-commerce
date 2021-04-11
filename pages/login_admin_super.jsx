@@ -114,7 +114,7 @@ const login = ({ navNotSeeView, loadingFalse }) => {
   )
 }
 
-const mapStateToProps = () => {}
+const mapStateToProps = () => ({})
 
 const mapDispatchToProps = dispatch => {
   return {
