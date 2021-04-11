@@ -44,35 +44,70 @@ const THIRDUSERCARTDEC = gql`
     }
   }
 `
+const THIRDUSER = gql`
+  query($id: ID!) {
+    thirdUser(_id: $id) {
+      _id
+      name
+      nickName
+      lastName
+      age
+      phoneNumber
+      img
+      email
+      gender
+      country
+      city
+      district
+      addressHome
+      reference
+      sendEmail
+      shopping {
+        _id
+        productType
+      }
+      cart {
+        img1
+        img2
+        brand
+        model
+        description
+        productType
+        productId
+      }
+    }
+  }
+`
 
-const CartProductCard = ({ p, removeFromCartView }) => {
+const CartProductCard = ({ p, removeFromCartView, typeUser }) => {
   const [userCartDec] = useMutation(USERCARTDEC)
-  const [thirdUserCartDec] = useMutation(THIRDUSERCARTDEC)
+  const [thirdUserCartDec] = useMutation(THIRDUSERCARTDEC, {
+    refetchQueries: [{ query: THIRDUSER, variables: { id: typeUser._id } }],
+  })
   const removeFromCartViewBtn = async product => {
-    if (typeof window !== 'undefined') {
-      if (localStorage.getItem('typeUser') === 'USER') {
-        await userCartDec({
-          variables: {
-            id: localStorage.getItem('_id'),
-            pId: product.productId,
-          },
-        })
-      }
-      if (localStorage.getItem('typeUser') === 'THIRDUSER') {
-        await thirdUserCartDec({
-          variables: {
-            id: localStorage.getItem('_id'),
-            pId: product.productId,
-          },
-        })
-      }
+    if (typeUser.__typename === 'UserThirdServices') {
+      await thirdUserCartDec({
+        variables: {
+          id: localStorage.getItem('_id'),
+          pId: product.productId,
+        },
+      })
+    } else {
+      await userCartDec({
+        variables: {
+          id: localStorage.getItem('_id'),
+          pId: product.productId,
+        },
+      })
     }
     removeFromCartView(product)
     message.info('Eliminacion Correcta')
+    const productContainer = document.getElementById(`${p.productId}`)
+    productContainer.remove()
   }
 
   return (
-    <Col sm={24} md={12} lg={8} xl={6} xxl={3}>
+    <Col sm={24} md={12} lg={8} xl={6} xxl={3} id={`${p.productId}`}>
       <div className="card">
         <div className="card-image">
           <figure className="image is-4by3">
@@ -113,7 +148,11 @@ const CartProductCard = ({ p, removeFromCartView }) => {
   )
 }
 
-const mapStateToProps = () => {}
+const mapStateToProps = state => {
+  return {
+    typeUser: state.userReducer.user[0],
+  }
+}
 
 const mapDispatchToProps = dispatch => {
   return {

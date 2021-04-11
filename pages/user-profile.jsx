@@ -360,7 +360,7 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
     <>
       <Head>
         <title>
-          {userInfos.admin ? '✨Administrador' : `Perfil: ${userInfos.name}`}
+          {userInfos?.admin ? '✨Administrador' : `Perfil: ${userInfos?.name}`}
         </title>
       </Head>
       <section className="section">

@@ -14,6 +14,7 @@ import {
   navMobileNotSee,
 } from '../../redux/actionCreator'
 import LinkCustom from '../Atoms/LinkCustom'
+import { useEffect } from 'react'
 
 const USER = gql`
   query($id: ID!) {
@@ -129,11 +130,13 @@ const Navbar = ({
   navSeeView,
   navNotSeeView,
   loaderState,
+  cartLength,
 }) => {
-  const { data: subscriptionData } = useSubscription(SELLS)
-  if (subscriptionData) {
-    addSellsView(subscriptionData)
-  }
+  // const { data: subscriptionData } = useSubscription(SELLS)
+  // if (subscriptionData) {
+  //   addSellsView(subscriptionData)
+  // }
+
   if (typeof window !== 'undefined') {
     if (localStorage.getItem('typeUser') === 'USER') {
       const { data } = useQuery(USER, {
@@ -152,11 +155,10 @@ const Navbar = ({
         variables: { id: localStorage.getItem('_id') },
       })
       addUserInfoView(data)
+      const cartCounter = data?.thirdUser.cart.length
+      localStorage.setItem('cart', cartCounter)
     }
   }
-
-  const cartCounter = userInfos && userInfos.cart?.length
-
   const navVisible = () => {
     if (localStorage.getItem('navMobile') !== 'is-active') {
       localStorage.setItem('navMobile', 'is-active')
@@ -214,7 +216,7 @@ const Navbar = ({
             </a>
           </Link>
           <Link href="/products/shoes">
-            <a class="navbar-item">
+            <a className="navbar-item">
               <LinkCustom text="Zapatos" />
             </a>
           </Link>
@@ -264,7 +266,7 @@ const Navbar = ({
                 <Link href="/cart">
                   <a>
                     {/* <Badge dot> */}
-                    <Badge count={cartCounter}>
+                    <Badge count={cartLength}>
                       <Button
                         type="primary"
                         icon={<ShoppingCartOutlined />}
@@ -314,7 +316,7 @@ const Navbar = ({
 
 const mapStateToProps = state => ({
   userInfos: state.userReducer.user[0],
-  cartLength: state.cartReducer.cart.length,
+  cartLength: state.cartReducer.cart,
   navMobileState: state.navMobileReducer,
   loaderState: state.stateReducer.loading,
 })

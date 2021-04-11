@@ -51,7 +51,7 @@ const link = process.browser
   : httpLink
 
 const client = new ApolloClient({
-  link: uploadLink || link,
+  link: uploadLink,
   cache: new InMemoryCache(),
 })
 

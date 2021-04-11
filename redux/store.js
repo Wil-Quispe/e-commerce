@@ -40,20 +40,18 @@ const stateReducer = (state = initialStates, action) => {
 }
 
 const cartInitialState = {
-  cart: [],
+  cart: typeof window !== 'undefined' && Number(localStorage.getItem('cart')),
 }
 const cartReducer = (state = cartInitialState, { type, product }) => {
   switch (type) {
     case 'ADD_TO_CART':
       return {
-        ...state,
-        cart: state.cart.concat(product),
+        cart: state.cart + 1,
       }
 
     case 'REMOVE_FROM_CART':
       return {
-        ...state,
-        cart: state.cart.filter(c => c._id !== product._id),
+        cart: state.cart - 1,
       }
   }
   return state
