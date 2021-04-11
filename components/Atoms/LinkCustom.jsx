@@ -8,7 +8,7 @@ const LinkCustom = ({ text, loadingTrue }) => {
   return <span onClick={loading}>{text}</span>
 }
 
-const mapStateToProps = () => {}
+const mapStateToProps = () => ({})
 
 const mapDispatchToProps = dispatch => {
   return {
