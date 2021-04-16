@@ -143,6 +143,8 @@ const Navbar = ({
         variables: { id: localStorage.getItem('_id') },
       })
       addUserInfoView(data)
+      const cartCounter = data?.user.cart.length
+      localStorage.setItem('cart', cartCounter)
     }
     if (localStorage.getItem('typeUser') === 'ADMIN') {
       const { data } = useQuery(ADMIN, {
@@ -266,7 +268,7 @@ const Navbar = ({
                 <Link href="/cart">
                   <a>
                     {/* <Badge dot> */}
-                    <Badge count={cartLength}>
+                    <Badge count={typeof cartLength ? cartLength : 0}>
                       <Button
                         type="primary"
                         icon={<ShoppingCartOutlined />}
