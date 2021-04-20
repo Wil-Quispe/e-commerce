@@ -35,7 +35,7 @@ const DELETEBANNER = gql`
     deleteBanner(pathImg: $pathImg, _id: $id)
   }
 `
-const localUri = 'http://localhost:3000/'
+const localUri = 'https://goshop.vercel.app/'
 
 const ChangeBanner = () => {
   const [imgUpload, setImgUpload] = useState()
