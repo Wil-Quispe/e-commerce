@@ -14,177 +14,58 @@ import {
 import { useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
 import { DeleteFilled, UploadOutlined } from '@ant-design/icons'
+import { camelCase } from '../../utils/index'
 
-const SHOESUPDATE = gql`
-  mutation(
-    $id: ID!
-    $brand: String
-    $model: String
-    $description: String
-    $price: Int
-    $stock: Int
-    $gender: String
-    $type: String
-    $material: String
-    $size: [String]
-  ) {
-    shoesUpdate(
-      _id: $id
-      data: {
-        brand: $brand
-        model: $model
-        description: $description
-        price: $price
-        stock: $stock
-        gender: $gender
-        type: $type
-        material: $material
-        size: $size
-      }
-    ) {
-      _id
-      __typename
-    }
-  }
-`
-const PANTSUPDATE = gql`
-  mutation(
-    $id: ID!
-    $brand: String
-    $model: String
-    $description: String
-    $price: Int
-    $stock: Int
-    $gender: String
-    $type: String
-    $material: String
-    $size: [String]
-  ) {
-    pantsUpdate(
-      _id: $id
-      data: {
-        brand: $brand
-        model: $model
-        description: $description
-        price: $price
-        stock: $stock
-        gender: $gender
-        type: $type
-        material: $material
-        size: $size
-      }
-    ) {
-      _id
-      __typename
-    }
-  }
-`
-const TSHIRTSUPDATE = gql`
-  mutation(
-    $id: ID!
-    $brand: String
-    $model: String
-    $description: String
-    $price: Int
-    $stock: Int
-    $gender: String
-    $type: String
-    $material: String
-    $size: [String]
-  ) {
-    tshirtUpdate(
-      _id: $id
-      data: {
-        brand: $brand
-        model: $model
-        description: $description
-        price: $price
-        stock: $stock
-        gender: $gender
-        type: $type
-        material: $material
-        size: $size
-      }
-    ) {
-      _id
-      __typename
-    }
-  }
-`
-const HATSUPDATE = gql`
-  mutation(
-    $id: ID!
-    $brand: String
-    $model: String
-    $description: String
-    $price: Int
-    $stock: Int
-    $gender: String
-    $type: String
-    $material: String
-    $size: [String]
-  ) {
-    hatsUpdate(
-      _id: $id
-      data: {
-        brand: $brand
-        model: $model
-        description: $description
-        price: $price
-        stock: $stock
-        gender: $gender
-        type: $type
-        material: $material
-        size: $size
-      }
-    ) {
-      _id
-      __typename
-    }
-  }
-`
-const SHOESDELETE = gql`
-  mutation($id: ID!) {
-    shoesDelete(_id: $id) {
-      brand
-    }
-  }
-`
-const PANTSDELETE = gql`
-  mutation($id: ID!) {
-    pantsDelete(_id: $id) {
-      brand
-    }
-  }
-`
-const TSHIRTSDELETE = gql`
-  mutation($id: ID!) {
-    tshirtDelete(_id: $id) {
-      brand
-    }
-  }
-`
-const HATSDELETE = gql`
-  mutation($id: ID!) {
-    hatsDelete(_id: $id) {
-      brand
-    }
-  }
-`
 const UPLOAD_FILE = gql`
-  mutation($file: Upload!, $id: ID!, $type: String!) {
-    singleUpload(file: $file, _id: $id, typeProduct: $type) {
+  mutation($file: Upload!, $id: ID!) {
+    singleUpload(file: $file, _id: $id) {
       path
     }
   }
 `
 const DELETEIMGUPLOADED = gql`
-  mutation($path: String!, $prodId: ID!, $typeProd: String!) {
-    deleteImgUploaded(
-      pathImg: $path
-      productId: $prodId
-      typeProduct: $typeProd
-    )
+  mutation($path: String!, $prodId: ID!) {
+    deleteImgUploaded(pathImg: $path, productId: $prodId)
+  }
+`
+const PRODUCTUPDATE = gql`
+  mutation(
+    $id: ID!
+    $brand: String
+    $model: String
+    $description: String
+    $price: Int
+    $stock: Int
+    $gender: String
+    $type: String
+    $material: String
+    $size: [String]
+  ) {
+    updateProduct(
+      _id: $id
+      data: {
+        brand: $brand
+        model: $model
+        description: $description
+        price: $price
+        stock: $stock
+        gender: $gender
+        type: $type
+        material: $material
+        size: $size
+      }
+    ) {
+      _id
+      typeProduct
+    }
+  }
+`
+const PRODUCTDELETE = gql`
+  mutation($id: ID!) {
+    deleteProduct(_id: $id) {
+      _id
+      brand
+    }
   }
 `
 
@@ -208,22 +89,14 @@ const formItemLayout = {
   },
 }
 
-const UpdateProduct = ({ product }) => {
+const UpdateProducts = ({ product }) => {
   const [imgList, setImgList] = useState([])
-  const [shoesUpdate] = useMutation(SHOESUPDATE)
-  const [pantsUpdate] = useMutation(PANTSUPDATE)
-  const [tshirtUpdate] = useMutation(TSHIRTSUPDATE)
-  const [hatsUpdate] = useMutation(HATSUPDATE)
-  const [shoesDelete] = useMutation(SHOESDELETE)
-  const [pantsDelete] = useMutation(PANTSDELETE)
-  const [tshirtDelete] = useMutation(TSHIRTSDELETE)
-  const [hatsDelete] = useMutation(HATSDELETE)
+  const [updateProduct] = useMutation(PRODUCTUPDATE)
+  const [deleteProduct] = useMutation(PRODUCTDELETE)
   const [deleteImgUploaded] = useMutation(DELETEIMGUPLOADED)
-  const [singleUpload] = useMutation(UPLOAD_FILE, {
-    onCompleted: data => console.log(data),
-  })
+  const [singleUpload] = useMutation(UPLOAD_FILE)
 
-  const updateProduct = async values => {
+  const updateProductFront = async values => {
     const size = values.size.split()
     const {
       brand,
@@ -235,148 +108,47 @@ const UpdateProduct = ({ product }) => {
       type,
       material,
     } = values
-    if (product.product === 'shoes') {
-      const result = await shoesUpdate({
+
+    const result = await updateProduct({
+      variables: {
+        id: product._id,
+        brand,
+        model,
+        description,
+        price,
+        stock,
+        gender,
+        type,
+        material,
+        size,
+      },
+    })
+    imgList.map(async f => {
+      await singleUpload({
         variables: {
-          id: product._id,
-          brand,
-          model,
-          description,
-          price,
-          stock,
-          gender,
-          type,
-          material,
-          size,
+          file: f,
+          id: result.data.updateProduct._id,
         },
       })
-      imgList.map(async f => {
-        await singleUpload({
-          variables: {
-            file: f,
-            id: result.data.shoesUpdate._id,
-            type: result.data.shoesUpdate.__typename,
-          },
-        })
-      })
-      typeof window !== 'undefined' && location.reload()
-    }
-    if (product.product === 'pants') {
-      const result = await pantsUpdate({
-        variables: {
-          id: product._id,
-          brand,
-          model,
-          description,
-          price,
-          stock,
-          gender,
-          type,
-          material,
-          size,
-        },
-      })
-      imgList.map(async f => {
-        await singleUpload({
-          variables: {
-            file: f,
-            id: result.data.pantsUpdate._id,
-            type: result.data.pantsUpdate.__typename,
-          },
-        })
-      })
-      typeof window !== 'undefined' && location.reload()
-    }
-    if (product.product === 'tshirt') {
-      const result = await tshirtUpdate({
-        variables: {
-          id: product._id,
-          brand,
-          model,
-          description,
-          price,
-          stock,
-          gender,
-          type,
-          material,
-          size,
-        },
-      })
-      imgList.map(async f => {
-        await singleUpload({
-          variables: {
-            file: f,
-            id: result.data.tshirtUpdate._id,
-            type: result.data.tshirtUpdate.__typename,
-          },
-        })
-      })
-      typeof window !== 'undefined' && location.reload()
-    }
-    if (product.product === 'hats') {
-      const result = await hatsUpdate({
-        variables: {
-          id: product._id,
-          brand,
-          model,
-          description,
-          price,
-          stock,
-          gender,
-          type,
-          material,
-          size,
-        },
-      })
-      imgList.map(async f => {
-        await singleUpload({
-          variables: {
-            file: f,
-            id: result.data.hatsUpdate._id,
-            type: result.data.hatsUpdate.__typename,
-          },
-        })
-      })
-      typeof window !== 'undefined' && location.reload()
-    }
+    })
+    typeof window !== 'undefined' && location.reload()
   }
 
-  const deleteProduct = async e => {
+  const deleteProductFront = async e => {
     e.stopPropagation()
-    if (product.product === 'shoes') {
-      await shoesDelete({ variables: { id: product._id } })
-      console.log('deleted')
-      typeof window !== 'undefined' && location.reload()
-    }
-    if (product.product === 'pants') {
-      await pantsDelete({ variables: { id: product._id } })
-      console.log('deleted')
-      typeof window !== 'undefined' && location.reload()
-    }
-    if (product.product === 'tshirt') {
-      await tshirtDelete({ variables: { id: product._id } })
-      console.log('deleted')
-      typeof window !== 'undefined' && location.reload()
-    }
-    if (product.product === 'hats') {
-      await hatsDelete({ variables: { id: product._id } })
-      console.log('deleted')
-      typeof window !== 'undefined' && location.reload()
-    }
+    await deleteProduct({ variables: { id: product._id } })
+    typeof window !== 'undefined' && location.reload()
   }
 
   const size = product.size.join(' ')
-  // console.log(product)
 
   const imgs = []
-
   product.imgs.map((img, i) => {
     imgs.push({ uid: i, status: 'done', url: img })
   })
 
   let c = 0
   const props = {
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
     defaultFileList: [...imgs],
     showUploadList: {
       removeIcon: (
@@ -390,7 +162,6 @@ const UpdateProduct = ({ product }) => {
         await deleteImgUploaded({
           variables: {
             path: file.url,
-            typeProd: product.__typename,
             prodId: product._id,
           },
         })
@@ -417,13 +188,15 @@ const UpdateProduct = ({ product }) => {
   return (
     <Collapse>
       <Panel
-        header={`${product.brand} ${product.model}`}
+        header={`${camelCase(product.typeProduct)} -- ${product.brand} ${
+          product.model
+        }`}
         extra={
           <Popconfirm
             title="Seguro que quieres Eliminar?"
             okText="Si"
             cancelText="Cancelar"
-            onConfirm={deleteProduct}
+            onConfirm={deleteProductFront}
             onCancel={e => {
               e.stopPropagation()
             }}
@@ -438,7 +211,7 @@ const UpdateProduct = ({ product }) => {
       >
         <Form
           {...formItemLayout}
-          onFinish={updateProduct}
+          onFinish={updateProductFront}
           initialValues={{
             brand: product.brand || ' ',
             model: product.model || ' ',
@@ -488,12 +261,7 @@ const UpdateProduct = ({ product }) => {
               </Row>
               <Row justify="center">
                 <Form.Item name="img">
-                  <Upload
-                    {...props}
-                    multiple
-                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    listType="picture-card"
-                  >
+                  <Upload {...props} multiple listType="picture-card">
                     {imgs.length >= 8 ? null : <UploadOutlined />}
                   </Upload>
                 </Form.Item>
@@ -511,4 +279,4 @@ const UpdateProduct = ({ product }) => {
   )
 }
 
-export default UpdateProduct
+export default UpdateProducts

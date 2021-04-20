@@ -6,7 +6,7 @@ const success = () => {
   return (
     <>
       <Head>
-        <title>error |{process.env.SITE_NAME}</title>
+        <title>Pago exitoso ❤ | {process.env.SITE_NAME}</title>
       </Head>
       <div>
         <Result

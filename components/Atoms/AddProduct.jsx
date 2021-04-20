@@ -1,8 +1,17 @@
 import { Row, Col, Form, Input, Button, InputNumber, Select } from 'antd'
 import { Upload, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import { gql, useMutation } from '@apollo/client'
+import { gql, useMutation, useQuery } from '@apollo/client'
 import { useState } from 'react'
+import { camelCase } from '../../utils'
+
+const QUERYTYPEPRODUCTS = gql`
+  query {
+    product {
+      typeProduct
+    }
+  }
+`
 // import UploadForm from './UploadForm'
 
 const { Option } = Select
@@ -25,151 +34,51 @@ const formItemLayout = {
   },
 }
 
-const CREATESHOES = gql`
-  mutation(
-    $brand: String!
-    $model: String!
-    $description: String!
-    $price: Int!
-    $stock: Int!
-    $gender: String!
-    $type: String!
-    $material: String!
-    $size: [String!]!
-    $product: String!
-  ) {
-    shoesCreate(
-      data: {
-        brand: $brand
-        model: $model
-        description: $description
-        price: $price
-        stock: $stock
-        gender: $gender
-        type: $type
-        material: $material
-        size: $size
-        product: $product
-      }
-    ) {
-      _id
-      __typename
-    }
-  }
-`
-const CREATEPANTS = gql`
-  mutation(
-    $brand: String!
-    $model: String!
-    $description: String!
-    $price: Int!
-    $stock: Int!
-    $gender: String!
-    $type: String!
-    $material: String!
-    $size: [String!]!
-    $product: String!
-  ) {
-    pantsCreate(
-      data: {
-        brand: $brand
-        model: $model
-        description: $description
-        price: $price
-        stock: $stock
-        gender: $gender
-        type: $type
-        material: $material
-        size: $size
-        product: $product
-      }
-    ) {
-      _id
-      __typename
-    }
-  }
-`
-const CREATETSHIRT = gql`
-  mutation(
-    $brand: String!
-    $model: String!
-    $description: String!
-    $price: Int!
-    $stock: Int!
-    $gender: String!
-    $type: String!
-    $material: String!
-    $size: [String!]!
-    $product: String!
-  ) {
-    tshirtCreate(
-      data: {
-        brand: $brand
-        model: $model
-        description: $description
-        price: $price
-        stock: $stock
-        gender: $gender
-        type: $type
-        material: $material
-        size: $size
-        product: $product
-      }
-    ) {
-      _id
-      __typename
-    }
-  }
-`
-const CREATEHATS = gql`
-  mutation(
-    $brand: String!
-    $model: String!
-    $description: String!
-    $price: Int!
-    $stock: Int!
-    $gender: String!
-    $type: String!
-    $material: String!
-    $size: [String!]!
-    $product: String!
-  ) {
-    hatsCreate(
-      data: {
-        brand: $brand
-        model: $model
-        description: $description
-        price: $price
-        stock: $stock
-        gender: $gender
-        type: $type
-        material: $material
-        size: $size
-        product: $product
-      }
-    ) {
-      _id
-      __typename
-    }
-  }
-`
 const UPLOAD_FILE = gql`
-  mutation($file: Upload!, $id: ID!, $type: String!) {
-    singleUpload(file: $file, _id: $id, typeProduct: $type) {
+  mutation($file: Upload!, $id: ID!) {
+    singleUpload(file: $file, _id: $id) {
       path
     }
   }
 `
+const CREATEPRODUCT = gql`
+  mutation(
+    $brand: String!
+    $model: String!
+    $description: String!
+    $price: Int!
+    $stock: Int!
+    $gender: String!
+    $type: String!
+    $material: String!
+    $size: [String!]!
+    $typeProduct: String!
+  ) {
+    createProduct(
+      data: {
+        brand: $brand
+        model: $model
+        description: $description
+        price: $price
+        stock: $stock
+        gender: $gender
+        type: $type
+        material: $material
+        size: $size
+        typeProduct: $typeProduct
+      }
+    ) {
+      _id
+      typeProduct
+    }
+  }
+`
 
-const AddProduct = ({ productType }) => {
+const AddProduct = ({ type }) => {
   const [imgList, setImgList] = useState([])
-  const [shoesCreate] = useMutation(CREATESHOES)
-  const [pantsCreate] = useMutation(CREATEPANTS)
-  const [tshirtCreate] = useMutation(CREATETSHIRT)
-  const [hatsCreate] = useMutation(CREATEHATS)
-  const [singleUpload] = useMutation(UPLOAD_FILE, {
-    onCompleted: data => console.log(data),
-  })
+  const { data: queryTypeProducts } = useQuery(QUERYTYPEPRODUCTS)
+  const [createProduct] = useMutation(CREATEPRODUCT)
+  const [singleUpload] = useMutation(UPLOAD_FILE)
 
   let c = 0
   const props = {
@@ -188,7 +97,7 @@ const AddProduct = ({ productType }) => {
     },
   }
 
-  const createProduct = async values => {
+  const createProductFront = async values => {
     const size = values.size.split(' ')
     const {
       brand,
@@ -199,11 +108,10 @@ const AddProduct = ({ productType }) => {
       gender,
       type,
       material,
-      product,
+      typeProduct,
     } = values
-
-    if (Object.keys(values).includes('shoes')) {
-      const result = await shoesCreate({
+    try {
+      const result = await createProduct({
         variables: {
           brand,
           model,
@@ -214,115 +122,34 @@ const AddProduct = ({ productType }) => {
           type,
           material,
           size,
-          product,
+          typeProduct,
         },
       })
       imgList.map(async f => {
         await singleUpload({
           variables: {
             file: f,
-            id: result.data.shoesCreate._id,
-            type: result.data.shoesCreate.__typename,
-          },
-        })
-      })
-
-      typeof window !== 'undefined' && location.reload()
-    }
-    if (Object.keys(values).includes('pants')) {
-      const result = await pantsCreate({
-        variables: {
-          brand,
-          model,
-          description,
-          price,
-          stock,
-          gender,
-          type,
-          material,
-          size,
-          product,
-        },
-      })
-      imgList.map(async f => {
-        await singleUpload({
-          variables: {
-            file: f,
-            id: result.data.pantsCreate._id,
-            type: result.data.pantsCreate.__typename,
+            id: result.data.createProduct._id,
           },
         })
       })
       typeof window !== 'undefined' && location.reload()
-    }
-    if (Object.keys(values).includes('tshirt')) {
-      const result = await tshirtCreate({
-        variables: {
-          brand,
-          model,
-          description,
-          price,
-          stock,
-          gender,
-          type,
-          material,
-          size,
-          product,
-        },
-      })
-      imgList.map(async f => {
-        await singleUpload({
-          variables: {
-            file: f,
-            id: result.data.tshirtCreate._id,
-            type: result.data.tshirtCreate.__typename,
-          },
-        })
-      })
-      typeof window !== 'undefined' && location.reload()
-    }
-    if (Object.keys(values).includes('hats')) {
-      const result = await hatsCreate({
-        variables: {
-          brand,
-          model,
-          description,
-          price,
-          stock,
-          gender,
-          type,
-          material,
-          size,
-          product,
-        },
-      })
-      imgList.map(async f => {
-        await singleUpload({
-          variables: {
-            file: f,
-            id: result.data.hatsCreate._id,
-            type: result.data.hatsCreate.__typename,
-          },
-        })
-      })
-
-      typeof window !== 'undefined' && location.reload()
+    } catch (error) {
+      message.error('ocurrio un error')
     }
   }
 
+  const typeProducts = [
+    ...new Set(queryTypeProducts?.product.map(p => p.typeProduct)),
+  ]
+
   return (
-    <Form
-      {...formItemLayout}
-      onFinish={createProduct}
-      initialValues={{
-        product: productType,
-      }}
-    >
+    <Form {...formItemLayout} onFinish={createProductFront}>
       <Row justify="center">
         <Col>
           <Row>
             <Col>
-              <Form.Item name={productType} style={{ display: 'none' }} />
+              {/* <Form.Item name={productType} style={{ display: 'none' }} /> */}
               <Form.Item
                 label="Marca"
                 name="brand"
@@ -397,23 +224,25 @@ const AddProduct = ({ productType }) => {
                 <Input />
               </Form.Item>
               <Form.Item
-                name="product"
+                name="typeProduct"
                 label="Producto"
                 rules={[{ required: true, message: 'Campo requerido' }]}
               >
-                <Input />
+                {type ? (
+                  <Input />
+                ) : (
+                  <Select allowClear>
+                    {typeProducts?.map((p, i) => (
+                      <Option value={p}>{camelCase(p)}</Option>
+                    ))}
+                  </Select>
+                )}
               </Form.Item>
             </Col>
           </Row>
           <Row justify="center" style={{ margin: '0 0 1em' }}>
             <Form.Item name="img">
-              <Upload
-                {...props}
-                multiple
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                listType="picture"
-                // defaultFileList={[...fileList]}
-              >
+              <Upload {...props} multiple listType="picture">
                 <Button icon={<UploadOutlined />}>
                   Agregar Imagenes al Producto
                 </Button>
@@ -429,6 +258,37 @@ const AddProduct = ({ productType }) => {
       </Row>
     </Form>
   )
+
+  // beforeUpload: async (file, fileList) => {
+  //   if (c > 0) return
+  //   fileList.map(async f => {
+  //     const fileRules = /jpeg|jpg|png/
+  //     if (!fileRules.test(f.type)) return message.info('Eliga un imagen pls')
+  //     if (!f) return
+  //     console.log(f)
+  //     const result = await uploadBanner({
+  //       variables: { file: f, id: localStorage.getItem('_id') },
+  //     })
+  //     if (result) {
+  //       location.reload()
+  //     } else message.error('no se pudo subir la imagen')
+  //   })
+  //   c++
+  // },
+
+  // onRemove: async file => {
+  //   try {
+  //     await deleteBanner({
+  //       variables: {
+  //         pathImg: file.url,
+  //         id: localStorage.getItem('_id'),
+  //       },
+  //     })
+  //     message.info('Eliminado correctamente')
+  //   } catch (error) {
+  //     message.error(`fallo al eliminar la imagen ${error}`)
+  //   }
+  // },
 }
 
 export default AddProduct

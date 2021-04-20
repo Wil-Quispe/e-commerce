@@ -13,77 +13,15 @@ const USERCARTDEC = gql`
 const THIRDUSERCARTDEC = gql`
   mutation($id: ID!, $pId: ID!) {
     thirdUserCartDec(_id: $id, productId: $pId) {
-      _id
       name
-      nickName
-      lastName
-      age
-      phoneNumber
-      img
-      email
-      gender
-      country
-      city
-      district
-      addressHome
-      reference
-      sendEmail
-      shopping {
-        _id
-        productType
-      }
-      cart {
-        img1
-        img2
-        brand
-        model
-        description
-        productType
-        productId
-      }
-    }
-  }
-`
-const THIRDUSER = gql`
-  query($id: ID!) {
-    thirdUser(_id: $id) {
-      _id
-      name
-      nickName
-      lastName
-      age
-      phoneNumber
-      img
-      email
-      gender
-      country
-      city
-      district
-      addressHome
-      reference
-      sendEmail
-      shopping {
-        _id
-        productType
-      }
-      cart {
-        img1
-        img2
-        brand
-        model
-        description
-        productType
-        productId
-      }
     }
   }
 `
 
 const CartProductCard = ({ p, removeFromCartView, typeUser }) => {
   const [userCartDec] = useMutation(USERCARTDEC)
-  const [thirdUserCartDec] = useMutation(THIRDUSERCARTDEC, {
-    refetchQueries: [{ query: THIRDUSER, variables: { id: typeUser._id } }],
-  })
+  const [thirdUserCartDec] = useMutation(THIRDUSERCARTDEC)
+
   const removeFromCartViewBtn = async product => {
     if (typeUser.__typename === 'UserThirdServices') {
       await thirdUserCartDec({
@@ -135,7 +73,7 @@ const CartProductCard = ({ p, removeFromCartView, typeUser }) => {
           <div className="content">
             {p.description}{' '}
             <Link
-              href={`/products/${p.productType.toLowerCase()}/${p.productId}`}
+              href={`/productos/${p.typeProduct.toLowerCase()}/${p.productId}`}
             >
               <a>mas detalles</a>
             </Link>
@@ -153,7 +91,6 @@ const mapStateToProps = state => {
     typeUser: state.userReducer.user[0],
   }
 }
-
 const mapDispatchToProps = dispatch => {
   return {
     removeFromCartView(product) {

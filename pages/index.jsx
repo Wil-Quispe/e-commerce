@@ -7,40 +7,32 @@ import ProductCard from '../components/molecules/ProductCard'
 import { connect } from 'react-redux'
 import { navMobileNotSee, loadingFalse } from '../redux/actionCreator'
 import { useEffect } from 'react'
+const fragmentQuery = gql`
+  fragment data on Products {
+    _id
+    brand
+    model
+    description
+    price
+    imgs
+    typeProduct
+  }
+`
 
 const PRODUCTS = gql`
+  ${fragmentQuery}
   query {
-    shoes(limit: 4) {
-      _id
-      brand
-      model
-      description
-      price
-      imgs
+    shoes: product(typeProduct: "zapatos", limit: 4) {
+      ...data
     }
-    tshirt(limit: 4) {
-      _id
-      brand
-      description
-      model
-      price
-      imgs
+    tshirt: product(typeProduct: "polos", limit: 4) {
+      ...data
     }
-    pants(limit: 4) {
-      _id
-      brand
-      description
-      model
-      price
-      imgs
+    pants: product(typeProduct: "pantalones", limit: 4) {
+      ...data
     }
-    hats(limit: 4) {
-      _id
-      brand
-      description
-      model
-      price
-      imgs
+    hats: product(typeProduct: "gorros", limit: 4) {
+      ...data
     }
   }
 `
@@ -62,7 +54,7 @@ const index = ({ navNotSeeView, loadingFalse }) => {
         <div className="container">
           <div className="columns">
             {data?.shoes.map((d, i) => (
-              <ProductCard key={i} product={d} path="shoes" />
+              <ProductCard key={i} product={d} path="zapatos" />
             ))}
           </div>
         </div>
@@ -71,7 +63,7 @@ const index = ({ navNotSeeView, loadingFalse }) => {
         <div className="container">
           <div className="columns">
             {data?.tshirt.map((d, i) => (
-              <ProductCard key={i} product={d} path="tshirt" />
+              <ProductCard key={i} product={d} path="polos" />
             ))}
           </div>
         </div>
@@ -80,7 +72,7 @@ const index = ({ navNotSeeView, loadingFalse }) => {
         <div className="container">
           <div className="columns">
             {data?.pants.map((d, i) => (
-              <ProductCard key={i} product={d} path="pants" />
+              <ProductCard key={i} product={d} path="pantalones" />
             ))}
           </div>
         </div>
@@ -89,7 +81,7 @@ const index = ({ navNotSeeView, loadingFalse }) => {
         <div className="container">
           <div className="columns">
             {data?.hats.map((d, i) => (
-              <ProductCard key={i} product={d} path="hats" />
+              <ProductCard key={i} product={d} path="gorras" />
             ))}
           </div>
         </div>
@@ -101,7 +93,7 @@ const index = ({ navNotSeeView, loadingFalse }) => {
             <div className="column">
               <Row justify="center" gutter={[16, 16]}>
                 <Col>
-                  <Link href="/products/shoes">
+                  <Link href="/productos/zapatos">
                     <Tooltip title="Zapatos">
                       <Avatar
                         size={100}
@@ -115,7 +107,7 @@ const index = ({ navNotSeeView, loadingFalse }) => {
                   </Link>
                 </Col>
                 <Col>
-                  <Link href="/products/tshirt">
+                  <Link href="/productos/polos">
                     <Tooltip title="Polos">
                       <Avatar
                         size={100}
@@ -130,7 +122,7 @@ const index = ({ navNotSeeView, loadingFalse }) => {
                   </Link>
                 </Col>
                 <Col>
-                  <Link href="/products/pants">
+                  <Link href="/productos/pantalones">
                     <Tooltip title="Pantalones">
                       <Avatar
                         size={100}
@@ -145,7 +137,7 @@ const index = ({ navNotSeeView, loadingFalse }) => {
                   </Link>
                 </Col>
                 <Col>
-                  <Link href="/products/hats">
+                  <Link href="/productos/gorros">
                     <Tooltip title="Gorros">
                       <Avatar
                         size={100}

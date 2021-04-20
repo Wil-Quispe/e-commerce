@@ -3,9 +3,8 @@ import { Button, message } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { connect } from 'react-redux'
 import { addToCart } from '../../redux/actionCreator'
-import { gql, useMutation, useLazyQuery } from '@apollo/client'
-import { useState, useEffect } from 'react'
-import { addtUserInfo } from '../../redux/actionCreator'
+import { gql, useMutation } from '@apollo/client'
+import { useState } from 'react'
 import LinkCustom from '../Atoms/LinkCustom'
 
 const USERCARTINC = gql`
@@ -16,7 +15,7 @@ const USERCARTINC = gql`
     $brand: String!
     $model: String!
     $description: String!
-    $productType: String!
+    $typeProduct: String!
     $productId: ID!
   ) {
     userCartInc(
@@ -27,7 +26,7 @@ const USERCARTINC = gql`
         brand: $brand
         model: $model
         description: $description
-        productType: $productType
+        typeProduct: $typeProduct
         productId: $productId
       }
     )
@@ -41,7 +40,7 @@ const THIRDUSERCARTINC = gql`
     $brand: String!
     $model: String!
     $description: String!
-    $productType: String!
+    $typeProduct: String!
     $productId: ID!
   ) {
     thirdUserCartInc(
@@ -52,64 +51,17 @@ const THIRDUSERCARTINC = gql`
         brand: $brand
         model: $model
         description: $description
-        productType: $productType
+        typeProduct: $typeProduct
         productId: $productId
       }
     )
   }
 `
-const THIRDUSER = gql`
-  query($id: ID!) {
-    thirdUser(_id: $id) {
-      _id
-      name
-      nickName
-      lastName
-      age
-      phoneNumber
-      img
-      email
-      gender
-      country
-      city
-      district
-      addressHome
-      reference
-      sendEmail
-      shopping {
-        _id
-        productType
-      }
-      cart {
-        img1
-        img2
-        brand
-        model
-        description
-        productType
-        productId
-      }
-    }
-  }
-`
 
-const ProductCard = ({
-  product,
-  path,
-  cols,
-  addToCartView,
-  addUserInfoView,
-}) => {
-  const [thirdUser, { data }] = useLazyQuery(THIRDUSER)
+const ProductCard = ({ product, path, cols, addToCartView }) => {
   const [userCartInc] = useMutation(USERCARTINC)
   const [thirdUserCartInc] = useMutation(THIRDUSERCARTINC)
   const [Counter, setCounter] = useState(0)
-  useEffect(async () => {
-    thirdUser({
-      variables: { id: localStorage.getItem('_id') },
-    })
-    addUserInfoView(data)
-  }, [Counter])
 
   const addToCartBtn = async product => {
     if (typeof window !== 'undefined') {
@@ -123,7 +75,7 @@ const ProductCard = ({
               brand: product.brand,
               model: product.model,
               description: product.description,
-              productType: product.__typename,
+              typeProduct: product.typeProduct,
               productId: product._id,
             },
           })
@@ -137,7 +89,7 @@ const ProductCard = ({
               brand: product.brand,
               model: product.model,
               description: product.description,
-              productType: product.__typename,
+              typeProduct: product.typeProduct,
               productId: product._id,
             },
           })
@@ -156,7 +108,7 @@ const ProductCard = ({
       <div className={`column is-${cols || 3}`}>
         <div className="card">
           <div className="card-image">
-            <Link href={`/products/${path}/${product._id}`}>
+            <Link href={`/productos/${path}/${product._id}`}>
               <figure className="image is-4by3">
                 <img
                   src={`${product.imgs[0] || product.img1}`}
@@ -188,7 +140,7 @@ const ProductCard = ({
             </div>
             <div className="content">
               {product.description}{' '}
-              <Link href={`/products/${path}/${product._id}`}>
+              <Link href={`/productos/${path}/${product._id}`}>
                 <a>
                   <LinkCustom text="mas detalles" />
                 </a>
@@ -208,9 +160,6 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => {
   return {
-    addUserInfoView(userInfo) {
-      dispatch(addtUserInfo(userInfo))
-    },
     addToCartView(product) {
       dispatch(addToCart(product))
     },

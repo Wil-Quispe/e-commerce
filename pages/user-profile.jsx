@@ -23,6 +23,7 @@ import LastSells from '../components/Atoms/LastSells'
 import { useEffect } from 'react'
 import { navMobileNotSee } from '../redux/actionCreator'
 import Head from 'next/head'
+import ChangeBanner from '../components/Atoms/ChangeBanner'
 
 const THIRDUSERUPDATE = gql`
   mutation(
@@ -123,75 +124,28 @@ const ADMINUPDATE = gql`
     }
   }
 `
-const QUERYSHOES = gql`
-  query($id: ID) {
-    shoes(_id: $id) {
-      _id
-      brand
-      model
-      description
-      price
-      stock
-      gender
-      type
-      material
-      size
-      product
-      imgs
-    }
+const fragment = gql`
+  fragment data on Products {
+    _id
+    brand
+    model
+    description
+    price
+    stock
+    gender
+    type
+    material
+    size
+    imgs
+    typeProduct
   }
 `
-const QUERYPANTS = gql`
-  query($id: ID) {
-    pants(_id: $id) {
-      _id
-      brand
-      model
-      description
-      price
-      stock
-      gender
-      type
-      material
-      size
-      imgs
-      product
-    }
-  }
-`
-const QUERYTSHIRTS = gql`
-  query($id: ID) {
-    tshirt(_id: $id) {
-      _id
-      brand
-      model
-      description
-      price
-      stock
-      gender
-      type
-      material
-      size
-      imgs
-      product
-    }
-  }
-`
-const QUERYHATS = gql`
-  query($id: ID) {
-    hats(_id: $id) {
-      _id
-      brand
-      model
-      description
-      price
-      stock
-      gender
-      type
-      material
-      size
-      imgs
-      product
+
+const QUERYPRODUCTS = gql`
+  ${fragment}
+  query {
+    product {
+      ...data
     }
   }
 `
@@ -211,10 +165,7 @@ const logOut = () => {
 }
 
 const profile = ({ userInfos, lastSells, navNotSeeView }) => {
-  const { data: queryShoes } = useQuery(QUERYSHOES)
-  const { data: queryPants } = useQuery(QUERYPANTS)
-  const { data: queryTshirts } = useQuery(QUERYTSHIRTS)
-  const { data: queryHats } = useQuery(QUERYHATS)
+  const { data: queryProducts } = useQuery(QUERYPRODUCTS)
   useEffect(() => {
     navNotSeeView()
   }, [])
@@ -225,11 +176,7 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
     }
   }
 
-  const productsLength =
-    queryShoes?.shoes.length +
-    queryPants?.pants.length +
-    queryTshirts?.tshirt.length +
-    queryHats?.hats.length
+  const productsLength = queryProducts?.product.length
 
   let onFinish = null
   if (typeUser === 'THIRDUSER') {
@@ -611,56 +558,28 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                       </Row>
                     </>
                   )}
+                  <Divider>Banner principal</Divider>
+                  <Row justify="center">
+                    <ChangeBanner />
+                  </Row>
                   <Divider>Crear Productos</Divider>
                   <Row justify="center">
-                    <Collapse
-                      // defaultActiveKey={['0']}
-                      style={{ width: '592.5px' }}
-                    >
-                      <Panel header="Agregar Zapatos">
-                        <AddProduct productType="shoes" />
+                    <Collapse style={{ width: '592.5px' }}>
+                      <Panel header="Agregar Producto">
+                        <AddProduct />
                       </Panel>
-                      <Panel header="Agregar Pantalones">
-                        <AddProduct productType="pants" />
-                      </Panel>
-                      <Panel header="Agregar Polos">
-                        <AddProduct productType="tshirt" />
-                      </Panel>
-                      <Panel header="Agregar Gorros">
-                        <AddProduct productType="hats" />
+                      <Panel header="Crear nuevo tipo de producto">
+                        <AddProduct type="new type" />
                       </Panel>
                     </Collapse>
                   </Row>
                   <Divider>Actualizar Productos</Divider>
                   <Row justify="center">
-                    <Collapse
-                      // defaultActiveKey={['0']}
-                      style={{ width: '592.5px' }}
-                    >
-                      <Panel header="Zapatos">
-                        {queryShoes &&
-                          queryShoes?.shoes.map((s, i) => {
-                            return <UpdateProduct product={s} key={i} />
-                          })}
-                      </Panel>
-                      <Panel header="Pantalones">
-                        {queryPants &&
-                          queryPants?.pants.map((p, i) => {
-                            return <UpdateProduct product={p} key={i} />
-                          })}
-                      </Panel>
-                      <Panel header="Polos">
-                        {queryTshirts &&
-                          queryTshirts?.tshirt.map((t, i) => {
-                            return <UpdateProduct product={t} key={i} />
-                          })}
-                      </Panel>
-                      <Panel header="Gorros">
-                        {queryHats &&
-                          queryHats?.hats.map((h, i) => {
-                            return <UpdateProduct product={h} key={i} />
-                          })}
-                      </Panel>
+                    <Collapse style={{ width: '592.5px' }}>
+                      {queryProducts &&
+                        queryProducts?.product.map((p, i) => (
+                          <UpdateProduct product={p} key={i} />
+                        ))}
                     </Collapse>
                   </Row>
                 </>

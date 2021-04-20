@@ -1,7 +1,6 @@
 import Navbar from '../components/organisms/Navbar'
 import 'antd/dist/antd.css'
 import Footer from '../components/organisms/Footer'
-import Comments from '../components/organisms/Comments'
 import {
   ApolloProvider,
   ApolloClient,
@@ -70,7 +69,6 @@ function MyApp({ Component, pageProps }) {
             <Provider store={store}>
               <Navbar />
               <Component {...pageProps} />
-              <Comments />
               <Footer />
             </Provider>
           </Elements>

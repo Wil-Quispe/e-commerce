@@ -10,7 +10,7 @@ const error = () => {
   return (
     <>
       <Head>
-        <title>error |{process.env.SITE_NAME}</title>
+        <title>error | {process.env.SITE_NAME}</title>
       </Head>
       <div>
         <Result

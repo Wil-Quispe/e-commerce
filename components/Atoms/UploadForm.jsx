@@ -11,9 +11,7 @@ const UPLOAD_FILE = gql`
 `
 
 const UploadForm = () => {
-  const [singleUpload] = useMutation(UPLOAD_FILE, {
-    onCompleted: data => console.log(data),
-  })
+  const [singleUpload] = useMutation(UPLOAD_FILE)
 
   const props = {
     beforeUpload: async (file, fileList) => {

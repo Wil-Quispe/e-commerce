@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Badge, Button, Avatar, Tooltip, Spin } from 'antd'
-import { gql, useQuery, useSubscription } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
 import {
   ShoppingCartOutlined,
   UserOutlined,
@@ -14,7 +14,7 @@ import {
   navMobileNotSee,
 } from '../../redux/actionCreator'
 import LinkCustom from '../Atoms/LinkCustom'
-import { useEffect } from 'react'
+import { camelCase } from '../../utils/index'
 
 const USER = gql`
   query($id: ID!) {
@@ -44,7 +44,7 @@ const USER = gql`
         brand
         model
         description
-        productType
+        typeProduct
         productId
       }
     }
@@ -101,23 +101,16 @@ const THIRDUSER = gql`
         brand
         model
         description
-        productType
+        typeProduct
         productId
       }
     }
   }
 `
-const SELLS = gql`
-  subscription {
-    sells {
-      name
-      imgUser
-      phoneNumber
-      email
-      brand
-      model
-      price
-      imgProduct
+const QUERYTYPEPRODUCTS = gql`
+  query {
+    product {
+      typeProduct
     }
   }
 `
@@ -125,17 +118,13 @@ const SELLS = gql`
 const Navbar = ({
   addUserInfoView,
   userInfos,
-  addSellsView,
   navMobileState,
   navSeeView,
   navNotSeeView,
   loaderState,
   cartLength,
 }) => {
-  // const { data: subscriptionData } = useSubscription(SELLS)
-  // if (subscriptionData) {
-  //   addSellsView(subscriptionData)
-  // }
+  const { data: queryTypeProducts } = useQuery(QUERYTYPEPRODUCTS)
 
   if (typeof window !== 'undefined') {
     if (localStorage.getItem('typeUser') === 'USER') {
@@ -144,7 +133,7 @@ const Navbar = ({
       })
       addUserInfoView(data)
       const cartCounter = data?.user.cart.length
-      localStorage.setItem('cart', cartCounter)
+      localStorage.setItem('cart', cartCounter && cartCounter)
     }
     if (localStorage.getItem('typeUser') === 'ADMIN') {
       const { data } = useQuery(ADMIN, {
@@ -158,7 +147,7 @@ const Navbar = ({
       })
       addUserInfoView(data)
       const cartCounter = data?.thirdUser.cart.length
-      localStorage.setItem('cart', cartCounter)
+      localStorage.setItem('cart', cartCounter && cartCounter)
     }
   }
   const navVisible = () => {
@@ -170,6 +159,10 @@ const Navbar = ({
       navNotSeeView()
     }
   }
+
+  const typeProducts = [
+    ...new Set(queryTypeProducts?.product.map(p => p.typeProduct)),
+  ]
 
   return (
     <nav
@@ -217,26 +210,15 @@ const Navbar = ({
               <LinkCustom text="Inicio" />
             </a>
           </Link>
-          <Link href="/products/shoes">
-            <a className="navbar-item">
-              <LinkCustom text="Zapatos" />
-            </a>
-          </Link>
-          <Link href="/products/pants">
-            <a className="navbar-item">
-              <LinkCustom text="Pantalones" />
-            </a>
-          </Link>
-          <Link href="/products/tshirt">
-            <a className="navbar-item">
-              <LinkCustom text="Polos" />
-            </a>
-          </Link>
-          <Link href="/products/hats">
-            <a className="navbar-item">
-              <LinkCustom text="Gorros" />
-            </a>
-          </Link>
+
+          {typeProducts?.map((p, i) => (
+            <Link href={`/productos/${p}`} key={i}>
+              <a className="navbar-item">
+                <LinkCustom text={camelCase(p)} />
+              </a>
+            </Link>
+          ))}
+
           <Link href="/login_admin_super">
             <a className="navbar-item">
               <LinkCustom text="Admin" />
@@ -268,7 +250,7 @@ const Navbar = ({
                 <Link href="/cart">
                   <a>
                     {/* <Badge dot> */}
-                    <Badge count={typeof cartLength ? cartLength : 0}>
+                    <Badge count={Boolean(cartLength) ? cartLength : 0}>
                       <Button
                         type="primary"
                         icon={<ShoppingCartOutlined />}
