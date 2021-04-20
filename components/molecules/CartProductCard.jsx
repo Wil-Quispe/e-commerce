@@ -45,7 +45,7 @@ const CartProductCard = ({ p, removeFromCartView, typeUser }) => {
   }
 
   return (
-    <Col sm={24} md={12} lg={8} xl={6} xxl={3} id={`${p.productId}`}>
+    <Col xs={24} sm={24} md={12} lg={8} xl={6} xxl={3} id={`${p.productId}`}>
       <div className="card">
         <div className="card-image">
           <figure className="image is-4by3">

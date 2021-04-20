@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button, message } from 'antd'
+import { Button, message, Col } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { connect } from 'react-redux'
 import { addToCart } from '../../redux/actionCreator'
@@ -104,54 +104,54 @@ const ProductCard = ({ product, path, cols, addToCartView }) => {
   }
 
   return (
-    <>
-      <div className={`column is-${cols || 3}`}>
-        <div className="card">
-          <div className="card-image">
-            <Link href={`/productos/${path}/${product._id}`}>
-              <figure className="image is-4by3">
+    <Col xs={24} sm={12} md={12} lg={8} xl={6} xxl={3}>
+      {/* <div className={`column is-${cols || 3}`}> */}
+      <div className="card">
+        <div className="card-image">
+          <Link href={`/productos/${path}/${product._id}`}>
+            <figure className="image is-4by3">
+              <img
+                src={`${product.imgs[0] || product.img1}`}
+                alt="Placeholder image"
+                style={{ objectFit: 'cover' }}
+              />
+            </figure>
+          </Link>
+        </div>
+        <div className="card-content">
+          <div className="media">
+            <div className="media-left">
+              <figure className="image is-48x48">
                 <img
-                  src={`${product.imgs[0] || product.img1}`}
+                  src={`${product.imgs[1] || product.img2}`}
                   alt="Placeholder image"
-                  style={{ objectFit: 'cover' }}
                 />
               </figure>
-            </Link>
+            </div>
+            <div className="media-content">
+              <p className="title is-4">{product.brand}</p>
+              <p className="subtitle is-6">{product.model}</p>
+            </div>
+            <Button
+              onClick={() => addToCartBtn(product)}
+              type="primary"
+              icon={<ShoppingCartOutlined />}
+            />
           </div>
-          <div className="card-content">
-            <div className="media">
-              <div className="media-left">
-                <figure className="image is-48x48">
-                  <img
-                    src={`${product.imgs[1] || product.img2}`}
-                    alt="Placeholder image"
-                  />
-                </figure>
-              </div>
-              <div className="media-content">
-                <p className="title is-4">{product.brand}</p>
-                <p className="subtitle is-6">{product.model}</p>
-              </div>
-              <Button
-                onClick={() => addToCartBtn(product)}
-                type="primary"
-                icon={<ShoppingCartOutlined />}
-              />
-            </div>
-            <div className="content">
-              {product.description}{' '}
-              <Link href={`/productos/${path}/${product._id}`}>
-                <a>
-                  <LinkCustom text="mas detalles" />
-                </a>
-              </Link>
-              .
-              <br />
-            </div>
+          <div className="content">
+            {product.description}{' '}
+            <Link href={`/productos/${path}/${product._id}`}>
+              <a>
+                <LinkCustom text="mas detalles" />
+              </a>
+            </Link>
+            .
+            <br />
           </div>
         </div>
       </div>
-    </>
+      {/* </div> */}
+    </Col>
   )
 }
 

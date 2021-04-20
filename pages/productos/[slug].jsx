@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import { Row } from 'antd'
 import { gql, useQuery } from '@apollo/client'
 import Head from 'next/head'
 import ProductCard from '../../components/molecules/ProductCard'
@@ -35,15 +36,11 @@ const ProductIndex = ({ navNotSeeView, loadingFalse }) => {
       <Head>
         <title>{slug && `${camelCase(slug)} | ${process.env.SITE_NAME}`}</title>
       </Head>
-      <section className="section">
-        <div className="container">
-          <div className="columns is-multiline">
-            {data?.product.map((d, i) => (
-              <ProductCard key={i} product={d} path={slug} />
-            ))}
-          </div>
-        </div>
-      </section>
+      <Row justify="center" gutter={[16, 16]} style={{ margin: '1.5em 3em' }}>
+        {data?.product.map((d, i) => (
+          <ProductCard key={i} product={d} path={slug} />
+        ))}
+      </Row>
     </>
   )
 }

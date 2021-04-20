@@ -14,18 +14,19 @@ const BANNER = gql`
 
 const Slider = () => {
   const { data: banner } = useQuery(BANNER, {
-    variables: { id: localStorage.getItem('_id') },
+    variables: { id: process.env.ADMIN_ID },
   })
-  const contentStyle = {}
+
+  console.log(banner && banner)
   return (
-    <section className="section">
+    <section className="section" style={{ margin: '-2.5em 0' }}>
       <div className="container">
         <Carousel autoplay>
           {banner?.admin.banner.map((img, i) => (
             <div key={i}>
               <Link href={img.href}>
                 <a>
-                  <img src={img.path} style={contentStyle} />
+                  <img src={img.path} />
                 </a>
               </Link>
             </div>

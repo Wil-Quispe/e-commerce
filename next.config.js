@@ -5,6 +5,6 @@ module.exports = {
     // URI: 'https://e-back.vercel.app',
     URI: 'http://localhost:5000',
     SITE_NAME: 'Goshop',
+    ADMIN_ID: '607b5f4d0b459701c82f5639',
   },
-  // return { env }
 }

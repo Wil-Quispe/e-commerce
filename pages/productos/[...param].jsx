@@ -1,4 +1,4 @@
-import { Divider } from 'antd'
+import { Divider, Row } from 'antd'
 import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import Pid from '../../components/molecules/Pid'
@@ -19,7 +19,7 @@ const PRODUCTID = gql`
       size
     }
 
-    many: product(typeProduct: $typeProduct, limit: 4) {
+    many: product(typeProduct: $typeProduct, limit: 6) {
       _id
       brand
       description
@@ -36,8 +36,7 @@ const ProductId = () => {
   const { data } = useQuery(PRODUCTID, {
     variables: { sId: param && param[1], typeProduct: param && param[0] },
   })
-  console.log(param && param[1])
-  console.log(data)
+
   return (
     <main>
       {/* producto con sus especificasiones */}
@@ -46,17 +45,12 @@ const ProductId = () => {
       <Divider orientation="left">Las personas tambien buscan esto</Divider>
 
       {/* productos recomendados */}
-      <section className="section">
-        <div className="container">
-          <div className="columns">
-            {data?.many?.map((d, i) => (
-              <ProductCard key={i} product={d} path={param[0]} />
-            ))}
-          </div>
-        </div>
-      </section>
+      <Row justify="center" gutter={[16, 16]} style={{ margin: '1.5em 3em' }}>
+        {data?.many?.map((d, i) => (
+          <ProductCard key={i} product={d} path={param[0]} />
+        ))}
+      </Row>
     </main>
-    // <h1>hola</h1>
   )
 }
 
