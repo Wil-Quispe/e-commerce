@@ -218,12 +218,6 @@ const Navbar = ({
               </a>
             </Link>
           ))}
-
-          <Link href="/login_admin_super">
-            <a className="navbar-item">
-              <LinkCustom text="Admin" />
-            </a>
-          </Link>
         </div>
 
         <div className="navbar-end">
