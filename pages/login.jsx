@@ -15,8 +15,9 @@ const LOGIN = gql`
     loginUser(email: $email, password: $password) {
       user {
         _id
-        name
-        email
+      }
+      admin {
+        _id
       }
       token
     }
@@ -120,15 +121,16 @@ const login = ({ navNotSeeView }) => {
       return message.error('contraseña incorrecta')
     const { email, password } = values
     try {
-      const data = await loginUser({
+      const result = await loginUser({
         variables: { email, password },
       })
+      const typeUser = result.data.loginUser.admin || result.data.loginUser.user
       saveInLocalStrgAndRedirect(
         [
-          { token: data.data.loginUser.token },
-          { typeUser: 'USER' },
-          { redux: 'user' },
-          { _id: data.data.loginUser.user._id },
+          { token: result.data.loginUser.token },
+          { typeUser: typeUser.__typename.toUpperCase() },
+          { redux: typeUser.__typename.toLowerCase() },
+          { _id: typeUser._id },
         ],
         '/'
       )
@@ -169,11 +171,7 @@ const login = ({ navNotSeeView }) => {
                   </Row>
                 </Col>
               </Row>
-              <Form
-                name="normal_login"
-                className="login-form"
-                onFinish={onFinish}
-              >
+              <Form name="normal_login" onFinish={onFinish}>
                 <Form.Item
                   name="email"
                   rules={[
@@ -185,7 +183,7 @@ const login = ({ navNotSeeView }) => {
                   ]}
                 >
                   <Input
-                    prefix={<UserOutlined className="site-form-item-icon" />}
+                    prefix={<UserOutlined />}
                     placeholder="correo electronico"
                   />
                 </Form.Item>
@@ -196,25 +194,14 @@ const login = ({ navNotSeeView }) => {
                   ]}
                 >
                   <Input.Password
-                    prefix={<LockOutlined className="site-form-item-icon" />}
+                    prefix={<LockOutlined />}
                     placeholder="contraseña"
                   />
                 </Form.Item>
 
                 <Row justify="center">
                   <Form.Item>
-                    <a className="login-form-forgot" href="">
-                      olvidaste tu contraseña?
-                    </a>
-                  </Form.Item>
-                </Row>
-                <Row justify="center">
-                  <Form.Item>
-                    <Button
-                      type="primary"
-                      htmlType="submit"
-                      className="login-form-button"
-                    >
+                    <Button type="primary" htmlType="submit">
                       Iniciar sesion
                     </Button>
                     {'  '}O <Link href="/signup">Registrate!</Link>
