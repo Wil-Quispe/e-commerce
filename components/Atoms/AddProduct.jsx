@@ -5,15 +5,6 @@ import { gql, useMutation, useQuery } from '@apollo/client'
 import { useState } from 'react'
 import { camelCase } from '../../utils'
 
-const QUERYTYPEPRODUCTS = gql`
-  query {
-    product {
-      typeProduct
-    }
-  }
-`
-// import UploadForm from './UploadForm'
-
 const { Option } = Select
 const formItemLayout = {
   labelCol: {
@@ -34,6 +25,13 @@ const formItemLayout = {
   },
 }
 
+const QUERYTYPEPRODUCTS = gql`
+  query {
+    product {
+      typeProduct
+    }
+  }
+`
 const UPLOAD_FILE = gql`
   mutation($file: Upload!, $id: ID!) {
     singleUpload(file: $file, _id: $id) {
@@ -149,7 +147,6 @@ const AddProduct = ({ type }) => {
         <Col>
           <Row>
             <Col>
-              {/* <Form.Item name={productType} style={{ display: 'none' }} /> */}
               <Form.Item
                 label="Marca"
                 name="brand"
@@ -258,37 +255,6 @@ const AddProduct = ({ type }) => {
       </Row>
     </Form>
   )
-
-  // beforeUpload: async (file, fileList) => {
-  //   if (c > 0) return
-  //   fileList.map(async f => {
-  //     const fileRules = /jpeg|jpg|png/
-  //     if (!fileRules.test(f.type)) return message.info('Eliga un imagen pls')
-  //     if (!f) return
-  //     console.log(f)
-  //     const result = await uploadBanner({
-  //       variables: { file: f, id: localStorage.getItem('_id') },
-  //     })
-  //     if (result) {
-  //       location.reload()
-  //     } else message.error('no se pudo subir la imagen')
-  //   })
-  //   c++
-  // },
-
-  // onRemove: async file => {
-  //   try {
-  //     await deleteBanner({
-  //       variables: {
-  //         pathImg: file.url,
-  //         id: localStorage.getItem('_id'),
-  //       },
-  //     })
-  //     message.info('Eliminado correctamente')
-  //   } catch (error) {
-  //     message.error(`fallo al eliminar la imagen ${error}`)
-  //   }
-  // },
 }
 
 export default AddProduct
