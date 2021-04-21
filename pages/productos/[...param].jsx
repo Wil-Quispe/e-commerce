@@ -19,7 +19,7 @@ const PRODUCTID = gql`
       size
     }
 
-    many: product(typeProduct: $typeProduct, limit: 6) {
+    many: product(typeProduct: $typeProduct) {
       _id
       brand
       description
