@@ -97,7 +97,7 @@ const UpdateProducts = ({ product }) => {
   const [singleUpload] = useMutation(UPLOAD_FILE)
 
   const updateProductFront = async values => {
-    const size = values.size.split()
+    const size = values.size.split(' ')
     const {
       brand,
       model,
