@@ -121,6 +121,11 @@ const ADMINSALESINC = gql`
     adminSalesInc(data: { _id: $id, productType: $prodType })
   }
 `
+const MESSAGEWHATSAPP = gql`
+  mutation($msgWhats: String!) {
+    sendMsgWa(msg: $msgWhats)
+  }
+`
 
 const formItemLayout = {
   labelCol: {
@@ -153,13 +158,14 @@ const Pid = ({ product, userInfo, loadingFalse }) => {
   const [userShoppingInc] = useMutation(USERSHOPPINGINC)
   const [thirdUserShoppingInc] = useMutation(THIRDUSERSHOPPINGINC)
   const [adminSalesInc] = useMutation(ADMINSALESINC)
+  const [sendMsgWa] = useMutation(MESSAGEWHATSAPP)
   const stripeJS = useStripe()
   const elements = useElements()
   useEffect(() => {
     loadingFalse()
   }, [])
 
-  const handleSubmit = async values => {
+  const handleBuy = async values => {
     const {
       phoneNumber,
       city,
@@ -168,6 +174,8 @@ const Pid = ({ product, userInfo, loadingFalse }) => {
       reference,
       sendEmail,
     } = values
+
+    // actualiza algunos datos del usuario
     if (userInfo.__typename === 'User') {
       try {
         const result = await userUpdate({
@@ -202,12 +210,16 @@ const Pid = ({ product, userInfo, loadingFalse }) => {
         message.error(error)
       }
     }
+
     if (empty) return message.info('Ingrese su Numero de tarjeta')
 
+    // ejecutando el pago por stripe
     const { error, paymentMethod } = await stripeJS.createPaymentMethod({
       type: 'card',
       card: elements.getElement(CardElement),
     })
+
+    //si es valido el metodo de pago del cliente
     if (paymentMethod) {
       const { id } = paymentMethod
       const data = await stripe({
@@ -224,6 +236,29 @@ const Pid = ({ product, userInfo, loadingFalse }) => {
           imgProduct: product.imgs[0],
         },
       })
+
+      // envia mensage a whatsapp del admin
+      sendMsgWa({
+        variables: {
+          msgWhats: `
+        Felicitaciones ✨🙌 nueva venta!
+
+                  Cliente
+        nombre: ${userInfo.name}
+        celular: ${phoneNumber}
+        email: ${userInfo.email}
+
+                  Producto
+        Tproducto: ${product.typeProduct}
+        marca: ${product.brand}
+        modelo: ${product.model}
+        precio: ${product.price}$
+
+      `,
+        },
+      })
+
+      // aumenta el contador de compras del usuario
       if (userInfo.__typename === 'User') {
         await userShoppingInc({
           variables: {
@@ -241,6 +276,8 @@ const Pid = ({ product, userInfo, loadingFalse }) => {
           },
         })
       }
+
+      // aumenta el contador de ventas del admin
       await adminSalesInc({
         variables: { id: product._id, prodType: product.__typename },
       })
@@ -362,7 +399,7 @@ const Pid = ({ product, userInfo, loadingFalse }) => {
                   {userInfo && (
                     <Form
                       {...formItemLayout}
-                      onFinish={handleSubmit}
+                      onFinish={handleBuy}
                       initialValues={{
                         phoneNumber: userInfo.phoneNumber || '',
                         city: userInfo.city || '',

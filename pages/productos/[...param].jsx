@@ -17,6 +17,7 @@ const PRODUCTID = gql`
       material
       imgs
       size
+      typeProduct
     }
 
     many: product(typeProduct: $typeProduct) {
