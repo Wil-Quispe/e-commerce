@@ -230,7 +230,7 @@ const Navbar = ({
           <div className="navbar-item">
             <div className="buttons">
               {userInfos && userInfos.sales ? null : (
-                <Tooltip title="Contactate con Nosotros">
+                <Tooltip title="Contactate con Nosotros" placement="bottom">
                   <Button
                     style={{ margin: '0 .5em' }}
                     icon={<WhatsAppOutlined />}
@@ -243,7 +243,7 @@ const Navbar = ({
               )}
               {typeof window !== 'undefined' &&
               localStorage.getItem('typeUser') === 'ADMIN' ? (
-                <Tooltip title="Administrador">
+                <Tooltip title="Administrador" placement="bottom">
                   <Avatar size={20} src="/admin.svg" />
                 </Tooltip>
               ) : (
@@ -262,7 +262,7 @@ const Navbar = ({
               {typeof window !== 'undefined' &&
               localStorage.getItem('typeUser') ? (
                 <Link href="/user-profile">
-                  <Tooltip title="Ver Perfil">
+                  <Tooltip title="Ver Perfil" placement="bottom">
                     {userInfos && userInfos.img ? (
                       <Avatar
                         src={userInfos.img}
