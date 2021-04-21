@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { connect } from 'react-redux'
 import { gql, useMutation } from '@apollo/client'
 import {
@@ -148,7 +148,7 @@ const formItemLayout = {
 
 const { Meta } = Card
 
-const Pid = ({ product, userInfo, loadingFalse }) => {
+const Pid = ({ product, userInfo }) => {
   const [buy, setBuy] = useState('')
   const [empty, setEmpty] = useState(true)
   const [formBuy, setFormBuy] = useState('none')
@@ -161,9 +161,6 @@ const Pid = ({ product, userInfo, loadingFalse }) => {
   const [sendMsgWa] = useMutation(MESSAGEWHATSAPP)
   const stripeJS = useStripe()
   const elements = useElements()
-  useEffect(() => {
-    loadingFalse()
-  }, [])
 
   const handleBuy = async values => {
     const {
@@ -241,19 +238,22 @@ const Pid = ({ product, userInfo, loadingFalse }) => {
       sendMsgWa({
         variables: {
           msgWhats: `
-        Felicitaciones ✨🙌 nueva venta!
+Felicitaciones ✨🙌 nueva venta!
 
-                  Cliente
-        nombre: ${userInfo.name}
-        celular: ${phoneNumber}
-        email: ${userInfo.email}
+        Cliente:
+nombre: ${userInfo.name}
+celular: ${phoneNumber}
+email: ${userInfo.email}
+ciudad: ${city}
+distrito: ${district}
+direccion: ${addressHome}
+referencia: ${reference}
 
-                  Producto
-        Tproducto: ${product.typeProduct}
-        marca: ${product.brand}
-        modelo: ${product.model}
-        precio: ${product.price}$
-
+        Producto:
+Tproducto: ${product.typeProduct}
+marca: ${product.brand}
+modelo: ${product.model}
+precio: ${product.price}$
       `,
         },
       })
@@ -496,12 +496,4 @@ const mapStateToProps = state => ({
   userInfo: state.userReducer.user[0],
 })
 
-const mapDispatchToProps = dispatch => {
-  return {
-    loadingFalse() {
-      dispatch(loadingFalse())
-    },
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Pid)
+export default connect(mapStateToProps, {})(Pid)
