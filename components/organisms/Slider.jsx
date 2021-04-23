@@ -17,7 +17,6 @@ const Slider = () => {
     variables: { id: process.env.ADMIN_ID },
   })
 
-  console.log(banner && banner)
   return (
     <section className="section" style={{ margin: '-2.5em 0' }}>
       <div className="container">
