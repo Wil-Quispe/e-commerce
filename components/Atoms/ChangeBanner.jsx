@@ -24,15 +24,13 @@ const BANNER = gql`
   }
 `
 const UPLOADBANNER = gql`
-  mutation($file: Upload!, $id: ID!, $href: String!) {
-    uploadBanner(file: $file, _id: $id, href: $href) {
-      path
-    }
+  mutation($pubId: String!, $path: String!, $href: String!, $id: ID!) {
+    uploadBanner(pubId: $pubId, path: $path, href: $href, _id: $id)
   }
 `
 const DELETEBANNER = gql`
   mutation($pathImg: String!, $id: ID!) {
-    deleteBanner(pathImg: $pathImg, _id: $id)
+    deleteBanner(path: $pathImg, _id: $id)
   }
 `
 const localUri = 'https://goshop.vercel.app/'
@@ -69,16 +67,33 @@ const ChangeBanner = () => {
   const formSubmit = async value => {
     try {
       const valueArray = Object.values(value)
-      imgUpload.map(async (img, i) => {
+      await imgUpload.map(async (img, i) => {
+        const data = new FormData()
+        data.append('file', img)
+        data.append('upload_preset', 'dphhkpiyp')
+
+        const res = await fetch(
+          'https://api.cloudinary.com/v1_1/dphhkpiyp/image/upload',
+          { method: 'POST', body: data }
+        )
+
+        const file = await res.json()
+        console.log(file)
+
         await uploadBanner({
           variables: {
-            file: img,
-            id: localStorage.getItem('_id'),
+            pubId: file.public_id,
+            path: file.secure_url,
             href: valueArray[i],
+            id: localStorage.getItem('_id'),
           },
         })
+
+        // espero que todas las imagense se suban al servidor
+        if (imgUpload.length - 1 === i) {
+          location.reload()
+        }
       })
-      location.reload()
     } catch (error) {
       message.error(error)
     }
@@ -159,6 +174,7 @@ const ChangeBanner = () => {
             <Row style={{ margin: '1em 0 0 ' }} justify="center">
               {imgs.map((img, i) => (
                 <Col
+                  key={i}
                   id={i}
                   style={{
                     border: '.5px solid #ececec',
