@@ -125,7 +125,7 @@ const ADMINUPDATE = gql`
   }
 `
 const fragment = gql`
-  fragment data on Products {
+  fragment dataQueryAdmin on Products {
     _id
     brand
     model
@@ -148,7 +148,7 @@ const QUERYPRODUCTS = gql`
   ${fragment}
   query {
     product {
-      ...data
+      ...dataQueryAdmin
     }
   }
 `
