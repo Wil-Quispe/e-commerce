@@ -12,6 +12,7 @@ import {
 import { UploadOutlined } from '@ant-design/icons'
 import { gql, useMutation, useQuery } from '@apollo/client'
 import { useState } from 'react'
+import useFetchImg from '../../hooks/useFetchImg'
 
 const BANNER = gql`
   query($id: ID!) {
@@ -42,6 +43,7 @@ const ChangeBanner = () => {
   })
   const [uploadBanner] = useMutation(UPLOADBANNER)
   const [deleteBanner] = useMutation(DELETEBANNER)
+  const [doFetch] = useFetchImg()
 
   const imgs = []
   banner?.admin.banner.map((img, i) => {
@@ -67,18 +69,8 @@ const ChangeBanner = () => {
   const formSubmit = async value => {
     try {
       const valueArray = Object.values(value)
-      await imgUpload.map(async (img, i) => {
-        const data = new FormData()
-        data.append('file', img)
-        data.append('upload_preset', 'dphhkpiyp')
-
-        const res = await fetch(
-          'https://api.cloudinary.com/v1_1/dphhkpiyp/image/upload',
-          { method: 'POST', body: data }
-        )
-
-        const file = await res.json()
-        console.log(file)
+      imgUpload.map(async (img, i) => {
+        const file = await doFetch(img)
 
         await uploadBanner({
           variables: {
