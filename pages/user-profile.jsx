@@ -136,7 +136,10 @@ const fragment = gql`
     type
     material
     size
-    imgs
+    imgs {
+      pubId
+      pathImg
+    }
     typeProduct
   }
 `

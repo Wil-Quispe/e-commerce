@@ -15,12 +15,11 @@ import { useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
 import { DeleteFilled, UploadOutlined } from '@ant-design/icons'
 import { camelCase } from '../../utils/index'
+import useFetchImg from '../../hooks/useFetchImg'
 
 const UPLOAD_FILE = gql`
-  mutation($file: Upload!, $id: ID!) {
-    singleUpload(file: $file, _id: $id) {
-      path
-    }
+  mutation($pubId: String!, $pathImg: String!, $id: ID!) {
+    singleUpload(_id: $id, pubId: $pubId, pathImg: $pathImg)
   }
 `
 const DELETEIMGUPLOADED = gql`
@@ -95,6 +94,7 @@ const UpdateProducts = ({ product }) => {
   const [deleteProduct] = useMutation(PRODUCTDELETE)
   const [deleteImgUploaded] = useMutation(DELETEIMGUPLOADED)
   const [singleUpload] = useMutation(UPLOAD_FILE)
+  const [doFetch] = useFetchImg()
 
   const updateProductFront = async values => {
     const size = values.size.split(' ')
@@ -123,15 +123,20 @@ const UpdateProducts = ({ product }) => {
         size,
       },
     })
-    imgList.map(async f => {
+    imgList.map(async (f, i) => {
+      const file = await doFetch(f)
       await singleUpload({
         variables: {
-          file: f,
+          pubId: file.public_id,
+          pathImg: file.secure_url,
           id: result.data.updateProduct._id,
         },
       })
+
+      if (imgList.length - 1 === i) {
+        location.reload()
+      }
     })
-    typeof window !== 'undefined' && location.reload()
   }
 
   const deleteProductFront = async e => {
@@ -144,7 +149,7 @@ const UpdateProducts = ({ product }) => {
 
   const imgs = []
   product.imgs.map((img, i) => {
-    imgs.push({ uid: i, status: 'done', url: img })
+    imgs.push({ uid: i, status: 'done', url: img.pathImg })
   })
 
   let c = 0

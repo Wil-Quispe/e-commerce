@@ -4,6 +4,7 @@ import { UploadOutlined } from '@ant-design/icons'
 import { gql, useMutation, useQuery } from '@apollo/client'
 import { useState } from 'react'
 import { camelCase } from '../../utils'
+import useFetchImg from '../../hooks/useFetchImg'
 
 const { Option } = Select
 const formItemLayout = {
@@ -33,10 +34,8 @@ const QUERYTYPEPRODUCTS = gql`
   }
 `
 const UPLOAD_FILE = gql`
-  mutation($file: Upload!, $id: ID!) {
-    singleUpload(file: $file, _id: $id) {
-      path
-    }
+  mutation($pubId: String!, $pathImg: String!, $id: ID!) {
+    singleUpload(_id: $id, pubId: $pubId, pathImg: $pathImg)
   }
 `
 const CREATEPRODUCT = gql`
@@ -77,6 +76,7 @@ const AddProduct = ({ type }) => {
   const { data: queryTypeProducts } = useQuery(QUERYTYPEPRODUCTS)
   const [createProduct] = useMutation(CREATEPRODUCT)
   const [singleUpload] = useMutation(UPLOAD_FILE)
+  const [doFetch] = useFetchImg()
 
   let c = 0
   const props = {
@@ -123,17 +123,22 @@ const AddProduct = ({ type }) => {
           typeProduct,
         },
       })
-      imgList.map(async f => {
+      imgList.map(async (f, i) => {
+        const file = await doFetch(f)
         await singleUpload({
           variables: {
-            file: f,
+            pubId: file.public_id,
+            pathImg: file.secure_url,
             id: result.data.createProduct._id,
           },
         })
+
+        if (imgList.length - 1 === i) {
+          location.reload()
+        }
       })
-      typeof window !== 'undefined' && location.reload()
     } catch (error) {
-      message.error('ocurrio un error')
+      message.error(error)
     }
   }
 
