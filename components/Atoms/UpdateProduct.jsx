@@ -229,7 +229,7 @@ const UpdateProducts = ({ product }) => {
             size: size || ' ',
           }}
         >
-          <Row>
+          <Row justify="center">
             <Col>
               <Row>
                 <Col>

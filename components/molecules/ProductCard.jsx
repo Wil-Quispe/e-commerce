@@ -58,7 +58,7 @@ const THIRDUSERCARTINC = gql`
   }
 `
 
-const ProductCard = ({ product, path, cols, addToCartView }) => {
+const ProductCard = ({ product, path, addToCartView }) => {
   const [userCartInc] = useMutation(USERCARTINC)
   const [thirdUserCartInc] = useMutation(THIRDUSERCARTINC)
   const [Counter, setCounter] = useState(0)
@@ -105,13 +105,12 @@ const ProductCard = ({ product, path, cols, addToCartView }) => {
 
   return (
     <Col xs={24} sm={12} md={12} lg={8} xl={6} xxl={3}>
-      {/* <div className={`column is-${cols || 3}`}> */}
       <div className="card">
         <div className="card-image">
           <Link href={`/productos/${path}/${product._id}`}>
             <figure className="image is-4by3">
               <img
-                src={`${product.imgs[0] || product.img1}`}
+                src={`${product.imgs[0].pathImg || product.img[1].pathImg}`}
                 alt="Placeholder image"
                 style={{ objectFit: 'cover' }}
               />
@@ -123,7 +122,7 @@ const ProductCard = ({ product, path, cols, addToCartView }) => {
             <div className="media-left">
               <figure className="image is-48x48">
                 <img
-                  src={`${product.imgs[1] || product.img2}`}
+                  src={`${product.imgs[1].pathImg || product.img[2].pathImg}`}
                   alt="Placeholder image"
                 />
               </figure>
@@ -150,7 +149,6 @@ const ProductCard = ({ product, path, cols, addToCartView }) => {
           </div>
         </div>
       </div>
-      {/* </div> */}
     </Col>
   )
 }

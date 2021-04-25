@@ -308,7 +308,7 @@ precio: ${product.price}$
               <Col lg={12} md={24}>
                 <Image.PreviewGroup>
                   <Row justify="center">
-                    <Image width={200} src={`${product.imgs[0]}`} />
+                    <Image width={200} src={`${product.imgs[0].pathImg}`} />
                   </Row>
                   <Row justify="center">
                     {product.imgs.map((pi, i) => {
@@ -320,7 +320,7 @@ precio: ${product.price}$
                             margin: '.5em .5em 0 0',
                           }}
                         >
-                          <Image width={50} src={`${pi}`} />
+                          <Image width={50} src={`${pi.pathImg}`} />
                         </Col>
                       )
                     })}
@@ -457,14 +457,13 @@ precio: ${product.price}$
 
                       {userInfo.sendEmail ? null : (
                         <Row justify="center">
-                          <Form.Item
-                            name="sendEmail"
-                            valuePropName="checked"
-                            style={{
-                              textAlign: 'center',
-                            }}
-                          >
-                            <Checkbox>
+                          <Form.Item name="sendEmail" valuePropName="checked">
+                            <Checkbox
+                              style={{
+                                textAlign: 'center',
+                                width: '200px',
+                              }}
+                            >
                               recibire emails de nuevos productos
                             </Checkbox>
                           </Form.Item>

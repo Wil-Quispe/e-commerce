@@ -14,7 +14,10 @@ const fragmentQuery = gql`
     model
     description
     price
-    imgs
+    imgs {
+      pubId
+      pathImg
+    }
     typeProduct
   }
 `

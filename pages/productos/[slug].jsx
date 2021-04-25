@@ -16,7 +16,10 @@ const QUERYPRODUCTS = gql`
       model
       description
       price
-      imgs
+      imgs {
+        pubId
+        pathImg
+      }
     }
   }
 `
@@ -26,7 +29,6 @@ const ProductIndex = ({ navNotSeeView, loadingFalse }) => {
   const { slug } = router.query
   const { data } = useQuery(QUERYPRODUCTS, { variables: { typeProduct: slug } })
   useEffect(() => {
-    // loadingFalse()
     navNotSeeView()
   }, [])
   loadingFalse()

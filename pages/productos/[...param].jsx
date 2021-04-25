@@ -15,7 +15,10 @@ const PRODUCTID = gql`
       stock
       gender
       material
-      imgs
+      imgs {
+        pubId
+        pathImg
+      }
       size
       typeProduct
     }
@@ -26,7 +29,10 @@ const PRODUCTID = gql`
       description
       model
       price
-      imgs
+      imgs {
+        pubId
+        pathImg
+      }
     }
   }
 `
