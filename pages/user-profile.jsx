@@ -23,7 +23,7 @@ import LastSells from '../components/Atoms/LastSells'
 import { useEffect } from 'react'
 import { navMobileNotSee } from '../redux/actionCreator'
 import Head from 'next/head'
-import ChangeBanner from '../components/Atoms/ChangeBanner'
+import Banner from '../components/Atoms/Banner'
 
 const THIRDUSERUPDATE = gql`
   mutation(
@@ -563,7 +563,14 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                   )}
                   <Divider>Banner principal</Divider>
                   <Row justify="center">
-                    <ChangeBanner />
+                    <Collapse>
+                      <Panel header="Primer Banner">
+                        <Banner indice={0} />
+                      </Panel>
+                      <Panel header="Segundo Banner">
+                        <Banner indice={1} />
+                      </Panel>
+                    </Collapse>
                   </Row>
                   <Divider>Crear Productos</Divider>
                   <Row justify="center">
