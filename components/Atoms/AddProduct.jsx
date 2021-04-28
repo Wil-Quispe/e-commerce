@@ -77,6 +77,7 @@ const AddProduct = ({ type }) => {
   const [createProduct] = useMutation(CREATEPRODUCT)
   const [singleUpload] = useMutation(UPLOAD_FILE)
   const [doFetch] = useFetchImg()
+  const [loading, setLoading] = useState(false)
 
   let c = 0
   const props = {
@@ -96,6 +97,10 @@ const AddProduct = ({ type }) => {
   }
 
   const createProductFront = async values => {
+    if (!Boolean(imgList.length)) {
+      return message.error('no ingresaste ninguna imagen para el producto')
+    }
+    setLoading(true)
     const size = values.size.split(' ')
     const {
       brand,
@@ -235,7 +240,9 @@ const AddProduct = ({ type }) => {
                 ) : (
                   <Select allowClear>
                     {typeProducts?.map((p, i) => (
-                      <Option value={p}>{camelCase(p)}</Option>
+                      <Option key={i} value={p}>
+                        {camelCase(p)}
+                      </Option>
                     ))}
                   </Select>
                 )}
@@ -254,7 +261,7 @@ const AddProduct = ({ type }) => {
         </Col>
       </Row>
       <Row justify="center">
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" loading={loading}>
           Crear Producto
         </Button>
       </Row>

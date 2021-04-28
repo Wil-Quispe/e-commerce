@@ -67,7 +67,6 @@ const PRODUCTDELETE = gql`
     }
   }
 `
-
 const { Panel } = Collapse
 const formItemLayout = {
   labelCol: {
@@ -95,8 +94,10 @@ const UpdateProducts = ({ product }) => {
   const [deleteImgUploaded] = useMutation(DELETEIMGUPLOADED)
   const [singleUpload] = useMutation(UPLOAD_FILE)
   const [doFetch] = useFetchImg()
+  const [loading, setLoading] = useState(false)
 
   const updateProductFront = async values => {
+    setLoading(true)
     const size = values.size.split(' ')
     const {
       brand,
@@ -123,20 +124,25 @@ const UpdateProducts = ({ product }) => {
         size,
       },
     })
-    imgList.map(async (f, i) => {
-      const file = await doFetch(f)
-      await singleUpload({
-        variables: {
-          pubId: file.public_id,
-          pathImg: file.secure_url,
-          id: result.data.updateProduct._id,
-        },
-      })
+    if (imgList.length) {
+      imgList.map(async (f, i) => {
+        const file = await doFetch(f)
+        await singleUpload({
+          variables: {
+            pubId: file.public_id,
+            pathImg: file.secure_url,
+            id: result.data.updateProduct._id,
+          },
+        })
+        console.log('hol+')
+        console.log(file)
 
-      if (imgList.length - 1 === i) {
-        location.reload()
-      }
-    })
+        if (imgList.length - 1 === i) {
+          setLoading(false)
+          location.reload()
+        }
+      })
+    } else location.reload()
   }
 
   const deleteProductFront = async e => {
@@ -163,6 +169,7 @@ const UpdateProducts = ({ product }) => {
       ),
     },
     onRemove: async file => {
+      setLoading(true)
       try {
         await deleteImgUploaded({
           variables: {
@@ -171,6 +178,7 @@ const UpdateProducts = ({ product }) => {
           },
         })
         message.info('Eliminado correctamente')
+        setLoading(false)
       } catch (error) {
         message.error('fallo al eliminar la imagen')
       }
@@ -274,7 +282,7 @@ const UpdateProducts = ({ product }) => {
             </Col>
           </Row>
           <Row justify="center">
-            <Button type="primary " htmlType="submit">
+            <Button type="primary" loading={loading} htmlType="submit">
               Guardar Cambios
             </Button>
           </Row>
