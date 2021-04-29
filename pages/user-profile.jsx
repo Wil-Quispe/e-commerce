@@ -583,15 +583,21 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                       </Panel>
                     </Collapse>
                   </Row>
-                  <Divider>Actualizar Productos</Divider>
-                  <Row justify="center">
-                    <Collapse style={{ width: '592.5px' }}>
-                      {queryProducts &&
-                        queryProducts?.product.map((p, i) => (
-                          <UpdateProduct product={p} key={i} />
-                        ))}
-                    </Collapse>
-                  </Row>
+                  {queryProducts?.product.length > 0 ? (
+                    <>
+                      <Divider>Actualizar Productos</Divider>
+                      <Row justify="center">
+                        <Collapse style={{ width: '592.5px' }}>
+                          {queryProducts &&
+                            queryProducts?.product.map((p, i) => (
+                              <UpdateProduct product={p} key={i} />
+                            ))}
+                        </Collapse>
+                      </Row>
+                    </>
+                  ) : (
+                    <Divider>No hay Productos para Actualizar</Divider>
+                  )}
                 </>
               )}
             </>
