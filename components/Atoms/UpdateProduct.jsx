@@ -60,8 +60,8 @@ const PRODUCTUPDATE = gql`
   }
 `
 const PRODUCTDELETE = gql`
-  mutation($id: ID!) {
-    deleteProduct(_id: $id) {
+  mutation($id: ID!, $imgs: [String!]!) {
+    deleteProduct(_id: $id, imgs: $imgs) {
       _id
       brand
     }
@@ -147,8 +147,17 @@ const UpdateProducts = ({ product }) => {
 
   const deleteProductFront = async e => {
     e.stopPropagation()
-    await deleteProduct({ variables: { id: product._id } })
-    typeof window !== 'undefined' && location.reload()
+    let imgsVar = []
+    imgs.map(i => {
+      imgsVar.push(i.url)
+    })
+
+    await deleteProduct({
+      variables: { id: product._id, imgs: imgsVar },
+    })
+    setTimeout(() => {
+      location.reload()
+    }, 1000)
   }
 
   const size = product.size.join(' ')
