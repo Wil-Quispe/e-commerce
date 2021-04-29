@@ -232,7 +232,7 @@ precio: ${product.price}$
           variables: {
             id: userInfo._id,
             pId: product._id,
-            prodType: product.__typename,
+            prodType: product.typeProduct,
           },
         })
       } else {
@@ -240,14 +240,14 @@ precio: ${product.price}$
           variables: {
             id: userInfo._id,
             pId: product._id,
-            prodType: product.__typename,
+            prodType: product.typeProduct,
           },
         })
       }
 
       // aumenta el contador de ventas del admin
       await adminSalesInc({
-        variables: { id: product._id, prodType: product.__typename },
+        variables: { id: product._id, prodType: product.typeProduct },
       })
 
       return
