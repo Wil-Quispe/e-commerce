@@ -19,6 +19,7 @@ import { ShoppingCartOutlined } from '@ant-design/icons'
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { loadingFalse } from '../../redux/actionCreator'
 import Head from 'next/head'
+import Paypal from '../Atoms/Paypal'
 
 const USERUPDATE = gql`
   mutation(
@@ -250,8 +251,6 @@ precio: ${product.price}$
         variables: { id: product._id, prodType: product.typeProduct },
       })
 
-      return
-
       if (data) {
         if (typeof window !== 'undefined') {
           window.location = '/payment/success'
@@ -439,6 +438,7 @@ precio: ${product.price}$
                           </Form.Item>
                         </Row>
                       )}
+                      <Paypal />
                       <Row justify="center">
                         <Button
                           type="primary"
