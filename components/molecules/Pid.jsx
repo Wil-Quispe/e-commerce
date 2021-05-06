@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { gql, useMutation } from '@apollo/client'
 import {
@@ -14,12 +14,12 @@ import {
   Input,
   Checkbox,
   Divider,
+  Collapse,
 } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js'
-import { loadingFalse } from '../../redux/actionCreator'
 import Head from 'next/head'
-import Paypal from '../Atoms/Paypal'
+import usePaypal from '../Atoms/Paypal'
+import PayPeru from '../Atoms/PayPeru'
 
 const USERUPDATE = gql`
   mutation(
@@ -71,11 +71,6 @@ const THIRDUSERUPDATE = gql`
     }
   }
 `
-const STRIPE = gql`
-  mutation Stripe($id: ID!, $amount: Int!) {
-    stripe(data: { id: $id, amount: $amount })
-  }
-`
 const USERSHOPPINGINC = gql`
   mutation($id: ID!, $pId: ID!, $prodType: String!) {
     userShoppingInc(_id: $id, data: { _id: $pId, productType: $prodType }) {
@@ -124,20 +119,37 @@ const formItemLayout = {
 }
 
 const { Meta } = Card
+const { Panel } = Collapse
 
 const Pid = ({ product, userInfo }) => {
   const [buy, setBuy] = useState('')
-  const [empty, setEmpty] = useState(true)
+  const [userInfoUpdate, setUserInfoUpdate] = useState(false)
   const [formBuy, setFormBuy] = useState('none')
-  const [stripe] = useMutation(STRIPE)
   const [userUpdate] = useMutation(USERUPDATE)
   const [thirdServicesUpdate] = useMutation(THIRDUSERUPDATE)
   const [userShoppingInc] = useMutation(USERSHOPPINGINC)
   const [thirdUserShoppingInc] = useMutation(THIRDUSERSHOPPINGINC)
   const [adminSalesInc] = useMutation(ADMINSALESINC)
   const [sendMsgWa] = useMutation(MESSAGEWHATSAPP)
-  const stripeJS = useStripe()
-  const elements = useElements()
+  const { PayPal, dataPay } = usePaypal({
+    description: 'lss',
+    amount: 1,
+  })
+  const [windowSize, setWindowSize] = useState(window.innerWidth)
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      setWindowSize(innerWidth)
+    })
+
+    if (dataPay?.status === 'ok') {
+      confirmPurchase()
+    }
+    if (dataPay?.status === 'error') {
+      window.location = '/payment/error'
+    }
+  }, [dataPay])
+
+  const collExtra = imgUrl => <Image src={imgUrl} width={20} preview={false} />
 
   const handleBuy = async values => {
     const {
@@ -163,6 +175,7 @@ const Pid = ({ product, userInfo }) => {
             sendEmail,
           },
         })
+        setUserInfoUpdate(true)
       } catch (error) {
         message.error(error)
       }
@@ -180,89 +193,65 @@ const Pid = ({ product, userInfo }) => {
             sendEmail,
           },
         })
+        setUserInfoUpdate(true)
       } catch (error) {
         message.error(error)
       }
     }
+  }
 
-    if (empty) return message.info('Ingrese su Numero de tarjeta')
+  const confirmPurchase = async () => {
+    // envia mensage a whatsapp del admin
+    {
+      //       sendMsgWa({
+      //         variables: {
+      //           msgWhats: `
+      // Felicitaciones ✨🙌 nueva venta!
+      //         Cliente:
+      // nombre: ${userInfo.name}
+      // celular: ${phoneNumber}
+      // email: ${userInfo.email}
+      // ciudad: ${city}
+      // distrito: ${district}
+      // direccion: ${addressHome}
+      // referencia: ${reference}
+      //         Producto:
+      // Tproducto: ${product.typeProduct}
+      // marca: ${product.brand}
+      // modelo: ${product.model}
+      // precio: ${product.price}$
+      //       `,
+      //         },
+      //       })
+    }
 
-    // ejecutando el pago por stripe
-    const { error, paymentMethod } = await stripeJS.createPaymentMethod({
-      type: 'card',
-      card: elements.getElement(CardElement),
+    // aumenta el contador de compras del usuario
+    if (userInfo.__typename === 'User') {
+      await userShoppingInc({
+        variables: {
+          id: userInfo._id,
+          pId: product._id,
+          prodType: product.typeProduct,
+        },
+      })
+    } else {
+      await thirdUserShoppingInc({
+        variables: {
+          id: userInfo._id,
+          pId: product._id,
+          prodType: product.typeProduct,
+        },
+      })
+    }
+
+    // aumenta el contador de ventas del admin
+    await adminSalesInc({
+      variables: { id: product._id, prodType: product.typeProduct },
     })
 
-    //si es valido el metodo de pago del cliente
-    if (paymentMethod) {
-      const { id } = paymentMethod
-      const data = await stripe({
-        variables: {
-          id,
-          amount: Number(product.price * 100),
-        },
-      })
-
-      // envia mensage a whatsapp del admin
-      sendMsgWa({
-        variables: {
-          msgWhats: `
-Felicitaciones ✨🙌 nueva venta!
-
-        Cliente:
-nombre: ${userInfo.name}
-celular: ${phoneNumber}
-email: ${userInfo.email}
-ciudad: ${city}
-distrito: ${district}
-direccion: ${addressHome}
-referencia: ${reference}
-
-        Producto:
-Tproducto: ${product.typeProduct}
-marca: ${product.brand}
-modelo: ${product.model}
-precio: ${product.price}$
-      `,
-        },
-      })
-
-      // aumenta el contador de compras del usuario
-      if (userInfo.__typename === 'User') {
-        await userShoppingInc({
-          variables: {
-            id: userInfo._id,
-            pId: product._id,
-            prodType: product.typeProduct,
-          },
-        })
-      } else {
-        await thirdUserShoppingInc({
-          variables: {
-            id: userInfo._id,
-            pId: product._id,
-            prodType: product.typeProduct,
-          },
-        })
-      }
-
-      // aumenta el contador de ventas del admin
-      await adminSalesInc({
-        variables: { id: product._id, prodType: product.typeProduct },
-      })
-
-      if (data) {
-        if (typeof window !== 'undefined') {
-          window.location = '/payment/success'
-        }
-      }
-    }
-    if (error) {
-      if (typeof window !== 'undefined') {
-        window.location = '/payment/error'
-      }
-    }
+    window.location = '/payment/success'
   }
+
   return (
     <>
       <Head>
@@ -361,12 +350,18 @@ precio: ${product.price}$
                 </Card>
               </Col>
             </Row>
-
-            <Row justify="center" style={{ display: `${formBuy}` }}>
+            <Row
+              justify="center"
+              style={{
+                display: `${formBuy}`,
+                width: '100%',
+              }}
+            >
               <Col>
                 <Card hoverable>
                   {userInfo && (
                     <Form
+                      id="form"
                       {...formItemLayout}
                       onFinish={handleBuy}
                       initialValues={{
@@ -378,77 +373,234 @@ precio: ${product.price}$
                         sendEmail: userInfo.sendEmail,
                       }}
                     >
-                      <CardElement
-                        onChange={e => {
-                          if (!e.empty) {
-                            setEmpty(false)
-                          } else {
-                            setEmpty(true)
-                          }
-                        }}
-                      />
                       <Divider>Datos Correctos?</Divider>
-                      <Form.Item
-                        label="Celular"
-                        name="phoneNumber"
-                        rules={[{ required: true, message: 'Campo requerido' }]}
-                      >
-                        <Input addonBefore="+51" />
-                      </Form.Item>
-                      <Form.Item
-                        label="Ciudad"
-                        name="city"
-                        rules={[{ required: true, message: 'Campo requerido' }]}
-                      >
-                        <Input />
-                      </Form.Item>
-                      <Form.Item
-                        label="Distrito"
-                        name="district"
-                        rules={[{ required: true, message: 'Campo requerido' }]}
-                      >
-                        <Input />
-                      </Form.Item>
-                      <Form.Item
-                        label="Direccion"
-                        name="addressHome"
-                        rules={[{ required: true, message: 'Campo requerido' }]}
-                      >
-                        <Input />
-                      </Form.Item>
-                      <Form.Item
-                        label="Referencia"
-                        name="reference"
-                        rules={[{ required: true, message: 'Campo requerido' }]}
-                      >
-                        <Input />
-                      </Form.Item>
-
-                      {userInfo.sendEmail ? null : (
-                        <Row justify="center">
-                          <Form.Item name="sendEmail" valuePropName="checked">
-                            <Checkbox
-                              style={{
-                                textAlign: 'center',
-                                width: '200px',
-                              }}
+                      {windowSize >= 992 ? (
+                        <Row justify="space-around">
+                          <Col style={{ width: '50%' }}>
+                            <Form.Item
+                              label="Celular"
+                              name="phoneNumber"
+                              className="center_item"
+                              rules={[
+                                { required: true, message: 'Campo requerido' },
+                              ]}
                             >
-                              recibire emails de nuevos productos
-                            </Checkbox>
-                          </Form.Item>
+                              <Input addonBefore="+51" />
+                            </Form.Item>
+                            <Form.Item
+                              className="center_item"
+                              label="Ciudad"
+                              name="city"
+                              rules={[
+                                { required: true, message: 'Campo requerido' },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              label="Distrito"
+                              name="district"
+                              className="center_item"
+                              rules={[
+                                { required: true, message: 'Campo requerido' },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              label="Direccion"
+                              name="addressHome"
+                              className="center_item"
+                              rules={[
+                                { required: true, message: 'Campo requerido' },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              label="Referencia"
+                              name="reference"
+                              className="center_item"
+                              rules={[
+                                { required: true, message: 'Campo requerido' },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+                            {userInfo.sendEmail ? null : (
+                              <Row justify="center">
+                                <Form.Item
+                                  name="sendEmail"
+                                  valuePropName="checked"
+                                >
+                                  <Checkbox
+                                    style={{
+                                      textAlign: 'center',
+                                      width: '200px',
+                                    }}
+                                  >
+                                    recibire emails de nuevos productos
+                                  </Checkbox>
+                                </Form.Item>
+                              </Row>
+                            )}
+                            {userInfoUpdate === false && (
+                              <Row justify="center">
+                                <Button type="primary" htmlType="submit">
+                                  Siguiente
+                                </Button>
+                              </Row>
+                            )}
+                          </Col>
+                          {userInfoUpdate && (
+                            <Col style={{ width: '50%' }}>
+                              <Collapse accordion>
+                                <Panel
+                                  header="Pagar con Paypal"
+                                  extra={collExtra('/paypal.jpg')}
+                                >
+                                  <PayPal />
+                                </Panel>
+                                <Panel
+                                  header="Pagar con Yape"
+                                  extra={collExtra('/yape.png')}
+                                >
+                                  <PayPeru
+                                    amount={product.price}
+                                    qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
+                                    img="/yape.png"
+                                    color="Yape"
+                                  />
+                                </Panel>
+                                <Panel
+                                  header="Pagar con Tunki"
+                                  extra={collExtra('/tunki.png')}
+                                >
+                                  <PayPeru
+                                    amount={product.price}
+                                    qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
+                                    img="/tunki.png"
+                                    color="Tunki"
+                                  />
+                                </Panel>
+                              </Collapse>
+                            </Col>
+                          )}
+                        </Row>
+                      ) : (
+                        <Row justify="center">
+                          <Col>
+                            <Form.Item
+                              label="Celular"
+                              name="phoneNumber"
+                              className="center_item"
+                              rules={[
+                                { required: true, message: 'Campo requerido' },
+                              ]}
+                            >
+                              <Input addonBefore="+51" />
+                            </Form.Item>
+                            <Form.Item
+                              className="center_item"
+                              label="Ciudad"
+                              name="city"
+                              rules={[
+                                { required: true, message: 'Campo requerido' },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              label="Distrito"
+                              name="district"
+                              className="center_item"
+                              rules={[
+                                { required: true, message: 'Campo requerido' },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              label="Direccion"
+                              name="addressHome"
+                              className="center_item"
+                              rules={[
+                                { required: true, message: 'Campo requerido' },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+                            <Form.Item
+                              label="Referencia"
+                              name="reference"
+                              className="center_item"
+                              rules={[
+                                { required: true, message: 'Campo requerido' },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+                            {userInfo.sendEmail ? null : (
+                              <Row justify="center">
+                                <Form.Item
+                                  name="sendEmail"
+                                  valuePropName="checked"
+                                >
+                                  <Checkbox
+                                    style={{
+                                      textAlign: 'center',
+                                      width: '200px',
+                                    }}
+                                  >
+                                    recibire emails de nuevos productos
+                                  </Checkbox>
+                                </Form.Item>
+                              </Row>
+                            )}
+                            {userInfoUpdate === false && (
+                              <Row justify="center">
+                                <Button type="primary" htmlType="submit">
+                                  Siguiente
+                                </Button>
+                              </Row>
+                            )}
+                          </Col>
+                          {userInfoUpdate && (
+                            <Col style={{ width: '100%' }}>
+                              <Collapse accordion>
+                                <Panel
+                                  header="Pagar con Paypal"
+                                  extra={collExtra('/paypal.jpg')}
+                                >
+                                  <PayPal />
+                                </Panel>
+                                <Panel
+                                  header="Pagar con Yape"
+                                  extra={collExtra('/yape.png')}
+                                >
+                                  <PayPeru
+                                    amount={product.price}
+                                    qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
+                                    img="/yape.png"
+                                    color="Yape"
+                                  />
+                                </Panel>
+                                <Panel
+                                  header="Pagar con Tunki"
+                                  extra={collExtra('/tunki.png')}
+                                >
+                                  <PayPeru
+                                    amount={product.price}
+                                    qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
+                                    img="/tunki.png"
+                                    color="Tunki"
+                                  />
+                                </Panel>
+                              </Collapse>
+                            </Col>
+                          )}
                         </Row>
                       )}
-                      <Paypal />
-                      <Row justify="center">
-                        <Button
-                          type="primary"
-                          shape="round"
-                          htmlType="submit"
-                          icon={<ShoppingCartOutlined />}
-                        >
-                          Comprar
-                        </Button>
-                      </Row>
                     </Form>
                   )}
                 </Card>
