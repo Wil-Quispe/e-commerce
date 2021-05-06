@@ -1,5 +1,6 @@
 import Navbar from '../components/organisms/Navbar'
 import 'antd/dist/antd.css'
+import '../styles/styles.css'
 import Footer from '../components/organisms/Footer'
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
 import { loadStripe } from '@stripe/stripe-js'
