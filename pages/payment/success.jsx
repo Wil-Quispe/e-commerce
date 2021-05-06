@@ -13,7 +13,7 @@ const success = () => {
           status="success"
           title="Pago exitoso!"
           extra={[
-            <Button type="primary">
+            <Button type="primary" key={1}>
               <Link href="/">ir a Inicio</Link>
             </Button>,
           ]}
