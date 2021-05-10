@@ -3,15 +3,11 @@ import 'antd/dist/antd.css'
 import '../styles/styles.css'
 import Footer from '../components/organisms/Footer'
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
-import { loadStripe } from '@stripe/stripe-js'
-import { Elements } from '@stripe/react-stripe-js'
 import { Provider } from 'react-redux'
 import { useEffect, useState } from 'react'
 
 import store from '../redux/store'
 import Spinner from '../components/Atoms/Spinner'
-
-const promiseStripe = loadStripe(process.env.STRIPE)
 
 const client = new ApolloClient({
   uri: process.env.URI,
@@ -29,13 +25,11 @@ function MyApp({ Component, pageProps }) {
         <Spinner />
       ) : (
         <ApolloProvider client={client}>
-          <Elements stripe={promiseStripe}>
-            <Provider store={store}>
-              <Navbar />
-              <Component {...pageProps} />
-              <Footer />
-            </Provider>
-          </Elements>
+          <Provider store={store}>
+            <Navbar />
+            <Component {...pageProps} />
+            <Footer />
+          </Provider>
         </ApolloProvider>
       )}
     </>
