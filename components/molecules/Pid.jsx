@@ -22,7 +22,7 @@ import usePaypal from '../Atoms/Paypal'
 import PayPeru from '../Atoms/PayPeru'
 
 const USERUPDATE = gql`
-  mutation(
+  mutation (
     $id: ID!
     $phoneNumber: String!
     $city: String!
@@ -47,7 +47,7 @@ const USERUPDATE = gql`
   }
 `
 const THIRDUSERUPDATE = gql`
-  mutation(
+  mutation (
     $id: ID!
     $phoneNumber: String!
     $city: String!
@@ -72,14 +72,14 @@ const THIRDUSERUPDATE = gql`
   }
 `
 const USERSHOPPINGINC = gql`
-  mutation($id: ID!, $pId: ID!, $prodType: String!) {
+  mutation ($id: ID!, $pId: ID!, $prodType: String!) {
     userShoppingInc(_id: $id, data: { _id: $pId, productType: $prodType }) {
       _id
     }
   }
 `
 const THIRDUSERSHOPPINGINC = gql`
-  mutation($id: ID!, $pId: ID!, $prodType: String!) {
+  mutation ($id: ID!, $pId: ID!, $prodType: String!) {
     thirdUserShoppingInc(
       _id: $id
       data: { _id: $pId, productType: $prodType }
@@ -89,13 +89,8 @@ const THIRDUSERSHOPPINGINC = gql`
   }
 `
 const ADMINSALESINC = gql`
-  mutation($id: ID!, $prodType: String!) {
+  mutation ($id: ID!, $prodType: String!) {
     adminSalesInc(data: { _id: $id, productType: $prodType })
-  }
-`
-const MESSAGEWHATSAPP = gql`
-  mutation($msgWhats: String!) {
-    sendMsgWa(msg: $msgWhats)
   }
 `
 
@@ -130,10 +125,9 @@ const Pid = ({ product, userInfo }) => {
   const [userShoppingInc] = useMutation(USERSHOPPINGINC)
   const [thirdUserShoppingInc] = useMutation(THIRDUSERSHOPPINGINC)
   const [adminSalesInc] = useMutation(ADMINSALESINC)
-  const [sendMsgWa] = useMutation(MESSAGEWHATSAPP)
   const { PayPal, dataPay } = usePaypal({
-    description: 'lss',
-    amount: 1,
+    description: product.model,
+    amount: product.price,
   })
   const [windowSize, setWindowSize] = useState(window.innerWidth)
   useEffect(() => {
@@ -152,14 +146,8 @@ const Pid = ({ product, userInfo }) => {
   const collExtra = imgUrl => <Image src={imgUrl} width={20} preview={false} />
 
   const handleBuy = async values => {
-    const {
-      phoneNumber,
-      city,
-      district,
-      addressHome,
-      reference,
-      sendEmail,
-    } = values
+    const { phoneNumber, city, district, addressHome, reference, sendEmail } =
+      values
 
     // actualiza algunos datos del usuario
     if (userInfo.__typename === 'User') {
