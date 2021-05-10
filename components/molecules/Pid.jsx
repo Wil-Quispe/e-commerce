@@ -93,6 +93,11 @@ const ADMINSALESINC = gql`
     adminSalesInc(data: { _id: $id, productType: $prodType })
   }
 `
+const SENDMSGTELEGRAM = gql`
+  mutation ($msg: String!) {
+    sendMsgTelegram(message: $msg)
+  }
+`
 
 const formItemLayout = {
   labelCol: {
@@ -125,6 +130,8 @@ const Pid = ({ product, userInfo }) => {
   const [userShoppingInc] = useMutation(USERSHOPPINGINC)
   const [thirdUserShoppingInc] = useMutation(THIRDUSERSHOPPINGINC)
   const [adminSalesInc] = useMutation(ADMINSALESINC)
+  const [sendMsgTelegram] = useMutation(SENDMSGTELEGRAM)
+  const [dataUser, setDataUser] = useState({})
   const { PayPal, dataPay } = usePaypal({
     description: product.model,
     amount: product.price,
@@ -149,10 +156,12 @@ const Pid = ({ product, userInfo }) => {
     const { phoneNumber, city, district, addressHome, reference, sendEmail } =
       values
 
+    setDataUser({ values })
+
     // actualiza algunos datos del usuario
     if (userInfo.__typename === 'User') {
       try {
-        const result = await userUpdate({
+        await userUpdate({
           variables: {
             id: userInfo._id,
             phoneNumber,
@@ -170,7 +179,7 @@ const Pid = ({ product, userInfo }) => {
     }
     if (userInfo.__typename === 'UserThirdServices') {
       try {
-        const result = await thirdServicesUpdate({
+        await thirdServicesUpdate({
           variables: {
             id: userInfo._id,
             phoneNumber,
@@ -190,28 +199,26 @@ const Pid = ({ product, userInfo }) => {
 
   const confirmPurchase = async () => {
     // envia mensage a whatsapp del admin
-    {
-      //       sendMsgWa({
-      //         variables: {
-      //           msgWhats: `
-      // Felicitaciones ✨🙌 nueva venta!
-      //         Cliente:
-      // nombre: ${userInfo.name}
-      // celular: ${phoneNumber}
-      // email: ${userInfo.email}
-      // ciudad: ${city}
-      // distrito: ${district}
-      // direccion: ${addressHome}
-      // referencia: ${reference}
-      //         Producto:
-      // Tproducto: ${product.typeProduct}
-      // marca: ${product.brand}
-      // modelo: ${product.model}
-      // precio: ${product.price}$
-      //       `,
-      //         },
-      //       })
-    }
+    sendMsgTelegram({
+      variables: {
+        msg: `
+      Felicitaciones ✨🙌 nueva venta!
+              Cliente:
+      nombre: ${userInfo.name}
+      celular: ${dataUser.phoneNumber || userInfo.phoneNumber} 
+      email: ${userInfo.email}
+      ciudad: ${dataUser.city || userInfo.city}
+      distrito: ${dataUser.district || userInfo.district}
+      direccion: ${dataUser.addressHome || userInfo.addressHome}
+      referencia: ${dataUser.reference || userInfo.reference}
+              Producto:
+      Tproducto: ${product.typeProduct}
+      marca: ${product.brand}
+      modelo: ${product.model}
+      precio: ${product.price}$
+            `,
+      },
+    })
 
     // aumenta el contador de compras del usuario
     if (userInfo.__typename === 'User') {
