@@ -23,7 +23,7 @@ const Paypal = ({ description, amount }) => {
   }
   const onApprove = async (data, actions) => {
     const order = await actions.order.capture()
-    setDataPay({ status: 'ok' })
+    setDataPay({ status: 'ok', order })
   }
   const onError = err => {
     console.log(err)
