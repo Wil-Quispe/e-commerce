@@ -12,6 +12,8 @@ import {
   Descriptions,
   Form,
   Input,
+  Select,
+  InputNumber,
   Checkbox,
   Divider,
   Collapse,
@@ -120,11 +122,15 @@ const formItemLayout = {
 
 const { Meta } = Card
 const { Panel } = Collapse
+const { Option } = Select
 
 const Pid = ({ product, userInfo }) => {
+  //mostrar algun formulario
   const [buy, setBuy] = useState('')
-  const [userInfoUpdate, setUserInfoUpdate] = useState(false)
   const [formBuy, setFormBuy] = useState('none')
+  const [dataProduct, setDataProduct] = useState({ form: 'none', btn: '' })
+
+  const [userInfoUpdate, setUserInfoUpdate] = useState(false)
   const [userUpdate] = useMutation(USERUPDATE)
   const [thirdServicesUpdate] = useMutation(THIRDUSERUPDATE)
   const [userShoppingInc] = useMutation(USERSHOPPINGINC)
@@ -134,7 +140,7 @@ const Pid = ({ product, userInfo }) => {
   const [dataUser, setDataUser] = useState({})
   const { PayPal, dataPay } = usePaypal({
     description: product.model,
-    amount: product.price,
+    amount: product.price * dataUser.product?.units,
   })
   const [windowSize, setWindowSize] = useState(window.innerWidth)
   useEffect(() => {
@@ -156,7 +162,7 @@ const Pid = ({ product, userInfo }) => {
     const { phoneNumber, city, district, addressHome, reference, sendEmail } =
       values
 
-    setDataUser({ values })
+    setDataUser({ ...dataUser, user: values })
 
     // actualiza algunos datos del usuario
     if (userInfo.__typename === 'User') {
@@ -205,17 +211,20 @@ const Pid = ({ product, userInfo }) => {
       Felicitaciones ✨🙌 nueva venta!
               Cliente:
       nombre: ${userInfo.name}
-      celular: ${dataUser.phoneNumber || userInfo.phoneNumber} 
+      celular: ${dataUser.user.phoneNumber || userInfo.phoneNumber} 
       email: ${userInfo.email}
-      ciudad: ${dataUser.city || userInfo.city}
-      distrito: ${dataUser.district || userInfo.district}
-      direccion: ${dataUser.addressHome || userInfo.addressHome}
-      referencia: ${dataUser.reference || userInfo.reference}
+      ciudad: ${dataUser.user.city || userInfo.city}
+      distrito: ${dataUser.user.district || userInfo.district}
+      direccion: ${dataUser.user.addressHome || userInfo.addressHome}
+      referencia: ${dataUser.user.reference || userInfo.reference}
               Producto:
       Tproducto: ${product.typeProduct}
       marca: ${product.brand}
       modelo: ${product.model}
-      precio: ${product.price}$
+      unidades: ${dataUser.product.units}
+      talla: ${dataUser.product.size}
+      precio unitario: ${product.price}$
+      precio total: ${product.price * dataUser.product.units}$
             `,
       },
     })
@@ -245,6 +254,12 @@ const Pid = ({ product, userInfo }) => {
     })
 
     window.location = '/pago/exitoso'
+  }
+
+  const dataProductSend = async values => {
+    setDataUser({ product: values })
+    setDataProduct({ btn: 'none' })
+    setFormBuy('block')
   }
 
   return (
@@ -331,7 +346,7 @@ const Pid = ({ product, userInfo }) => {
                           typeof window !== 'undefined' &&
                           localStorage.getItem('token')
                         ) {
-                          setBuy('none'), setFormBuy('block')
+                          setBuy('none'), setDataProduct({ form: 'block' })
                         } else {
                           message.info(
                             'Tienes que Iniciar Session o Registrarte'
@@ -342,6 +357,43 @@ const Pid = ({ product, userInfo }) => {
                       Comprar
                     </Button>
                   </Row>
+                </Card>
+              </Col>
+            </Row>
+            <Row justify="center" style={{ display: `${dataProduct.form}` }}>
+              <Col>
+                <Card hoverable>
+                  <Form onFinish={dataProductSend}>
+                    <Divider>Datos del Producto</Divider>
+                    <Form.Item
+                      label="unidades"
+                      name="units"
+                      rules={[{ required: true, message: 'Campo requerido' }]}
+                    >
+                      <InputNumber />
+                    </Form.Item>
+                    <Form.Item
+                      label="talla"
+                      name="size"
+                      rules={[{ required: true, message: 'Campo requerido' }]}
+                    >
+                      <Select allowClear>
+                        {product?.size.map((s, i) => (
+                          <Option key={i} value={s}>
+                            {s}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                    <Row
+                      justify="center"
+                      style={{ display: `${dataProduct.btn}` }}
+                    >
+                      <Button type="primary" htmlType="submit">
+                        Siguiente
+                      </Button>
+                    </Row>
+                  </Form>
                 </Card>
               </Col>
             </Row>
@@ -454,14 +506,25 @@ const Pid = ({ product, userInfo }) => {
                                   header="Pagar con Paypal"
                                   extra={collExtra('/paypal.jpg')}
                                 >
-                                  <PayPal />
+                                  <Row justify="center">
+                                    <Col>
+                                      <h3 className="center_paragraph">
+                                        monto a pagar{' '}
+                                        {dataUser.product.units * product.price}
+                                        $
+                                      </h3>
+                                      <PayPal />
+                                    </Col>
+                                  </Row>
                                 </Panel>
                                 <Panel
                                   header="Pagar con Yape"
                                   extra={collExtra('/yape.png')}
                                 >
                                   <PayPeru
-                                    amount={product.price}
+                                    amount={
+                                      product.price * dataUser.product?.units
+                                    }
                                     qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
                                     img="/yape.png"
                                     color="Yape"
@@ -472,7 +535,9 @@ const Pid = ({ product, userInfo }) => {
                                   extra={collExtra('/tunki.png')}
                                 >
                                   <PayPeru
-                                    amount={product.price}
+                                    amount={
+                                      product.price * dataUser.product?.units
+                                    }
                                     qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
                                     img="/tunki.png"
                                     color="Tunki"
@@ -567,14 +632,25 @@ const Pid = ({ product, userInfo }) => {
                                   header="Pagar con Paypal"
                                   extra={collExtra('/paypal.jpg')}
                                 >
-                                  <PayPal />
+                                  <Row justify="center">
+                                    <Col>
+                                      <h3 className="center_paragraph">
+                                        monto a pagar{' '}
+                                        {dataUser.product.units * product.price}
+                                        $
+                                      </h3>
+                                      <PayPal />
+                                    </Col>
+                                  </Row>
                                 </Panel>
                                 <Panel
                                   header="Pagar con Yape"
                                   extra={collExtra('/yape.png')}
                                 >
                                   <PayPeru
-                                    amount={product.price}
+                                    amount={
+                                      product.price * dataUser.product?.units
+                                    }
                                     qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
                                     img="/yape.png"
                                     color="Yape"
@@ -585,7 +661,9 @@ const Pid = ({ product, userInfo }) => {
                                   extra={collExtra('/tunki.png')}
                                 >
                                   <PayPeru
-                                    amount={product.price}
+                                    amount={
+                                      product.price * dataUser.product?.units
+                                    }
                                     qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
                                     img="/tunki.png"
                                     color="Tunki"

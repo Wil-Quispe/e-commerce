@@ -1,4 +1,3 @@
-import { Row } from 'antd'
 import { useState } from 'react'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -26,18 +25,15 @@ const Paypal = ({ description, amount }) => {
     setDataPay({ status: 'ok', order })
   }
   const onError = err => {
-    console.log(err)
     setDataPay({ status: 'error' })
   }
 
   const PayPal = () => (
-    <Row justify="center">
-      <PayPalButton
-        createOrder={(data, actions) => createOrder(data, actions)}
-        onApprove={(data, actions) => onApprove(data, actions)}
-        onError={err => onError(err)}
-      />
-    </Row>
+    <PayPalButton
+      createOrder={(data, actions) => createOrder(data, actions)}
+      onApprove={(data, actions) => onApprove(data, actions)}
+      onError={err => onError(err)}
+    />
   )
 
   return {
