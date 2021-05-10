@@ -145,7 +145,7 @@ const Pid = ({ product, userInfo }) => {
       confirmPurchase()
     }
     if (dataPay?.status === 'error') {
-      window.location = '/payment/error'
+      window.location = '/pago/error'
     }
   }, [dataPay])
 
@@ -249,7 +249,7 @@ const Pid = ({ product, userInfo }) => {
       variables: { id: product._id, prodType: product.typeProduct },
     })
 
-    window.location = '/payment/success'
+    window.location = '/pago/exitoso'
   }
 
   return (

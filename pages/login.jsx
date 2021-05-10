@@ -204,7 +204,7 @@ const login = ({ navNotSeeView }) => {
                     <Button type="primary" htmlType="submit">
                       Iniciar sesion
                     </Button>
-                    {'  '}O <Link href="/signup">Registrate!</Link>
+                    {'  '}O <Link href="/registro">Registrate!</Link>
                   </Form.Item>
                 </Row>
               </Form>

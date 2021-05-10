@@ -12,3 +12,8 @@
   border-radius: 10px;
   color: #751a94;
 }
+
+/*posicion exacta de la pantalla en el resultado de la compra  */
+.result_page {
+  height: 58vh;
+}

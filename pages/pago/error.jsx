@@ -12,7 +12,7 @@ const error = () => {
       <Head>
         <title>error | {process.env.SITE_NAME}</title>
       </Head>
-      <div>
+      <div className="result_page">
         <Result
           status="error"
           title="Se produjo algunos problemas con tu operacion"

@@ -20,7 +20,7 @@ const cart = ({ cartList, navNotSeeView }) => {
             return <CartProductCard p={p} key={i} />
           })
         ) : (
-          <h1>Tu Carrito esta bacio</h1>
+          <h1 className="result_page">Tu Carrito esta bacio</h1>
         )}
       </Row>
     </>

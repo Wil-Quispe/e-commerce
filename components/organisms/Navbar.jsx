@@ -241,7 +241,7 @@ const Navbar = ({
                   <Avatar size={20} src="/admin.svg" />
                 </Tooltip>
               ) : (
-                <Link href="/cart">
+                <Link href="/carrito">
                   <a>
                     {/* <Badge dot> */}
                     <Badge count={Boolean(cartLength) ? cartLength : 0}>
@@ -255,7 +255,7 @@ const Navbar = ({
               )}
               {typeof window !== 'undefined' &&
               localStorage.getItem('typeUser') ? (
-                <Link href="/user-profile">
+                <Link href="/perfil">
                   <Tooltip title="Ver Perfil" placement="bottom">
                     {userInfos && userInfos.img ? (
                       <Avatar
@@ -273,7 +273,7 @@ const Navbar = ({
                 </Link>
               ) : (
                 <>
-                  <Link href="/signup">
+                  <Link href="/registro">
                     <Button type="primary" style={{ margin: '0 .5em' }}>
                       Registrarse
                     </Button>
