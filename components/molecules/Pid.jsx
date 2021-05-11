@@ -140,7 +140,7 @@ const Pid = ({ product, userInfo }) => {
   const [dataUser, setDataUser] = useState({})
   const { PayPal, dataPay } = usePaypal({
     description: product.model,
-    amount: product.price * dataUser.product?.units,
+    amount: Number(product.price) * dataUser.product?.units,
   })
   const [windowSize, setWindowSize] = useState(window.innerWidth)
   useEffect(() => {
@@ -224,7 +224,7 @@ const Pid = ({ product, userInfo }) => {
       unidades: ${dataUser.product.units}
       talla: ${dataUser.product.size}
       precio unitario: ${product.price}$
-      precio total: ${product.price * dataUser.product.units}$
+      precio total: ${Number(product.price) * dataUser.product.units}$
             `,
       },
     })
@@ -510,7 +510,8 @@ const Pid = ({ product, userInfo }) => {
                                     <Col>
                                       <h3 className="center_paragraph">
                                         monto a pagar{' '}
-                                        {dataUser.product.units * product.price}
+                                        {dataUser.product.units *
+                                          Number(product.price)}
                                         $
                                       </h3>
                                       <PayPal />
@@ -523,7 +524,8 @@ const Pid = ({ product, userInfo }) => {
                                 >
                                   <PayPeru
                                     amount={
-                                      product.price * dataUser.product?.units
+                                      Number(product.price) *
+                                      dataUser.product?.units
                                     }
                                     qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
                                     img="/yape.png"
@@ -536,7 +538,8 @@ const Pid = ({ product, userInfo }) => {
                                 >
                                   <PayPeru
                                     amount={
-                                      product.price * dataUser.product?.units
+                                      Number(product.price) *
+                                      dataUser.product?.units
                                     }
                                     qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
                                     img="/tunki.png"
@@ -636,7 +639,8 @@ const Pid = ({ product, userInfo }) => {
                                     <Col>
                                       <h3 className="center_paragraph">
                                         monto a pagar{' '}
-                                        {dataUser.product.units * product.price}
+                                        {dataUser.product.units *
+                                          Number(product.price)}
                                         $
                                       </h3>
                                       <PayPal />
@@ -649,7 +653,8 @@ const Pid = ({ product, userInfo }) => {
                                 >
                                   <PayPeru
                                     amount={
-                                      product.price * dataUser.product?.units
+                                      Number(product.price) *
+                                      dataUser.product?.units
                                     }
                                     qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
                                     img="/yape.png"
@@ -662,7 +667,8 @@ const Pid = ({ product, userInfo }) => {
                                 >
                                   <PayPeru
                                     amount={
-                                      product.price * dataUser.product?.units
+                                      Number(product.price) *
+                                      dataUser.product?.units
                                     }
                                     qr="https://cdn.onlinewebfonts.com/svg/img_101311.png"
                                     img="/tunki.png"

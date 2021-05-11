@@ -34,16 +34,16 @@ const QUERYTYPEPRODUCTS = gql`
   }
 `
 const UPLOAD_FILE = gql`
-  mutation($pubId: String!, $pathImg: String!, $id: ID!) {
+  mutation ($pubId: String!, $pathImg: String!, $id: ID!) {
     singleUpload(_id: $id, pubId: $pubId, pathImg: $pathImg)
   }
 `
 const CREATEPRODUCT = gql`
-  mutation(
+  mutation (
     $brand: String!
     $model: String!
     $description: String!
-    $price: Int!
+    $price: String!
     $stock: Int!
     $gender: String!
     $type: String!
@@ -119,7 +119,7 @@ const AddProduct = ({ type }) => {
           brand,
           model,
           description,
-          price,
+          price: String(price),
           stock,
           gender,
           type,

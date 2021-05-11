@@ -18,22 +18,22 @@ import { camelCase } from '../../utils/index'
 import useFetchImg from '../../hooks/useFetchImg'
 
 const UPLOAD_FILE = gql`
-  mutation($pubId: String!, $pathImg: String!, $id: ID!) {
+  mutation ($pubId: String!, $pathImg: String!, $id: ID!) {
     singleUpload(_id: $id, pubId: $pubId, pathImg: $pathImg)
   }
 `
 const DELETEIMGUPLOADED = gql`
-  mutation($path: String!, $prodId: ID!) {
+  mutation ($path: String!, $prodId: ID!) {
     deleteImgUploaded(pathImg: $path, productId: $prodId)
   }
 `
 const PRODUCTUPDATE = gql`
-  mutation(
+  mutation (
     $id: ID!
     $brand: String
     $model: String
     $description: String
-    $price: Int
+    $price: String
     $stock: Int
     $gender: String
     $type: String
@@ -60,7 +60,7 @@ const PRODUCTUPDATE = gql`
   }
 `
 const PRODUCTDELETE = gql`
-  mutation($id: ID!, $imgs: [String!]!) {
+  mutation ($id: ID!, $imgs: [String!]!) {
     deleteProduct(_id: $id, imgs: $imgs) {
       _id
       brand
@@ -99,16 +99,8 @@ const UpdateProducts = ({ product }) => {
   const updateProductFront = async values => {
     setLoading(true)
     const size = values.size.split(' ')
-    const {
-      brand,
-      model,
-      description,
-      price,
-      stock,
-      gender,
-      type,
-      material,
-    } = values
+    const { brand, model, description, price, stock, gender, type, material } =
+      values
 
     const result = await updateProduct({
       variables: {
@@ -116,7 +108,7 @@ const UpdateProducts = ({ product }) => {
         brand,
         model,
         description,
-        price,
+        price: String(price),
         stock,
         gender,
         type,
@@ -134,9 +126,6 @@ const UpdateProducts = ({ product }) => {
             id: result.data.updateProduct._id,
           },
         })
-        console.log('hol+')
-        console.log(file)
-
         if (imgList.length - 1 === i) {
           setLoading(false)
           location.reload()
