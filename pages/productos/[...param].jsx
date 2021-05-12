@@ -1,11 +1,14 @@
+import { useEffect } from 'react'
 import { Divider, Row } from 'antd'
 import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import Pid from '../../components/molecules/Pid'
 import ProductCard from '../../components/molecules/ProductCard'
+import { connect } from 'react-redux'
+import { loadingFalse } from '../../redux/actionCreator'
 
 const PRODUCTID = gql`
-  query($sId: ID!, $typeProduct: String!) {
+  query ($sId: ID!, $typeProduct: String!) {
     one: product(_id: $sId) {
       _id
       brand
@@ -37,13 +40,15 @@ const PRODUCTID = gql`
   }
 `
 
-const ProductId = () => {
+const ProductId = ({ loadingFalse }) => {
   const router = useRouter()
   const { param } = router.query
   const { data } = useQuery(PRODUCTID, {
     variables: { sId: param && param[1], typeProduct: param && param[0] },
   })
-
+  useEffect(() => {
+    loadingFalse()
+  })
   return (
     <main>
       {/* producto con sus especificasiones */}
@@ -61,4 +66,14 @@ const ProductId = () => {
   )
 }
 
-export default ProductId
+const mapStateToProps = () => ({})
+
+const mapDispatchToProps = dispatch => {
+  return {
+    loadingFalse() {
+      dispatch(loadingFalse())
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductId)
