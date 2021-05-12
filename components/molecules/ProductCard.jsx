@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button, message, Col } from 'antd'
+import { Button, message, Col, Typography } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 import { connect } from 'react-redux'
 import { addToCart } from '../../redux/actionCreator'
@@ -8,7 +8,7 @@ import { useState } from 'react'
 import LinkCustom from '../Atoms/LinkCustom'
 
 const USERCARTINC = gql`
-  mutation(
+  mutation (
     $id: ID!
     $img1: String!
     $img2: String!
@@ -33,7 +33,7 @@ const USERCARTINC = gql`
   }
 `
 const THIRDUSERCARTINC = gql`
-  mutation(
+  mutation (
     $id: ID!
     $img1: String!
     $img2: String!
@@ -57,6 +57,7 @@ const THIRDUSERCARTINC = gql`
     )
   }
 `
+const { Paragraph } = Typography
 
 const ProductCard = ({ product, path, addToCartView }) => {
   const [userCartInc] = useMutation(USERCARTINC)
@@ -138,13 +139,14 @@ const ProductCard = ({ product, path, addToCartView }) => {
             />
           </div>
           <div className="content">
-            {product.description}{' '}
+            <Paragraph style={{ margin: '0' }} ellipsis={{ rows: 2 }}>
+              {product.description}
+            </Paragraph>
             <Link href={`/productos/${path}/${product._id}`}>
               <a>
                 <LinkCustom text="mas detalles" />
               </a>
             </Link>
-            .
             <br />
           </div>
         </div>
