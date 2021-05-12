@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 import Head from 'next/head'
 
 const LOGIN = gql`
-  mutation($email: String!, $password: String!) {
+  mutation ($email: String!, $password: String!) {
     loginUser(email: $email, password: $password) {
       user {
         _id
@@ -25,7 +25,7 @@ const LOGIN = gql`
 `
 
 const SIGNUPTHIRDSERVICES = gql`
-  mutation(
+  mutation (
     $name: String!
     $lastName: String
     $nickName: String
@@ -83,13 +83,8 @@ const login = ({ navNotSeeView }) => {
   }
   const responseGoogle = async response => {
     try {
-      const {
-        name,
-        familyName,
-        givenName,
-        email,
-        imageUrl,
-      } = response.profileObj
+      const { name, familyName, givenName, email, imageUrl } =
+        response.profileObj
       const data = await loginThirdServices({
         variables: {
           name,
@@ -167,6 +162,7 @@ const login = ({ navNotSeeView }) => {
                       fields="name,email,picture"
                       callback={responseFacebook}
                       textButton="Facebook"
+                      cssClass="facebook_login"
                     />
                   </Row>
                 </Col>

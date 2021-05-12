@@ -27,3 +27,13 @@
   text-decoration-color: #1890ff;
   cursor: pointer;
 }
+
+.facebook_login {
+  width: 110px;
+  border: none;
+  background-color: #3578e5;
+  border-radius: 3px;
+  color: #fff;
+  padding: 0.7em 0.8em;
+  cursor: pointer;
+}
