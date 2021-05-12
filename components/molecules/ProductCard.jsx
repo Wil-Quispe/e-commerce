@@ -110,11 +110,13 @@ const ProductCard = ({ product, path, addToCartView }) => {
         <div className="card-image">
           <Link href={`/productos/${path}/${product._id}`}>
             <figure className="image is-4by3">
-              <img
-                src={`${product.imgs[0].pathImg || product.img[1].pathImg}`}
-                alt="Placeholder image"
-                style={{ objectFit: 'cover' }}
-              />
+              <a>
+                <img
+                  src={`${product.imgs[0].pathImg || product.img[1].pathImg}`}
+                  alt="Placeholder image"
+                  style={{ objectFit: 'cover' }}
+                />
+              </a>
             </figure>
           </Link>
         </div>
@@ -129,14 +131,21 @@ const ProductCard = ({ product, path, addToCartView }) => {
               </figure>
             </div>
             <div className="media-content">
-              <p className="title is-4">{product.brand}</p>
+              <Link href={`/productos/${path}/${product._id}`}>
+                <p className="title is-4 underline">
+                  <LinkCustom text={product.brand} />
+                </p>
+              </Link>
               <p className="subtitle is-6">{product.model}</p>
             </div>
-            <Button
-              onClick={() => addToCartBtn(product)}
-              type="primary"
-              icon={<ShoppingCartOutlined />}
-            />
+            <div>
+              <Button
+                onClick={() => addToCartBtn(product)}
+                type="primary"
+                icon={<ShoppingCartOutlined />}
+              />
+              <p>{product.price}$</p>
+            </div>
           </div>
           <div className="content">
             <Paragraph style={{ margin: '0' }} ellipsis={{ rows: 2 }}>
