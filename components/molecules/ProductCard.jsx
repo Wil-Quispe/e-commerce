@@ -71,8 +71,8 @@ const ProductCard = ({ product, path, addToCartView }) => {
           await userCartInc({
             variables: {
               id: localStorage.getItem('_id'),
-              img1: product.imgs[0],
-              img2: product.imgs[1],
+              img1: product.imgs[0].pathImg,
+              img2: product.imgs[1].pathImg,
               brand: product.brand,
               model: product.model,
               description: product.description,
@@ -85,8 +85,8 @@ const ProductCard = ({ product, path, addToCartView }) => {
           await thirdUserCartInc({
             variables: {
               id: localStorage.getItem('_id'),
-              img1: product.imgs[0],
-              img2: product.imgs[1],
+              img1: product.imgs[0].pathImg,
+              img2: product.imgs[1].pathImg,
               brand: product.brand,
               model: product.model,
               description: product.description,

@@ -17,7 +17,7 @@ import LinkCustom from '../Atoms/LinkCustom'
 import { camelCase } from '../../utils/index'
 
 const USER = gql`
-  query($id: ID!) {
+  query ($id: ID!) {
     user(_id: $id) {
       _id
       name
@@ -51,7 +51,7 @@ const USER = gql`
   }
 `
 const ADMIN = gql`
-  query($id: ID!) {
+  query ($id: ID!) {
     admin(_id: $id) {
       _id
       name
@@ -74,7 +74,7 @@ const ADMIN = gql`
   }
 `
 const THIRDUSER = gql`
-  query($id: ID!) {
+  query ($id: ID!) {
     thirdUser(_id: $id) {
       _id
       name
@@ -241,17 +241,15 @@ const Navbar = ({
                   <Avatar size={20} src="/admin.svg" />
                 </Tooltip>
               ) : (
-                <Link href="/carrito">
-                  <a>
-                    {/* <Badge dot> */}
-                    <Badge count={Boolean(cartLength) ? cartLength : 0}>
-                      <Button
-                        type="primary"
-                        icon={<ShoppingCartOutlined />}
-                      ></Button>
-                    </Badge>
-                  </a>
-                </Link>
+                <a href="/carrito">
+                  <Badge dot={cartLength > 0 ? true : false}>
+                    {/* <Badge count={Boolean(cartLength) ? cartLength : 0}> */}
+                    <Button
+                      type="primary"
+                      icon={<ShoppingCartOutlined />}
+                    ></Button>
+                  </Badge>
+                </a>
               )}
               {typeof window !== 'undefined' &&
               localStorage.getItem('typeUser') ? (
