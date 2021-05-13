@@ -21,7 +21,7 @@ const PayPeru = ({ amount, img, qr, color }) => {
 
           <Image preview={false} width={200} src={qr} alt={color} />
 
-          <h3 className="name_color_pay">Wil Quispe</h3>
+          <h3 className="name_color_pay">Paul Quiñones</h3>
           <h3 className="number_pay">923 383 923</h3>
           <h3>Total a pagar</h3>
           <h3>S/{amount}</h3>

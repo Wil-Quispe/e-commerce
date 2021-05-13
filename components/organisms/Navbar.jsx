@@ -231,7 +231,7 @@ const Navbar = ({
                     type="primary"
                     shape="circle"
                     target="_blank"
-                    href="https://wa.link/9p5nyn"
+                    href="https://wa.link/ukq28t"
                   />
                 </Tooltip>
               )}
