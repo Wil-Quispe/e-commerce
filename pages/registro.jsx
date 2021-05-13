@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 import Head from 'next/head'
 
 const SIGNUP = gql`
-  mutation($name: String!, $email: String!, $password: String!) {
+  mutation ($name: String!, $email: String!, $password: String!) {
     signUpUser(data: { name: $name, email: $email, password: $password }) {
       user {
         _id
@@ -24,7 +24,7 @@ const SIGNUP = gql`
 `
 
 const SIGNUPTHIRDSERVICES = gql`
-  mutation(
+  mutation (
     $name: String!
     $lastName: String
     $nickName: String
@@ -81,13 +81,8 @@ const signup = ({ navNotSeeView }) => {
   }
   const responseGoogle = async response => {
     try {
-      const {
-        name,
-        familyName,
-        givenName,
-        email,
-        imageUrl,
-      } = response.profileObj
+      const { name, familyName, givenName, email, imageUrl } =
+        response.profileObj
       const data = await loginThirdServices({
         variables: {
           name,
@@ -153,7 +148,7 @@ const signup = ({ navNotSeeView }) => {
                 <Col>
                   <Row style={{ margin: '1em' }} justify="center">
                     <GoogleLogin
-                      clientId="1086856703745-ng0rgthsjdc280e9tg3si0fqft05bkfa.apps.googleusercontent.com"
+                      clientId={`${process.env.GOOGLE_ID}`}
                       buttonText="Google"
                       onSuccess={responseGoogle}
                       onFailure={failGoogle}
@@ -162,7 +157,7 @@ const signup = ({ navNotSeeView }) => {
                   </Row>
                   <Row style={{ margin: '1em' }}>
                     <FacebookLogin
-                      appId="151368343545938"
+                      appId={`${process.env.FACEBOOK_ID}`}
                       fields="name,email,picture"
                       callback={responseFacebook}
                       textButton="Facebook"

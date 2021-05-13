@@ -149,7 +149,7 @@ const login = ({ navNotSeeView }) => {
                 <Col>
                   <Row style={{ margin: '1em' }} justify="center">
                     <GoogleLogin
-                      clientId="1086856703745-ng0rgthsjdc280e9tg3si0fqft05bkfa.apps.googleusercontent.com"
+                      clientId={`${process.env.GOOGLE_ID}`}
                       buttonText="Google"
                       onSuccess={responseGoogle}
                       onFailure={failGoogle}
@@ -158,7 +158,7 @@ const login = ({ navNotSeeView }) => {
                   </Row>
                   <Row style={{ margin: '1em' }}>
                     <FacebookLogin
-                      appId="151368343545938"
+                      appId={`${process.env.FACEBOOK_ID}`}
                       fields="name,email,picture"
                       callback={responseFacebook}
                       textButton="Facebook"
