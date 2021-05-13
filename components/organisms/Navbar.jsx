@@ -224,7 +224,7 @@ const Navbar = ({
           <div className="navbar-item">
             <div className="buttons">
               {userInfos && userInfos.sales ? null : (
-                <Tooltip title="Contactate con Nosotros" placement="bottom">
+                <Tooltip title="Contáctate con Nosotros" placement="bottom">
                   <Button
                     style={{ margin: '0 .5em' }}
                     icon={<WhatsAppOutlined />}

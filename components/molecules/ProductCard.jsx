@@ -153,7 +153,7 @@ const ProductCard = ({ product, path, addToCartView }) => {
             </Paragraph>
             <Link href={`/productos/${path}/${product._id}`}>
               <a>
-                <LinkCustom text="mas detalles" />
+                <LinkCustom text="más detalles" />
               </a>
             </Link>
             <br />

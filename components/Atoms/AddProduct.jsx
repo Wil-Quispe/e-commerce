@@ -172,7 +172,7 @@ const AddProduct = ({ type }) => {
                 <Input />
               </Form.Item>
               <Form.Item
-                label="Description"
+                label="Descripción"
                 name="description"
                 rules={[{ required: true, message: 'Campo requerido' }]}
               >
@@ -200,9 +200,9 @@ const AddProduct = ({ type }) => {
                 rules={[{ required: true, message: 'Campo requerido' }]}
               >
                 <Select allowClear>
-                  <Option value="male">Hombre</Option>
-                  <Option value="female">Mujer</Option>
-                  <Option value="other">Ambos</Option>
+                  <Option value="hombre">Hombre</Option>
+                  <Option value="mujer">Mujer</Option>
+                  <Option value="hombre - mujer">Ambos</Option>
                 </Select>
               </Form.Item>
               <Form.Item
@@ -211,9 +211,9 @@ const AddProduct = ({ type }) => {
                 rules={[{ required: true, message: 'Campo requerido' }]}
               >
                 <Select allowClear>
-                  <Option value="male">Casuales</Option>
-                  <Option value="female">Urbanas</Option>
-                  <Option value="other">Escolares</Option>
+                  <Option value="casuales">Casuales</Option>
+                  <Option value="urbanas">Urbanas</Option>
+                  <Option value="escolares">Escolares</Option>
                 </Select>
               </Form.Item>
               <Form.Item

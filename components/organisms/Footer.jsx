@@ -8,7 +8,7 @@ const Footer = () => {
         </p>
         <p>
           <strong> GoshopPro</strong> todos los
-          <a href="#"> Derechos</a> y recursos estan reservados
+          <a href="#"> Derechos</a> y recursos están reservados
         </p>
       </div>
     </footer>

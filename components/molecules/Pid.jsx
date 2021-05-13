@@ -304,13 +304,13 @@ const Pid = ({ product, userInfo }) => {
                 >
                   <Meta description={product.description} />
                   <Descriptions
-                    title="Informarción del producto"
+                    title="Información del producto"
                     style={{ margin: '.3em 0 0' }}
                   >
                     <Descriptions.Item label="stock">
                       {product.stock}
                     </Descriptions.Item>
-                    <Descriptions.Item label="marka">
+                    <Descriptions.Item label="marca">
                       {product.brand}
                     </Descriptions.Item>
                     <Descriptions.Item label="modelo">
@@ -319,7 +319,7 @@ const Pid = ({ product, userInfo }) => {
                     <Descriptions.Item label="precio">
                       {product.price}$
                     </Descriptions.Item>
-                    <Descriptions.Item label="genero">
+                    <Descriptions.Item label="género">
                       {product.gender}
                     </Descriptions.Item>
                     <Descriptions.Item label="material">
@@ -467,7 +467,7 @@ const Pid = ({ product, userInfo }) => {
                               <Input />
                             </Form.Item>
                             <Form.Item
-                              label="Direccion"
+                              label="Dirección"
                               name="addressHome"
                               className="center_item"
                               rules={[
@@ -498,7 +498,7 @@ const Pid = ({ product, userInfo }) => {
                                       width: '200px',
                                     }}
                                   >
-                                    recibire emails de nuevos productos
+                                    Recibiré emails de nuevos productos
                                   </Checkbox>
                                 </Form.Item>
                               </Row>
@@ -521,7 +521,7 @@ const Pid = ({ product, userInfo }) => {
                                   <Row justify="center">
                                     <Col>
                                       <h3 className="center_paragraph">
-                                        monto a pagar{' '}
+                                        Monto a pagar{' '}
                                         {dataUser.product.units *
                                           Number(product.price)}
                                         $
@@ -596,7 +596,7 @@ const Pid = ({ product, userInfo }) => {
                               <Input />
                             </Form.Item>
                             <Form.Item
-                              label="Direccion"
+                              label="Dirección"
                               name="addressHome"
                               className="center_item"
                               rules={[
@@ -627,7 +627,7 @@ const Pid = ({ product, userInfo }) => {
                                       width: '200px',
                                     }}
                                   >
-                                    recibire emails de nuevos productos
+                                    Recibiré emails de nuevos productos
                                   </Checkbox>
                                 </Form.Item>
                               </Row>
@@ -644,13 +644,13 @@ const Pid = ({ product, userInfo }) => {
                             <Col style={{ width: '100%' }}>
                               <Collapse accordion>
                                 <Panel
-                                  header="Pagar con Paypal"
+                                  header="Pagar con PayPal"
                                   extra={collExtra('/paypal.jpg')}
                                 >
                                   <Row justify="center">
                                     <Col>
                                       <h3 className="center_paragraph">
-                                        monto a pagar{' '}
+                                        Monto a pagar{' '}
                                         {dataUser.product.units *
                                           Number(product.price)}
                                         $

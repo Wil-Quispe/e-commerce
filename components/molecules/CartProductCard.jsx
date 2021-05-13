@@ -6,12 +6,12 @@ import { removeFromCart } from '../../redux/actionCreator'
 import { gql, useMutation } from '@apollo/client'
 
 const USERCARTDEC = gql`
-  mutation($id: ID!, $pId: ID!) {
+  mutation ($id: ID!, $pId: ID!) {
     userCartDec(_id: $id, productId: $pId)
   }
 `
 const THIRDUSERCARTDEC = gql`
-  mutation($id: ID!, $pId: ID!) {
+  mutation ($id: ID!, $pId: ID!) {
     thirdUserCartDec(_id: $id, productId: $pId) {
       name
     }
@@ -75,7 +75,7 @@ const CartProductCard = ({ p, removeFromCartView, typeUser }) => {
             <Link
               href={`/productos/${p.typeProduct.toLowerCase()}/${p.productId}`}
             >
-              <a>mas detalles</a>
+              <a>más detalles</a>
             </Link>
             .
             <br />

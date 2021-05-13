@@ -256,7 +256,7 @@ const UpdateProducts = ({ product }) => {
                   </Form.Item>
                 </Col>
                 <Col>
-                  <Form.Item label="Genero" name="gender">
+                  <Form.Item label="Género" name="gender">
                     <Input />
                   </Form.Item>
                   <Form.Item label="Tipo" name="type">

@@ -54,7 +54,7 @@ const ProductId = ({ loadingFalse }) => {
       {/* producto con sus especificasiones */}
       {data && <Pid product={data.one[0]} />}
 
-      <Divider orientation="left">Las personas tambien buscan esto</Divider>
+      <Divider orientation="left">Las personas también buscan esto</Divider>
 
       {/* productos recomendados */}
       <Row justify="center" gutter={[16, 16]} style={{ margin: '1.5em 3em' }}>

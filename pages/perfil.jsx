@@ -26,7 +26,7 @@ import Head from 'next/head'
 import Banner from '../components/Atoms/Banner'
 
 const THIRDUSERUPDATE = gql`
-  mutation(
+  mutation (
     $id: ID!
     $name: String
     $nickName: String
@@ -63,7 +63,7 @@ const THIRDUSERUPDATE = gql`
   }
 `
 const USERUPDATE = gql`
-  mutation(
+  mutation (
     $id: ID!
     $name: String
     $nickName: String
@@ -100,7 +100,7 @@ const USERUPDATE = gql`
   }
 `
 const ADMINUPDATE = gql`
-  mutation(
+  mutation (
     $id: ID!
     $name: String
     $lastName: String
@@ -417,11 +417,11 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                                 <InputNumber />
                               </Form.Item>
 
-                              <Form.Item name="gender" label="Genero">
+                              <Form.Item name="gender" label="Género">
                                 <Select allowClear>
-                                  <Option value="male">Hombre</Option>
-                                  <Option value="female">Mujer</Option>
-                                  <Option value="other">otro</Option>
+                                  <Option value="hombre">Hombre</Option>
+                                  <Option value="mujer">Mujer</Option>
+                                  <Option value="otro">Otro</Option>
                                 </Select>
                               </Form.Item>
 
@@ -484,11 +484,11 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                                 <InputNumber />
                               </Form.Item>
 
-                              <Form.Item name="gender" label="Genero">
+                              <Form.Item name="gender" label="Género">
                                 <Select allowClear>
-                                  <Option value="male">Hombre</Option>
-                                  <Option value="female">Mujer</Option>
-                                  <Option value="other">otro</Option>
+                                  <Option value="hombre">Hombre</Option>
+                                  <Option value="mujer">Mujer</Option>
+                                  <Option value="otro">Otro</Option>
                                 </Select>
                               </Form.Item>
 
@@ -519,28 +519,23 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                           </Row>
 
                           <Row justify="center">
-                            <Col>
-                              <Row justify="center">
-                                <Form.Item
-                                  name="sendEmail"
-                                  valuePropName="checked"
-                                  style={{
-                                    textAlign: 'center',
-                                  }}
-                                >
-                                  <Checkbox>
-                                    recibire emails de nuevos productos
-                                  </Checkbox>
-                                </Form.Item>
-                              </Row>
-                              <Row justify="center">
-                                <Form.Item>
-                                  <Button type="primary" htmlType="submit">
-                                    Guardar Cambios
-                                  </Button>
-                                </Form.Item>
-                              </Row>
-                            </Col>
+                            <Form.Item name="sendEmail" valuePropName="checked">
+                              <Checkbox
+                                style={{
+                                  textAlign: 'center',
+                                  width: '200px',
+                                }}
+                              >
+                                Recibiré emails de nuevos productos
+                              </Checkbox>
+                            </Form.Item>
+                          </Row>
+                          <Row justify="center">
+                            <Form.Item>
+                              <Button type="primary" htmlType="submit">
+                                Guardar Cambios
+                              </Button>
+                            </Form.Item>
                           </Row>
                         </Col>
                       </Row>
