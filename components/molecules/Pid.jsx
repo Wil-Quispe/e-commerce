@@ -298,15 +298,15 @@ const Pid = ({ product, userInfo }) => {
 
               <Col lg={12} md={24}>
                 <Card
-                  title={`Nombre: ${product.brand}- ${product.model}`}
+                  title={`Modelo: ${product.brand} - ${product.model}`}
                   bordered={false}
                   hoverable={true}
                 >
-                  <Meta
-                    title="Descripcion del producto"
-                    description={product.description}
-                  />
-                  <Descriptions title="Informarción extra">
+                  <Meta description={product.description} />
+                  <Descriptions
+                    title="Informarción del producto"
+                    style={{ margin: '.3em 0 0' }}
+                  >
                     <Descriptions.Item label="stock">
                       {product.stock}
                     </Descriptions.Item>
@@ -360,31 +360,43 @@ const Pid = ({ product, userInfo }) => {
                 </Card>
               </Col>
             </Row>
-            <Row justify="center" style={{ display: `${dataProduct.form}` }}>
+            <Row
+              justify="center"
+              style={{ display: `${dataProduct.form}`, width: '60vw' }}
+            >
               <Col>
                 <Card hoverable>
-                  <Form onFinish={dataProductSend}>
+                  <Form onFinish={dataProductSend} {...formItemLayout}>
                     <Divider>Datos del Producto</Divider>
-                    <Form.Item
-                      label="unidades"
-                      name="units"
-                      rules={[{ required: true, message: 'Campo requerido' }]}
-                    >
-                      <InputNumber />
-                    </Form.Item>
-                    <Form.Item
-                      label="talla"
-                      name="size"
-                      rules={[{ required: true, message: 'Campo requerido' }]}
-                    >
-                      <Select allowClear>
-                        {product?.size.map((s, i) => (
-                          <Option key={i} value={s}>
-                            {s}
-                          </Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
+                    <Row justify="center">
+                      <Col style={{ width: '60%' }}>
+                        <Form.Item
+                          label="talla"
+                          name="size"
+                          rules={[
+                            { required: true, message: 'Campo requerido' },
+                          ]}
+                        >
+                          <Select allowClear>
+                            {product?.size.map((s, i) => (
+                              <Option key={i} value={s}>
+                                {s}
+                              </Option>
+                            ))}
+                          </Select>
+                        </Form.Item>
+                        <Form.Item
+                          label="unidades"
+                          name="units"
+                          rules={[
+                            { required: true, message: 'Campo requerido' },
+                          ]}
+                        >
+                          <InputNumber />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+
                     <Row
                       justify="center"
                       style={{ display: `${dataProduct.btn}` }}
