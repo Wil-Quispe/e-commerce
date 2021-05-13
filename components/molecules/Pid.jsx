@@ -22,6 +22,7 @@ import { ShoppingCartOutlined } from '@ant-design/icons'
 import Head from 'next/head'
 import usePaypal from '../Atoms/Paypal'
 import PayPeru from '../Atoms/PayPeru'
+import ProductToBuy from '../Atoms/ProductToBuy'
 
 const USERUPDATE = gql`
   mutation (
@@ -260,6 +261,16 @@ const Pid = ({ product, userInfo }) => {
     setDataUser({ product: values })
     setDataProduct({ btn: 'none' })
     setFormBuy('block')
+  }
+
+  const productToBuyProps = {
+    brand: product.brand,
+    model: product.model,
+    gender: product.gender,
+    material: product.material,
+    size: dataUser.product?.size,
+    units: dataUser.product?.units,
+    price: product.price,
   }
 
   return (
@@ -513,6 +524,7 @@ const Pid = ({ product, userInfo }) => {
                           </Col>
                           {userInfoUpdate && (
                             <Col style={{ width: '50%' }}>
+                              <ProductToBuy {...productToBuyProps} />
                               <Collapse accordion>
                                 <Panel
                                   header="Pagar con Paypal"
@@ -520,12 +532,6 @@ const Pid = ({ product, userInfo }) => {
                                 >
                                   <Row justify="center">
                                     <Col>
-                                      <h3 className="center_paragraph">
-                                        Monto a pagar{' '}
-                                        {dataUser.product.units *
-                                          Number(product.price)}
-                                        $
-                                      </h3>
                                       <PayPal />
                                     </Col>
                                   </Row>
@@ -642,6 +648,7 @@ const Pid = ({ product, userInfo }) => {
                           </Col>
                           {userInfoUpdate && (
                             <Col style={{ width: '100%' }}>
+                              <ProductToBuy {...productToBuyProps} />
                               <Collapse accordion>
                                 <Panel
                                   header="Pagar con PayPal"
@@ -649,12 +656,6 @@ const Pid = ({ product, userInfo }) => {
                                 >
                                   <Row justify="center">
                                     <Col>
-                                      <h3 className="center_paragraph">
-                                        Monto a pagar{' '}
-                                        {dataUser.product.units *
-                                          Number(product.price)}
-                                        $
-                                      </h3>
                                       <PayPal />
                                     </Col>
                                   </Row>
