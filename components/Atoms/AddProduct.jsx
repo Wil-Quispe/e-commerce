@@ -111,6 +111,7 @@ const AddProduct = ({ type }) => {
       setTimeout(() => {
         location.reload()
       }, 2000)
+      return
     }
     if (!Boolean(imgList.length)) {
       return message.error('No ingresaste ninguna imagen para el producto')
