@@ -183,14 +183,14 @@ const AddProduct = ({ type }) => {
                 name="price"
                 rules={[{ required: true, message: 'Campo requerido' }]}
               >
-                <InputNumber />
+                <InputNumber min={1} />
               </Form.Item>
               <Form.Item
                 label="Stock"
                 name="stock"
                 rules={[{ required: true, message: 'Campo requerido' }]}
               >
-                <InputNumber />
+                <InputNumber min={1} />
               </Form.Item>
             </Col>
             <Col>

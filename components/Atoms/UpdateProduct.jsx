@@ -249,10 +249,10 @@ const UpdateProducts = ({ product }) => {
                     <Input />
                   </Form.Item>
                   <Form.Item label="Precio" name="price">
-                    <InputNumber />
+                    <InputNumber min={1} />
                   </Form.Item>
                   <Form.Item label="Stock" name="stock">
-                    <InputNumber />
+                    <InputNumber min={1} />
                   </Form.Item>
                 </Col>
                 <Col>

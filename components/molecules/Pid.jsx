@@ -403,7 +403,7 @@ const Pid = ({ product, userInfo }) => {
                             { required: true, message: 'Campo requerido' },
                           ]}
                         >
-                          <InputNumber />
+                          <InputNumber min={1} />
                         </Form.Item>
                       </Col>
                     </Row>
@@ -537,7 +537,7 @@ const Pid = ({ product, userInfo }) => {
                                   </Row>
                                 </Panel>
                                 <Panel
-                                  header="Pagar con Yape"
+                                  header="Pagar con Yape solo perú"
                                   extra={collExtra('/yape.png')}
                                 >
                                   <PayPeru
@@ -551,7 +551,7 @@ const Pid = ({ product, userInfo }) => {
                                   />
                                 </Panel>
                                 <Panel
-                                  header="Pagar con Tunki"
+                                  header="Pagar con Tunki solo perú"
                                   extra={collExtra('/tunki.png')}
                                 >
                                   <PayPeru
@@ -661,7 +661,7 @@ const Pid = ({ product, userInfo }) => {
                                   </Row>
                                 </Panel>
                                 <Panel
-                                  header="Pagar con Yape"
+                                  header="Pagar con Yape solo perú"
                                   extra={collExtra('/yape.png')}
                                 >
                                   <PayPeru
@@ -675,7 +675,7 @@ const Pid = ({ product, userInfo }) => {
                                   />
                                 </Panel>
                                 <Panel
-                                  header="Pagar con Tunki"
+                                  header="Pagar con Tunki solo perú"
                                   extra={collExtra('/tunki.png')}
                                 >
                                   <PayPeru

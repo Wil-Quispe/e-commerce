@@ -414,7 +414,7 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                             </Col>
                             <Col>
                               <Form.Item name="age" label="Edad">
-                                <InputNumber />
+                                <InputNumber min={1} />
                               </Form.Item>
 
                               <Form.Item name="gender" label="Género">
@@ -481,7 +481,7 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                               </Form.Item>
 
                               <Form.Item name="age" label="Edad">
-                                <InputNumber />
+                                <InputNumber min={1} />
                               </Form.Item>
 
                               <Form.Item name="gender" label="Género">
