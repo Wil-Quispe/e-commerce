@@ -161,6 +161,7 @@ const signup = ({ navNotSeeView }) => {
                       fields="name,email,picture"
                       callback={responseFacebook}
                       textButton="Facebook"
+                      cssClass="facebook_login"
                     />
                   </Row>
                 </Col>
