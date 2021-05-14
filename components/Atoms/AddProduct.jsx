@@ -1,4 +1,13 @@
-import { Row, Col, Form, Input, Button, InputNumber, Select } from 'antd'
+import {
+  Tooltip,
+  Row,
+  Col,
+  Form,
+  Input,
+  Button,
+  InputNumber,
+  Select,
+} from 'antd'
 import { Upload, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { gql, useMutation, useQuery } from '@apollo/client'
@@ -86,7 +95,7 @@ const AddProduct = ({ type }) => {
       let imgs = []
       fileList.map(f => {
         const fileRules = /jpeg|jpg|png/
-        if (!fileRules.test(f.type)) return message.info('Eliga un imagen pls')
+        if (!fileRules.test(f.type)) return message.info('Elija una imagen')
         if (!f) return
         imgs.push(f)
         // singleUpload({ variables: { file: f } })
@@ -97,8 +106,14 @@ const AddProduct = ({ type }) => {
   }
 
   const createProductFront = async values => {
+    if (imgList.length < 2) {
+      message.error('Tienes que agregar mínimo 2 imágenes')
+      setTimeout(() => {
+        location.reload()
+      }, 2000)
+    }
     if (!Boolean(imgList.length)) {
-      return message.error('no ingresaste ninguna imagen para el producto')
+      return message.error('No ingresaste ninguna imagen para el producto')
     }
     setLoading(true)
     const size = values.size.split(' ')
@@ -251,11 +266,13 @@ const AddProduct = ({ type }) => {
           </Row>
           <Row justify="center" style={{ margin: '0 0 1em' }}>
             <Form.Item name="img">
-              <Upload {...props} multiple listType="picture">
-                <Button icon={<UploadOutlined />}>
-                  Agregar Imagenes al Producto
-                </Button>
-              </Upload>
+              <Tooltip title="Agregar mínimo 2 imágenes">
+                <Upload {...props} multiple listType="picture">
+                  <Button icon={<UploadOutlined />}>
+                    Agregar Imagenes al Producto
+                  </Button>
+                </Upload>
+              </Tooltip>
             </Form.Item>
           </Row>
         </Col>
