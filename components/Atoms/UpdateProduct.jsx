@@ -135,6 +135,8 @@ const UpdateProducts = ({ product }) => {
   }
 
   const deleteProductFront = async e => {
+    message.info('No puedes eliminar el producto son de Ejemplo')
+    return
     e.stopPropagation()
     let imgsVar = []
     imgs.map(i => {
