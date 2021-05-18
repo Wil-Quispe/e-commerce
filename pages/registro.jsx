@@ -137,19 +137,19 @@ const signup = ({ navNotSeeView }) => {
       <Head>
         <title>Registrarse | {process.env.SITE_NAME}</title>
       </Head>
-      <section className="section">
-        <div className="container">
-          <Row justify="center">
+      <section className='section'>
+        <div className='container'>
+          <Row justify='center'>
             <Col style={{ width: '300px' }}>
-              <Row justify="center">
+              <Row justify='center'>
                 <h3>Inicia Sesion con</h3>
               </Row>
-              <Row justify="center" style={{ margin: '0 0 1em' }}>
+              <Row justify='center' style={{ margin: '0 0 1em' }}>
                 <Col>
-                  <Row style={{ margin: '1em' }} justify="center">
+                  <Row style={{ margin: '1em' }} justify='center'>
                     <GoogleLogin
                       clientId={`${process.env.GOOGLE_ID}`}
-                      buttonText="Google"
+                      buttonText='Google'
                       onSuccess={responseGoogle}
                       onFailure={failGoogle}
                       cookiePolicy={'single_host_origin'}
@@ -158,17 +158,17 @@ const signup = ({ navNotSeeView }) => {
                   <Row style={{ margin: '1em' }}>
                     <FacebookLogin
                       appId={`${process.env.FACEBOOK_ID}`}
-                      fields="name,email,picture"
+                      fields='name,email,picture'
                       callback={responseFacebook}
-                      textButton="Facebook"
-                      cssClass="facebook_login"
+                      textButton='Facebook'
+                      cssClass='facebook_login'
                     />
                   </Row>
                 </Col>
               </Row>
-              <Form name="register" onFinish={onFinish}>
+              <Form name='register' onFinish={onFinish}>
                 <Form.Item
-                  name="name"
+                  name='name'
                   rules={[
                     {
                       required: true,
@@ -177,18 +177,14 @@ const signup = ({ navNotSeeView }) => {
                   ]}
                 >
                   <Input
-                    prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="Nombre de Usuario"
+                    prefix={<UserOutlined className='site-form-item-icon' />}
+                    placeholder='Nombre de Usuario'
                   />
                 </Form.Item>
 
                 <Form.Item
-                  name="email"
+                  name='email'
                   rules={[
-                    {
-                      type: 'email',
-                      message: 'Contraseña incorrecta!',
-                    },
                     {
                       required: true,
                       message: 'ingrese su correo!',
@@ -196,13 +192,13 @@ const signup = ({ navNotSeeView }) => {
                   ]}
                 >
                   <Input
-                    prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="correo electronico"
+                    prefix={<UserOutlined className='site-form-item-icon' />}
+                    placeholder='correo electronico'
                   />
                 </Form.Item>
 
                 <Form.Item
-                  name="password"
+                  name='password'
                   rules={[
                     {
                       required: true,
@@ -212,13 +208,13 @@ const signup = ({ navNotSeeView }) => {
                   hasFeedback
                 >
                   <Input.Password
-                    prefix={<LockOutlined className="site-form-item-icon" />}
-                    placeholder="contraseña"
+                    prefix={<LockOutlined className='site-form-item-icon' />}
+                    placeholder='contraseña'
                   />
                 </Form.Item>
 
                 <Form.Item
-                  name="confirm"
+                  name='confirm'
                   dependencies={['password']}
                   hasFeedback
                   rules={[
@@ -240,17 +236,17 @@ const signup = ({ navNotSeeView }) => {
                   ]}
                 >
                   <Input.Password
-                    prefix={<LockOutlined className="site-form-item-icon" />}
-                    placeholder="confirmar contraseña"
+                    prefix={<LockOutlined className='site-form-item-icon' />}
+                    placeholder='confirmar contraseña'
                   />
                 </Form.Item>
 
-                <Row justify="center">
+                <Row justify='center'>
                   <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button type='primary' htmlType='submit'>
                       Registrarse
                     </Button>
-                    {'  '} O <Link href="/login">Iniciar Sesion</Link>
+                    {'  '} O <Link href='/login'>Iniciar Sesion</Link>
                   </Form.Item>
                 </Row>
               </Form>
