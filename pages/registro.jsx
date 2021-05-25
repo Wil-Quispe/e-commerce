@@ -189,6 +189,7 @@ const signup = ({ navNotSeeView }) => {
                       required: true,
                       message: 'ingrese su correo!',
                     },
+                    { type: 'email', message: 'correo invalido' },
                   ]}
                 >
                   <Input
