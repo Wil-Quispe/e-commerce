@@ -5,8 +5,22 @@ import { useEffect } from 'react'
 import CartProductCard from '../components/molecules/CartProductCard'
 import Head from 'next/head'
 import Spinner from '../components/Atoms/Spinner'
+import Link from 'next/link'
 
 const cart = ({ cartList, navNotSeeView }) => {
+  if (!Boolean(localStorage.getItem('token')))
+    return (
+      <div
+        className='result_page'
+        style={{ textAlign: 'center', margin: '1.5em 3em' }}
+      >
+        <h1>
+          Tienes que iniciar sesión y agregar ítems a tu carrito para ver algún
+          contenido
+        </h1>
+        <Link href='/'>Inicio</Link>
+      </div>
+    )
   useEffect(() => {
     navNotSeeView()
   }, [])
