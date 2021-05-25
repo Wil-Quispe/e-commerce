@@ -5,8 +5,7 @@ import Head from 'next/head'
 import ProductCard from '../../components/molecules/ProductCard'
 import { camelCase } from '../../utils/index'
 import { connect } from 'react-redux'
-import { navMobileNotSee, loadingFalse } from '../../redux/actionCreator'
-import { useEffect } from 'react'
+import { loadingFalse } from '../../redux/actionCreator'
 import Spinner from '../../components/Atoms/Spinner'
 
 const QUERYPRODUCTS = gql`
@@ -25,7 +24,7 @@ const QUERYPRODUCTS = gql`
   }
 `
 
-const ProductIndex = ({ navNotSeeView, loadingFalse }) => {
+const ProductIndex = ({ loadingFalse }) => {
   const router = useRouter()
   const { slug } = router.query
   const { data } = useQuery(QUERYPRODUCTS, { variables: { typeProduct: slug } })
@@ -55,9 +54,6 @@ const mapDispatchToProps = dispatch => {
   return {
     loadingFalse() {
       dispatch(loadingFalse())
-    },
-    navNotSeeView() {
-      dispatch(navMobileNotSee())
     },
   }
 }
