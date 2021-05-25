@@ -24,6 +24,7 @@ import { useEffect } from 'react'
 import { navMobileNotSee } from '../redux/actionCreator'
 import Head from 'next/head'
 import Banner from '../components/Atoms/Banner'
+import Spinner from '../components/Atoms/Spinner'
 
 const THIRDUSERUPDATE = gql`
   mutation (
@@ -313,36 +314,36 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
           {userInfos?.admin ? '✨Administrador' : `Perfil: ${userInfos?.name}`}
         </title>
       </Head>
-      <section className="section">
-        <div className="container">
-          {userInfos && (
+      <section className='section'>
+        <div className='container'>
+          {userInfos ? (
             <>
-              <Row justify="center">
+              <Row justify='center'>
                 <Card style={{ width: '500px' }} hoverable>
                   <Row>
                     {userInfos.img ? (
                       <Meta
-                        avatar={<Avatar src={userInfos.img} size="large" />}
+                        avatar={<Avatar src={userInfos.img} size='large' />}
                         title={`Hola ${userInfos.name}`}
                       />
                     ) : (
                       <Meta
-                        avatar={<Avatar icon={<UserOutlined />} size="large" />}
+                        avatar={<Avatar icon={<UserOutlined />} size='large' />}
                         title={`Hola ${userInfos.name}`}
                       />
                     )}
                   </Row>
-                  <Row justify="space-between" style={{ margin: '1em 0 0' }}>
+                  <Row justify='space-between' style={{ margin: '1em 0 0' }}>
                     <Col>
                       {userInfos.admin ? (
                         <Row>
                           <Col>
-                            <Tag color="#108ee9">
+                            <Tag color='#108ee9'>
                               ventas: {userInfos.sales.length}
                             </Tag>
                           </Col>
                           <Col>
-                            <Tag color="#108ee9">
+                            <Tag color='#108ee9'>
                               productos: {productsLength}
                             </Tag>
                           </Col>
@@ -350,12 +351,12 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                       ) : (
                         <Row>
                           <Col>
-                            <Tag color="#108ee9">
+                            <Tag color='#108ee9'>
                               Compras: {userInfos.shopping.length}
                             </Tag>
                           </Col>
                           <Col>
-                            <Tag color="#108ee9">
+                            <Tag color='#108ee9'>
                               Carrito: {userInfos.cart.length}
                             </Tag>
                           </Col>
@@ -363,9 +364,9 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                       )}
                     </Col>
                     <Col>
-                      <Tooltip title="Cerrar Sesion">
+                      <Tooltip title='Cerrar Sesion'>
                         <Button
-                          type="primary"
+                          type='primary'
                           icon={<LogoutOutlined />}
                           onClick={logOut}
                         />
@@ -375,7 +376,7 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                 </Card>
               </Row>
 
-              <Row justify="center">
+              <Row justify='center'>
                 {userInfos.admin ? (
                   <Card hoverable style={{ margin: '2em 0' }}>
                     <Form
@@ -395,44 +396,44 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                         <Col>
                           <Row>
                             <Col>
-                              <Form.Item name="name" label="Nombre">
+                              <Form.Item name='name' label='Nombre'>
                                 <Input />
                               </Form.Item>
-                              <Form.Item name="lastName" label="Apellido">
+                              <Form.Item name='lastName' label='Apellido'>
                                 <Input />
                               </Form.Item>
                               <Form.Item
-                                name="nickName"
-                                label="Nickname"
-                                tooltip="Como quieres que otras personas te llamen"
+                                name='nickName'
+                                label='Nickname'
+                                tooltip='Como quieres que otras personas te llamen'
                               >
                                 <Input />
                               </Form.Item>
-                              <Form.Item name="phoneNumber" label="Celular">
-                                <Input addonBefore="+51" />
+                              <Form.Item name='phoneNumber' label='Celular'>
+                                <Input addonBefore='+51' />
                               </Form.Item>
                             </Col>
                             <Col>
-                              <Form.Item name="age" label="Edad">
+                              <Form.Item name='age' label='Edad'>
                                 <InputNumber min={1} />
                               </Form.Item>
 
-                              <Form.Item name="gender" label="Género">
+                              <Form.Item name='gender' label='Género'>
                                 <Select allowClear>
-                                  <Option value="hombre">Hombre</Option>
-                                  <Option value="mujer">Mujer</Option>
-                                  <Option value="otro">Otro</Option>
+                                  <Option value='hombre'>Hombre</Option>
+                                  <Option value='mujer'>Mujer</Option>
+                                  <Option value='otro'>Otro</Option>
                                 </Select>
                               </Form.Item>
 
-                              <Form.Item name="email" label="E-mail">
+                              <Form.Item name='email' label='E-mail'>
                                 <Input readOnly />
                               </Form.Item>
                             </Col>
                           </Row>
 
-                          <Row justify="center">
-                            <Button type="primary" htmlType="submit">
+                          <Row justify='center'>
+                            <Button type='primary' htmlType='submit'>
                               Guardar Cambios
                             </Button>
                           </Row>
@@ -444,7 +445,7 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                   <Card hoverable style={{ margin: '2em 0' }}>
                     <Form
                       {...formItemLayout}
-                      name="register"
+                      name='register'
                       onFinish={onFinish}
                       initialValues={{
                         name: `${userInfos.name}`,
@@ -462,64 +463,64 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                         sendEmail: `${userInfos.sendEmail || ''}`,
                       }}
                     >
-                      <Row justify="center">
+                      <Row justify='center'>
                         <Col>
                           <Row>
                             <Col>
-                              <Form.Item name="name" label="Nombre">
+                              <Form.Item name='name' label='Nombre'>
                                 <Input />
                               </Form.Item>
-                              <Form.Item name="lastName" label="Apellido">
+                              <Form.Item name='lastName' label='Apellido'>
                                 <Input />
                               </Form.Item>
                               <Form.Item
-                                name="nickName"
-                                label="Nickname"
-                                tooltip="Como quieres que otras personas te llamen"
+                                name='nickName'
+                                label='Nickname'
+                                tooltip='Como quieres que otras personas te llamen'
                               >
                                 <Input />
                               </Form.Item>
 
-                              <Form.Item name="age" label="Edad">
+                              <Form.Item name='age' label='Edad'>
                                 <InputNumber min={1} />
                               </Form.Item>
 
-                              <Form.Item name="gender" label="Género">
+                              <Form.Item name='gender' label='Género'>
                                 <Select allowClear>
-                                  <Option value="hombre">Hombre</Option>
-                                  <Option value="mujer">Mujer</Option>
-                                  <Option value="otro">Otro</Option>
+                                  <Option value='hombre'>Hombre</Option>
+                                  <Option value='mujer'>Mujer</Option>
+                                  <Option value='otro'>Otro</Option>
                                 </Select>
                               </Form.Item>
 
-                              <Form.Item name="email" label="E-mail">
+                              <Form.Item name='email' label='E-mail'>
                                 <Input readOnly />
                               </Form.Item>
                             </Col>
                             <Col>
-                              <Form.Item name="country" label="Pais">
+                              <Form.Item name='country' label='Pais'>
                                 <Input />
                               </Form.Item>
-                              <Form.Item name="city" label="Cuidad">
+                              <Form.Item name='city' label='Cuidad'>
                                 <Input />
                               </Form.Item>
-                              <Form.Item name="district" label="Distrito">
+                              <Form.Item name='district' label='Distrito'>
                                 <Input />
                               </Form.Item>
-                              <Form.Item name="addressHome" label="Dirección">
+                              <Form.Item name='addressHome' label='Dirección'>
                                 <Input />
                               </Form.Item>
-                              <Form.Item name="reference" label="Referencia">
+                              <Form.Item name='reference' label='Referencia'>
                                 <Input />
                               </Form.Item>
-                              <Form.Item name="phoneNumber" label="Celular">
-                                <Input addonBefore="+51" />
+                              <Form.Item name='phoneNumber' label='Celular'>
+                                <Input addonBefore='+51' />
                               </Form.Item>
                             </Col>
                           </Row>
 
-                          <Row justify="center">
-                            <Form.Item name="sendEmail" valuePropName="checked">
+                          <Row justify='center'>
+                            <Form.Item name='sendEmail' valuePropName='checked'>
                               <Checkbox
                                 style={{
                                   textAlign: 'center',
@@ -530,9 +531,9 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                               </Checkbox>
                             </Form.Item>
                           </Row>
-                          <Row justify="center">
+                          <Row justify='center'>
                             <Form.Item>
-                              <Button type="primary" htmlType="submit">
+                              <Button type='primary' htmlType='submit'>
                                 Guardar Cambios
                               </Button>
                             </Form.Item>
@@ -549,7 +550,7 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                   {lastSells.length > 0 && (
                     <>
                       <Divider>Ultimas Ventas</Divider>
-                      <Row justify="center" gutter={[16, 16]}>
+                      <Row justify='center' gutter={[16, 16]}>
                         {lastSells?.map((s, i) => (
                           <LastSells sell={s.sells} key={i} />
                         ))}
@@ -557,31 +558,31 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                     </>
                   )}
                   <Divider>Banner principal</Divider>
-                  <Row justify="center">
+                  <Row justify='center'>
                     <Collapse>
-                      <Panel header="Primer Banner">
+                      <Panel header='Primer Banner'>
                         <Banner indice={0} />
                       </Panel>
-                      <Panel header="Segundo Banner">
+                      <Panel header='Segundo Banner'>
                         <Banner indice={1} />
                       </Panel>
                     </Collapse>
                   </Row>
                   <Divider>Crear Productos</Divider>
-                  <Row justify="center">
+                  <Row justify='center'>
                     <Collapse style={{ width: '592.5px' }}>
-                      <Panel header="Agregar Producto">
+                      <Panel header='Agregar Producto'>
                         <AddProduct />
                       </Panel>
-                      <Panel header="Crear nuevo tipo de producto">
-                        <AddProduct type="new type" />
+                      <Panel header='Crear nuevo tipo de producto'>
+                        <AddProduct type='new type' />
                       </Panel>
                     </Collapse>
                   </Row>
                   {queryProducts?.product.length > 0 ? (
                     <>
                       <Divider>Actualizar Productos</Divider>
-                      <Row justify="center">
+                      <Row justify='center'>
                         <Collapse style={{ width: '592.5px' }}>
                           {queryProducts &&
                             queryProducts?.product.map((p, i) => (
@@ -596,6 +597,8 @@ const profile = ({ userInfos, lastSells, navNotSeeView }) => {
                 </>
               )}
             </>
+          ) : (
+            <Spinner />
           )}
         </div>
       </section>

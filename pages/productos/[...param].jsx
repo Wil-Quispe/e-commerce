@@ -6,6 +6,7 @@ import Pid from '../../components/molecules/Pid'
 import ProductCard from '../../components/molecules/ProductCard'
 import { connect } from 'react-redux'
 import { loadingFalse } from '../../redux/actionCreator'
+import Spinner from '../../components/Atoms/Spinner'
 
 const PRODUCTID = gql`
   query ($sId: ID!, $typeProduct: String!) {
@@ -51,17 +52,27 @@ const ProductId = ({ loadingFalse }) => {
   })
   return (
     <main>
-      {/* producto con sus especificasiones */}
-      {data && <Pid product={data.one[0]} />}
+      {data ? (
+        <>
+          {/* producto con sus especificasiones */}
+          {data && <Pid product={data.one[0]} />}
 
-      <Divider orientation="left">Las personas también buscan esto</Divider>
+          <Divider orientation='left'>Las personas también buscan esto</Divider>
 
-      {/* productos recomendados */}
-      <Row justify="center" gutter={[16, 16]} style={{ margin: '1.5em 3em' }}>
-        {data?.many?.map((d, i) => (
-          <ProductCard key={i} product={d} path={param[0]} />
-        ))}
-      </Row>
+          {/* productos recomendados */}
+          <Row
+            justify='center'
+            gutter={[16, 16]}
+            style={{ margin: '1.5em 3em' }}
+          >
+            {data?.many?.map((d, i) => (
+              <ProductCard key={i} product={d} path={param[0]} />
+            ))}
+          </Row>
+        </>
+      ) : (
+        <Spinner />
+      )}
     </main>
   )
 }

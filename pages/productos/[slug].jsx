@@ -7,9 +7,10 @@ import { camelCase } from '../../utils/index'
 import { connect } from 'react-redux'
 import { navMobileNotSee, loadingFalse } from '../../redux/actionCreator'
 import { useEffect } from 'react'
+import Spinner from '../../components/Atoms/Spinner'
 
 const QUERYPRODUCTS = gql`
-  query($typeProduct: String!) {
+  query ($typeProduct: String!) {
     product(typeProduct: $typeProduct) {
       _id
       brand
@@ -38,10 +39,14 @@ const ProductIndex = ({ navNotSeeView, loadingFalse }) => {
       <Head>
         <title>{slug && `${camelCase(slug)} | ${process.env.SITE_NAME}`}</title>
       </Head>
-      <Row justify="center" gutter={[16, 16]} style={{ margin: '1.5em 3em' }}>
-        {data?.product.map((d, i) => (
-          <ProductCard key={i} product={d} path={slug} />
-        ))}
+      <Row justify='center' gutter={[16, 16]} style={{ margin: '1.5em 3em' }}>
+        {data ? (
+          data?.product.map((d, i) => (
+            <ProductCard key={i} product={d} path={slug} />
+          ))
+        ) : (
+          <Spinner />
+        )}
       </Row>
     </>
   )
