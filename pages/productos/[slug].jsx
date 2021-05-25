@@ -29,9 +29,7 @@ const ProductIndex = ({ navNotSeeView, loadingFalse }) => {
   const router = useRouter()
   const { slug } = router.query
   const { data } = useQuery(QUERYPRODUCTS, { variables: { typeProduct: slug } })
-  useEffect(() => {
-    navNotSeeView()
-  }, [])
+
   loadingFalse()
 
   return (

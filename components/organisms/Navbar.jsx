@@ -151,13 +151,15 @@ const Navbar = ({
     }
   }
   const navVisible = () => {
-    if (localStorage.getItem('navMobile') !== 'is-active') {
-      localStorage.setItem('navMobile', 'is-active')
+    if (navMobileState.nav !== 'is-active') {
       navSeeView()
     } else {
-      localStorage.setItem('navMobile', '')
       navNotSeeView()
     }
+  }
+
+  const notNavVisible = () => {
+    navNotSeeView()
   }
 
   const typeProducts = [
@@ -166,9 +168,9 @@ const Navbar = ({
 
   return (
     <nav
-      className="navbar"
-      role="navigation"
-      aria-label="main navigation"
+      className='navbar'
+      role='navigation'
+      aria-label='main navigation'
       style={{
         background: '#F0F0F0',
         position: '-webkit-sticky',
@@ -176,76 +178,76 @@ const Navbar = ({
         top: '0',
       }}
     >
-      <div className="navbar-brand">
-        <Link href="/">
-          <a className="navbar-item">
+      <div className='navbar-brand'>
+        <Link href='/'>
+          <a className='navbar-item'>
             <img
               width={112}
               height={28}
-              src="https://coolboxpe.vtexassets.com/arquivos/completeIconCoolbox.png"
-              alt="main logo"
+              src='https://coolboxpe.vtexassets.com/arquivos/completeIconCoolbox.png'
+              alt='main logo'
             />
           </a>
         </Link>
 
         {/* barra hamburgesa responsive */}
         <a
-          role="button"
-          className="navbar-burger"
-          aria-label="menu"
-          aria-expanded="true"
-          data-target="navbarBasicExample"
+          role='button'
+          className='navbar-burger'
+          aria-label='menu'
+          aria-expanded='true'
+          data-target='navbarBasicExample'
           onClick={navVisible}
         >
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
-          <span aria-hidden="true" />
+          <span aria-hidden='true' />
+          <span aria-hidden='true' />
+          <span aria-hidden='true' />
         </a>
       </div>
 
-      <div className={`navbar-menu ${navMobileState.nav}`} id="navbar-menu">
-        <div className="navbar-start">
-          <Link href="/">
-            <a className="navbar-item">
-              <LinkCustom text="Inicio" />
+      <div className={`navbar-menu ${navMobileState.nav}`} id='navbar-menu'>
+        <div className='navbar-start'>
+          <Link href='/'>
+            <a className='navbar-item'>
+              <LinkCustom text='Inicio' />
             </a>
           </Link>
 
           {typeProducts?.map((p, i) => (
             <Link href={`/productos/${p}`} key={i}>
-              <a className="navbar-item">
+              <a className='navbar-item' onClick={notNavVisible}>
                 <LinkCustom text={camelCase(p)} />
               </a>
             </Link>
           ))}
         </div>
 
-        <div className="navbar-end">
-          <div className="navbar-item">
-            <div className="buttons">
+        <div className='navbar-end'>
+          <div className='navbar-item'>
+            <div className='buttons'>
               {userInfos && userInfos.sales ? null : (
-                <Tooltip title="Contáctate con Nosotros" placement="bottom">
+                <Tooltip title='Contáctate con Nosotros' placement='bottom'>
                   <Button
                     style={{ margin: '0 .5em' }}
                     icon={<WhatsAppOutlined />}
-                    type="primary"
-                    shape="circle"
-                    target="_blank"
-                    href="https://wa.link/ukq28t"
+                    type='primary'
+                    shape='circle'
+                    target='_blank'
+                    href='https://wa.link/ukq28t'
                   />
                 </Tooltip>
               )}
               {typeof window !== 'undefined' &&
               localStorage.getItem('typeUser') === 'ADMIN' ? (
-                <Tooltip title="Administrador" placement="bottom">
-                  <Avatar size={20} src="/admin.svg" />
+                <Tooltip title='Administrador' placement='bottom'>
+                  <Avatar size={20} src='/admin.svg' />
                 </Tooltip>
               ) : (
-                <a href="/carrito">
+                <a href='/carrito'>
                   <Badge dot={cartLength > 0 ? true : false}>
                     {/* <Badge count={Boolean(cartLength) ? cartLength : 0}> */}
                     <Button
-                      type="primary"
+                      type='primary'
                       icon={<ShoppingCartOutlined />}
                     ></Button>
                   </Badge>
@@ -253,12 +255,12 @@ const Navbar = ({
               )}
               {typeof window !== 'undefined' &&
               localStorage.getItem('typeUser') ? (
-                <Link href="/perfil">
-                  <Tooltip title="Ver Perfil" placement="bottom">
+                <Link href='/perfil'>
+                  <Tooltip title='Ver Perfil' placement='bottom'>
                     {userInfos && userInfos.img ? (
                       <Avatar
                         src={userInfos.img}
-                        shape="circle"
+                        shape='circle'
                         style={{ height: 'auto', margin: '.5em' }}
                       />
                     ) : (
@@ -271,13 +273,13 @@ const Navbar = ({
                 </Link>
               ) : (
                 <>
-                  <Link href="/registro">
-                    <Button type="primary" style={{ margin: '0 .5em' }}>
+                  <Link href='/registro'>
+                    <Button type='primary' style={{ margin: '0 .5em' }}>
                       Registrarse
                     </Button>
                   </Link>
-                  <Link href="/login">
-                    <Button type="primary">Iniciar Sesion</Button>
+                  <Link href='/login'>
+                    <Button type='primary'>Iniciar Sesion</Button>
                   </Link>
                 </>
               )}
