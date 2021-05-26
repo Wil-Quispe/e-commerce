@@ -20,6 +20,7 @@ const QUERYPRODUCTS = gql`
         pubId
         pathImg
       }
+      typeProduct
     }
   }
 `
