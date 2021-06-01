@@ -1,8 +1,8 @@
 import { gql, useQuery } from '@apollo/client'
 import Link from 'next/link'
-import { Carousel } from 'antd'
+import { Carousel, Row } from 'antd'
 const BANNER = gql`
-  query($id: ID!) {
+  query ($id: ID!) {
     admin(_id: $id) {
       banner {
         path
@@ -18,16 +18,18 @@ const Slider = () => {
   })
 
   return (
-    <section className="section" style={{ margin: '-2.5em 0' }}>
-      <div className="container">
+    <section className='section'>
+      <div className='container'>
         <Carousel autoplay>
           {banner?.admin.banner.map((img, i) => (
             <div key={i}>
-              <Link href={img.href}>
-                <a>
-                  <img src={img.path} />
-                </a>
-              </Link>
+              <Row justify='center'>
+                <Link href={img.href}>
+                  <a>
+                    <img src={img.path} />
+                  </a>
+                </Link>
+              </Row>
             </div>
           ))}
         </Carousel>
