@@ -25,7 +25,7 @@ import PayPeru from '../Atoms/PayPeru'
 import ProductToBuy from '../Atoms/ProductToBuy'
 
 const USERUPDATE = gql`
-  mutation (
+  mutation(
     $id: ID!
     $phoneNumber: String!
     $city: String!
@@ -50,7 +50,7 @@ const USERUPDATE = gql`
   }
 `
 const THIRDUSERUPDATE = gql`
-  mutation (
+  mutation(
     $id: ID!
     $phoneNumber: String!
     $city: String!
@@ -75,14 +75,14 @@ const THIRDUSERUPDATE = gql`
   }
 `
 const USERSHOPPINGINC = gql`
-  mutation ($id: ID!, $pId: ID!, $prodType: String!) {
+  mutation($id: ID!, $pId: ID!, $prodType: String!) {
     userShoppingInc(_id: $id, data: { _id: $pId, productType: $prodType }) {
       _id
     }
   }
 `
 const THIRDUSERSHOPPINGINC = gql`
-  mutation ($id: ID!, $pId: ID!, $prodType: String!) {
+  mutation($id: ID!, $pId: ID!, $prodType: String!) {
     thirdUserShoppingInc(
       _id: $id
       data: { _id: $pId, productType: $prodType }
@@ -92,12 +92,12 @@ const THIRDUSERSHOPPINGINC = gql`
   }
 `
 const ADMINSALESINC = gql`
-  mutation ($id: ID!, $prodType: String!) {
+  mutation($id: ID!, $prodType: String!) {
     adminSalesInc(data: { _id: $id, productType: $prodType })
   }
 `
 const SENDMSGTELEGRAM = gql`
-  mutation ($msg: String!) {
+  mutation($msg: String!) {
     sendMsgTelegram(message: $msg)
   }
 `
@@ -157,11 +157,19 @@ const Pid = ({ product, userInfo }) => {
     }
   }, [dataPay])
 
-  const collExtra = imgUrl => <Image src={imgUrl} width={20} preview={false} />
+  const collExtra = (imgUrl) => (
+    <Image src={imgUrl} width={20} preview={false} />
+  )
 
-  const handleBuy = async values => {
-    const { phoneNumber, city, district, addressHome, reference, sendEmail } =
-      values
+  const handleBuy = async (values) => {
+    const {
+      phoneNumber,
+      city,
+      district,
+      addressHome,
+      reference,
+      sendEmail,
+    } = values
 
     setDataUser({ ...dataUser, user: values })
 
@@ -257,7 +265,7 @@ const Pid = ({ product, userInfo }) => {
     window.location = '/pago/exitoso'
   }
 
-  const dataProductSend = async values => {
+  const dataProductSend = async (values) => {
     setDataUser({ product: values })
     setDataProduct({ btn: 'none' })
     setFormBuy('block')
@@ -360,7 +368,7 @@ const Pid = ({ product, userInfo }) => {
                           setBuy('none'), setDataProduct({ form: 'block' })
                         } else {
                           message.info(
-                            'Tienes que Iniciar Session o Registrarte'
+                            'Tienes que Iniciar Session o Registrarte',
                           )
                         }
                       }}
@@ -705,7 +713,7 @@ const Pid = ({ product, userInfo }) => {
   )
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   userInfo: state.userReducer.user[0],
 })
 

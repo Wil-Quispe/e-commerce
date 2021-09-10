@@ -10,6 +10,7 @@ import NProgress from 'nprogress'
 
 import store from '../redux/store'
 import Spinner from '../components/Atoms/Spinner'
+NProgress.configure({ showSpinner: false })
 
 const client = new ApolloClient({
   uri: process.env.URI,

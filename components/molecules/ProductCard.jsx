@@ -112,7 +112,7 @@ const ProductCard = ({ product, path, addToCartView }) => {
                 <img
                   src={`${product.imgs[0].pathImg || product.img[1].pathImg}`}
                   alt="Placeholder image"
-                  style={{ objectFit: 'cover' }}
+                  style={{ objectFit: 'cover', objectPosition: 'top' }}
                 />
               </a>
             </figure>
@@ -123,6 +123,7 @@ const ProductCard = ({ product, path, addToCartView }) => {
             <div className="media-left">
               <figure className="image is-48x48">
                 <img
+                  style={{ objectPosition: 'top' }}
                   src={`${product.imgs[1].pathImg || product.img[2].pathImg}`}
                   alt="Placeholder image"
                 />

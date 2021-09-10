@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Badge, Button, Avatar, Tooltip, Spin } from 'antd'
+import { Badge, Button, Avatar, Tooltip } from 'antd'
 import { gql, useQuery } from '@apollo/client'
 import {
   ShoppingCartOutlined,
