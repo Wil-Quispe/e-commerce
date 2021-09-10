@@ -25,8 +25,10 @@ function MyApp({ Component, pageProps }) {
     Router.events.on('routeChangeComplete', () => {
       NProgress.done()
     })
+
     setLoading(false)
   }, [])
+
   return (
     <>
       {loading ? (

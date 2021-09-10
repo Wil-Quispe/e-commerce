@@ -20,25 +20,6 @@ const navMobileReducer = (state = navInitialState, action) => {
   return state
 }
 
-const initialStates = {
-  loading: false,
-}
-
-const stateReducer = (state = initialStates, action) => {
-  switch (action.type) {
-    case 'LOADING_TRUE':
-      return {
-        loading: (state.loading = true),
-      }
-
-    case 'LOADING_FALSE':
-      return {
-        loading: (state.loading = false),
-      }
-  }
-  return state
-}
-
 const cartInitialState = {
   cart: typeof window !== 'undefined' && Number(localStorage.getItem('cart')),
 }
@@ -108,7 +89,6 @@ export default createStore(
     userReducer,
     sellsReducer,
     navMobileReducer,
-    stateReducer,
   }),
-  composeWithDevTools()
+  composeWithDevTools(),
 )

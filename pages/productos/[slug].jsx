@@ -4,12 +4,10 @@ import { gql, useQuery } from '@apollo/client'
 import Head from 'next/head'
 import ProductCard from '../../components/molecules/ProductCard'
 import { camelCase } from '../../utils/index'
-import { connect } from 'react-redux'
-import { loadingFalse } from '../../redux/actionCreator'
 import Spinner from '../../components/Atoms/Spinner'
 
 const QUERYPRODUCTS = gql`
-  query ($typeProduct: String!) {
+  query($typeProduct: String!) {
     product(typeProduct: $typeProduct) {
       _id
       brand
@@ -25,19 +23,17 @@ const QUERYPRODUCTS = gql`
   }
 `
 
-const ProductIndex = ({ loadingFalse }) => {
+const ProductIndex = () => {
   const router = useRouter()
   const { slug } = router.query
   const { data } = useQuery(QUERYPRODUCTS, { variables: { typeProduct: slug } })
-
-  loadingFalse()
 
   return (
     <>
       <Head>
         <title>{slug && `${camelCase(slug)} | ${process.env.SITE_NAME}`}</title>
       </Head>
-      <Row justify='center' gutter={[16, 16]} style={{ margin: '1.5em 3em' }}>
+      <Row justify="center" gutter={[16, 16]} style={{ margin: '1.5em 3em' }}>
         {data ? (
           data?.product.map((d, i) => (
             <ProductCard key={i} product={d} path={slug} />
@@ -50,13 +46,4 @@ const ProductIndex = ({ loadingFalse }) => {
   )
 }
 
-const mapStateToProps = () => ({})
-const mapDispatchToProps = dispatch => {
-  return {
-    loadingFalse() {
-      dispatch(loadingFalse())
-    },
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProductIndex)
+export default ProductIndex

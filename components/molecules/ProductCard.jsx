@@ -5,10 +5,9 @@ import { connect } from 'react-redux'
 import { addToCart } from '../../redux/actionCreator'
 import { gql, useMutation } from '@apollo/client'
 import { useState } from 'react'
-import LinkCustom from '../Atoms/LinkCustom'
 
 const USERCARTINC = gql`
-  mutation (
+  mutation(
     $id: ID!
     $img1: String!
     $img2: String!
@@ -33,7 +32,7 @@ const USERCARTINC = gql`
   }
 `
 const THIRDUSERCARTINC = gql`
-  mutation (
+  mutation(
     $id: ID!
     $img1: String!
     $img2: String!
@@ -64,7 +63,7 @@ const ProductCard = ({ product, path, addToCartView }) => {
   const [thirdUserCartInc] = useMutation(THIRDUSERCARTINC)
   const [Counter, setCounter] = useState(0)
 
-  const addToCartBtn = async product => {
+  const addToCartBtn = async (product) => {
     if (!Boolean(localStorage.getItem('token')))
       return message.info('tienes que registrarte')
 
@@ -105,55 +104,51 @@ const ProductCard = ({ product, path, addToCartView }) => {
 
   return (
     <Col xs={24} sm={12} md={12} lg={8} xl={6} xxl={3}>
-      <div className='card'>
-        <div className='card-image'>
+      <div className="card">
+        <div className="card-image">
           <Link href={`/productos/${path}/${product._id}`}>
-            <figure className='image is-4by3'>
+            <figure className="image is-4by3">
               <a>
                 <img
                   src={`${product.imgs[0].pathImg || product.img[1].pathImg}`}
-                  alt='Placeholder image'
+                  alt="Placeholder image"
                   style={{ objectFit: 'cover' }}
                 />
               </a>
             </figure>
           </Link>
         </div>
-        <div className='card-content'>
-          <div className='media'>
-            <div className='media-left'>
-              <figure className='image is-48x48'>
+        <div className="card-content">
+          <div className="media">
+            <div className="media-left">
+              <figure className="image is-48x48">
                 <img
                   src={`${product.imgs[1].pathImg || product.img[2].pathImg}`}
-                  alt='Placeholder image'
+                  alt="Placeholder image"
                 />
               </figure>
             </div>
-            <div className='media-content'>
+            <div className="media-content">
               <Link href={`/productos/${path}/${product._id}`}>
-                <p className='title is-4 underline'>
-                  <LinkCustom text={product.brand} />
-                </p>
+                <p className="title is-4 underline">{product.brand}</p>
               </Link>
-              <p className='subtitle is-6'>{product.model}</p>
+              <p className="subtitle is-6">{product.model}</p>
             </div>
             <div>
               <Button
                 onClick={() => addToCartBtn(product)}
-                type='primary'
+                type="primary"
                 icon={<ShoppingCartOutlined />}
               />
               <p>{product.price}$</p>
             </div>
           </div>
-          <div className='content'>
+          <div className="content">
             <Paragraph style={{ margin: '0' }} ellipsis={{ rows: 2 }}>
               {product.description}
             </Paragraph>
             <Link href={`/productos/${path}/${product._id}`}>
-              <a>
-                <LinkCustom text='más detalles' />
-              </a>
+              <a>más detalles</a>
             </Link>
             <br />
           </div>
@@ -163,10 +158,10 @@ const ProductCard = ({ product, path, addToCartView }) => {
   )
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   cartList: state.userReducer.user[0],
 })
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     addToCartView(product) {
       dispatch(addToCart(product))

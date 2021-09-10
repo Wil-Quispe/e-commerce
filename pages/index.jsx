@@ -5,7 +5,7 @@ import Head from 'next/head'
 import { gql, useQuery } from '@apollo/client'
 import ProductCard from '../components/molecules/ProductCard'
 import { connect } from 'react-redux'
-import { navMobileNotSee, loadingFalse } from '../redux/actionCreator'
+import { navMobileNotSee } from '../redux/actionCreator'
 import { useEffect } from 'react'
 import Spinner from '../components/Atoms/Spinner'
 const fragmentQuery = gql`
@@ -32,11 +32,10 @@ const PRODUCTS = gql`
   }
 `
 
-const index = ({ navNotSeeView, loadingFalse }) => {
+const index = ({ navNotSeeView }) => {
   const { data } = useQuery(PRODUCTS)
   useEffect(() => {
     navNotSeeView()
-    loadingFalse()
   }, [])
 
   return (
@@ -46,7 +45,7 @@ const index = ({ navNotSeeView, loadingFalse }) => {
       </Head>
       <Slider />
 
-      <Row justify='center' gutter={[16, 16]} style={{ margin: '1.5em 3em' }}>
+      <Row justify="center" gutter={[16, 16]} style={{ margin: '1.5em 3em' }}>
         {data ? (
           data?.product.map((d, i) => (
             <ProductCard key={i} product={d} path={d.typeProduct} />
@@ -56,13 +55,13 @@ const index = ({ navNotSeeView, loadingFalse }) => {
         )}
       </Row>
 
-      <Row justify='center' gutter={[16, 16]} style={{ margin: '3em 0' }}>
+      <Row justify="center" gutter={[16, 16]} style={{ margin: '3em 0' }}>
         <Col>
-          <Link href='/productos/zapatos'>
-            <Tooltip title='Zapatos'>
+          <Link href="/productos/zapatos">
+            <Tooltip title="Zapatos">
               <Avatar
                 size={100}
-                src='/sneakers.svg'
+                src="/sneakers.svg"
                 style={{
                   background: 'rgba(0, 0, 0, 0.19)',
                   padding: '1em',
@@ -72,26 +71,11 @@ const index = ({ navNotSeeView, loadingFalse }) => {
           </Link>
         </Col>
         <Col>
-          <Link href='/productos/polos'>
-            <Tooltip title='Polos'>
+          <Link href="/productos/polos">
+            <Tooltip title="Polos">
               <Avatar
                 size={100}
-                src='/shirt.svg'
-                style={{
-                  // border: '1px solid #1890ff',
-                  background: 'rgba(0, 0, 0, 0.19)',
-                  padding: '1em',
-                }}
-              />
-            </Tooltip>
-          </Link>
-        </Col>
-        <Col>
-          <Link href='/productos/pantalones'>
-            <Tooltip title='Pantalones'>
-              <Avatar
-                size={100}
-                src='/pants.svg'
+                src="/shirt.svg"
                 style={{
                   // border: '1px solid #1890ff',
                   background: 'rgba(0, 0, 0, 0.19)',
@@ -102,11 +86,26 @@ const index = ({ navNotSeeView, loadingFalse }) => {
           </Link>
         </Col>
         <Col>
-          <Link href='/productos/gorros'>
-            <Tooltip title='Gorros'>
+          <Link href="/productos/pantalones">
+            <Tooltip title="Pantalones">
               <Avatar
                 size={100}
-                src='/cap.svg'
+                src="/pants.svg"
+                style={{
+                  // border: '1px solid #1890ff',
+                  background: 'rgba(0, 0, 0, 0.19)',
+                  padding: '1em',
+                }}
+              />
+            </Tooltip>
+          </Link>
+        </Col>
+        <Col>
+          <Link href="/productos/gorros">
+            <Tooltip title="Gorros">
+              <Avatar
+                size={100}
+                src="/cap.svg"
                 style={{
                   // border: '1px solid #1890ff',
                   background: 'rgba(0, 0, 0, 0.19)',
@@ -122,11 +121,8 @@ const index = ({ navNotSeeView, loadingFalse }) => {
 }
 
 const mapStateToProps = () => ({})
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    loadingFalse() {
-      dispatch(loadingFalse())
-    },
     navNotSeeView() {
       dispatch(navMobileNotSee())
     },

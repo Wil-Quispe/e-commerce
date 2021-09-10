@@ -1,15 +1,13 @@
-import { useEffect } from 'react'
 import { Divider, Row } from 'antd'
 import { gql, useQuery } from '@apollo/client'
 import { useRouter } from 'next/router'
 import Pid from '../../components/molecules/Pid'
 import ProductCard from '../../components/molecules/ProductCard'
-import { connect } from 'react-redux'
-import { loadingFalse } from '../../redux/actionCreator'
+
 import Spinner from '../../components/Atoms/Spinner'
 
 const PRODUCTID = gql`
-  query ($sId: ID!, $typeProduct: String!) {
+  query($sId: ID!, $typeProduct: String!) {
     one: product(_id: $sId) {
       _id
       brand
@@ -41,15 +39,13 @@ const PRODUCTID = gql`
   }
 `
 
-const ProductId = ({ loadingFalse }) => {
+const ProductId = () => {
   const router = useRouter()
   const { param } = router.query
   const { data } = useQuery(PRODUCTID, {
     variables: { sId: param && param[1], typeProduct: param && param[0] },
   })
-  useEffect(() => {
-    loadingFalse()
-  })
+
   return (
     <main>
       {data ? (
@@ -57,11 +53,11 @@ const ProductId = ({ loadingFalse }) => {
           {/* producto con sus especificasiones */}
           {data && <Pid product={data.one[0]} />}
 
-          <Divider orientation='left'>Las personas también buscan esto</Divider>
+          <Divider orientation="left">Las personas también buscan esto</Divider>
 
           {/* productos recomendados */}
           <Row
-            justify='center'
+            justify="center"
             gutter={[16, 16]}
             style={{ margin: '1.5em 3em' }}
           >
@@ -77,14 +73,4 @@ const ProductId = ({ loadingFalse }) => {
   )
 }
 
-const mapStateToProps = () => ({})
-
-const mapDispatchToProps = dispatch => {
-  return {
-    loadingFalse() {
-      dispatch(loadingFalse())
-    },
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProductId)
+export default ProductId
