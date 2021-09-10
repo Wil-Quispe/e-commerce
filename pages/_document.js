@@ -10,6 +10,10 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
           />
+          <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css"
+          />
           <script
             src={`https://www.paypal.com/sdk/js?client-id=${process.env.PAYPAL_ID}&currency=${process.env.PAYPAL_CURRENCY}`}
           ></script>
