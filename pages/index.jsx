@@ -2,38 +2,14 @@ import { Avatar, Tooltip, Row, Col } from 'antd'
 import Slider from '../components/organisms/Slider'
 import Link from 'next/link'
 import Head from 'next/head'
-import { gql, useQuery } from '@apollo/client'
 import ProductCard from '../components/molecules/ProductCard'
 import { connect } from 'react-redux'
 import { navMobileNotSee } from '../redux/actionCreator'
 import { useEffect } from 'react'
 import Spinner from '../components/Atoms/Spinner'
-const fragmentQuery = gql`
-  fragment data on Products {
-    _id
-    brand
-    model
-    description
-    price
-    imgs {
-      pubId
-      pathImg
-    }
-    typeProduct
-  }
-`
+import { fetchGraphQlQuery } from '../lib/fetchGraphql'
 
-const PRODUCTS = gql`
-  ${fragmentQuery}
-  query {
-    product {
-      ...data
-    }
-  }
-`
-
-const index = ({ navNotSeeView }) => {
-  const { data } = useQuery(PRODUCTS)
+const index = ({ navNotSeeView, data }) => {
   useEffect(() => {
     navNotSeeView()
   }, [])
@@ -118,6 +94,30 @@ const index = ({ navNotSeeView }) => {
       </Row>
     </main>
   )
+}
+
+const query = `query {
+  product {
+    _id
+    brand
+    model
+    description
+    price
+    imgs {
+      pubId
+      pathImg
+    }
+    typeProduct
+  }
+}
+
+
+`
+
+export const getStaticProps = async () => {
+  const data = await fetchGraphQlQuery(query)
+
+  return { props: { data } }
 }
 
 const mapStateToProps = () => ({})

@@ -1,33 +1,12 @@
-import { useRouter } from 'next/router'
 import { Row } from 'antd'
-import { gql, useQuery } from '@apollo/client'
 import Head from 'next/head'
 import ProductCard from '../../components/molecules/ProductCard'
 import { camelCase } from '../../utils/index'
 import Spinner from '../../components/Atoms/Spinner'
+import { fetchGraphQlQuery } from '../../lib/fetchGraphql'
 
-const QUERYPRODUCTS = gql`
-  query($typeProduct: String!) {
-    product(typeProduct: $typeProduct) {
-      _id
-      brand
-      model
-      description
-      price
-      imgs {
-        pubId
-        pathImg
-      }
-      typeProduct
-    }
-  }
-`
-
-const ProductIndex = () => {
-  const router = useRouter()
-  const { slug } = router.query
-  const { data } = useQuery(QUERYPRODUCTS, { variables: { typeProduct: slug } })
-
+const ProductIndex = ({ data }) => {
+  const slug = data?.product[0].typeProduct
   return (
     <>
       <Head>
@@ -44,6 +23,31 @@ const ProductIndex = () => {
       </Row>
     </>
   )
+}
+
+export const getServerSideProps = async (context) => {
+  const query = `
+  query($typeProduct: String!) {
+    product(typeProduct: $typeProduct) {
+      _id
+      brand
+      model
+      description
+      price
+      imgs {
+        pubId
+        pathImg
+      }
+      typeProduct
+    }
+  }
+  
+  `
+  const variables = { typeProduct: context.params?.slug }
+
+  const data = await fetchGraphQlQuery(query, variables)
+
+  return { props: { data } }
 }
 
 export default ProductIndex
