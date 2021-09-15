@@ -364,9 +364,9 @@ const profile = ({ userInfos, lastSells, navNotSeeView, queryProducts }) => {
                         phoneNumber: `${userInfos.phoneNumber || ''}`,
                       }}
                     >
-                      <Row>
+                      <Row justify="center">
                         <Col>
-                          <Row>
+                          <Row justify="center">
                             <Col>
                               <Form.Item name="name" label="Nombre">
                                 <Input />
@@ -381,13 +381,13 @@ const profile = ({ userInfos, lastSells, navNotSeeView, queryProducts }) => {
                               >
                                 <Input />
                               </Form.Item>
-                              <Form.Item name="phoneNumber" label="Celular">
-                                <Input addonBefore="+51" />
+                              <Form.Item name="age" label="Edad">
+                                <InputNumber min={1} />
                               </Form.Item>
                             </Col>
                             <Col>
-                              <Form.Item name="age" label="Edad">
-                                <InputNumber min={1} />
+                              <Form.Item name="phoneNumber" label="Celular">
+                                <Input addonBefore="+51" />
                               </Form.Item>
 
                               <Form.Item name="gender" label="Género">
@@ -452,7 +452,6 @@ const profile = ({ userInfos, lastSells, navNotSeeView, queryProducts }) => {
                               >
                                 <Input />
                               </Form.Item>
-
                               <Form.Item name="age" label="Edad">
                                 <InputNumber min={1} />
                               </Form.Item>
