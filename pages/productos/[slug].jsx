@@ -46,6 +46,8 @@ export const getServerSideProps = async (context) => {
   const variables = { typeProduct: context.params?.slug }
 
   const data = await fetchGraphQlQuery(query, variables)
+  if ((data.product = [])) return { notFound: true }
+  console.log(data)
 
   return { props: { data } }
 }
