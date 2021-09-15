@@ -601,7 +601,7 @@ const query = `query {
 
 `
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const data = await fetchGraphQlQuery(query)
   return { props: { queryProducts: data } }
 }
