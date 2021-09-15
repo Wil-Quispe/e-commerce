@@ -1,4 +1,4 @@
-import { Row, Button, Upload, Form, Input } from 'antd'
+import { Row, message, Button, Upload, Form, Input } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { gql, useMutation, useQuery } from '@apollo/client'
 import { useState } from 'react'
@@ -37,6 +37,11 @@ const UPDATEBANNER = gql`
     )
   }
 `
+const DELETEBANNER = gql`
+  mutation($id: ID!, $path: String!) {
+    deleteBanner(_id: $id, path: $path)
+  }
+`
 
 const Banner = ({ indice }) => {
   const { data: banner } = useQuery(BANNER, {
@@ -45,6 +50,7 @@ const Banner = ({ indice }) => {
   const [doFetch] = useFetchImg()
   const [uploadBanner] = useMutation(UPLOADBANNER)
   const [updateBanner] = useMutation(UPDATEBANNER)
+  const [deleteBanner] = useMutation(DELETEBANNER)
   const [loading, setLoading] = useState(false)
   const [imgUpload, setImgUpload] = useState()
   const [changeBanner, setChangeBanner] = useState(false) //stado del banner si cambia o no
@@ -61,15 +67,25 @@ const Banner = ({ indice }) => {
     defaultFileList: [
       { uid: 1, status: 'done', url: banner?.admin.banner[indice]?.path },
     ],
-    data: async file => {
+    data: async (file) => {
       setImgUpload(file)
     },
-    onRemove: async file => {
+    onRemove: async (file) => {
       setChangeBanner(true)
+      if (!file.url) return
+      try {
+        const result = await deleteBanner({
+          variables: { id: localStorage.getItem('_id'), path: file.url },
+        })
+        console.log(result)
+        message.info('Eliminado')
+      } catch (error) {
+        message.error('fallo al eliminar')
+      }
     },
   }
 
-  const onFinishBanner = async values => {
+  const onFinishBanner = async (values) => {
     setLoading(true)
     if (hrState && changeBanner) {
       //cambian ambos o nuevo banner
@@ -116,7 +132,7 @@ const Banner = ({ indice }) => {
           }}
         >
           <Form.Item
-            onChange={e => {
+            onChange={(e) => {
               setHrState(true)
               setCc(e.target.value)
             }}
