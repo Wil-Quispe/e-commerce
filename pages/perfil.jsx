@@ -26,6 +26,7 @@ import Head from 'next/head'
 import Banner from '../components/Atoms/Banner'
 import Spinner from '../components/Atoms/Spinner'
 import { fetchGraphQlQuery } from '../lib/fetchGraphql'
+import Link from 'next/link'
 
 const THIRDUSERUPDATE = gql`
   mutation(
@@ -319,6 +320,10 @@ const profile = ({ userInfos, lastSells, navNotSeeView, queryProducts }) => {
                               productos: {productsLength}
                             </Tag>
                           </Col>
+
+                          <Link href="/admin-usuarios">
+                            <a>ver mis Usuarios</a>
+                          </Link>
                         </Row>
                       ) : (
                         <Row>
