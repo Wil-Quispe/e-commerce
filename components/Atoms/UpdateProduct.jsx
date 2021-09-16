@@ -13,9 +13,14 @@ import {
 } from 'antd'
 import { useState } from 'react'
 import { gql, useMutation } from '@apollo/client'
-import { DeleteFilled, UploadOutlined } from '@ant-design/icons'
+import {
+  DeleteFilled,
+  UploadOutlined,
+  DeliveredProcedureOutlined,
+} from '@ant-design/icons'
 import { camelCase } from '../../utils/index'
 import useFetchImg from '../../hooks/useFetchImg'
+import Link from 'next/link'
 
 const UPLOAD_FILE = gql`
   mutation($pubId: String!, $pathImg: String!, $id: ID!) {
@@ -214,21 +219,28 @@ const UpdateProducts = ({ product }) => {
           product.model
         }`}
         extra={
-          <Popconfirm
-            title="Seguro que quieres Eliminar?"
-            okText="Si"
-            cancelText="Cancelar"
-            onConfirm={deleteProductFront}
-            onCancel={(e) => {
-              e.stopPropagation()
-            }}
-          >
-            <DeleteFilled
-              onClick={(e) => {
+          <>
+            <Popconfirm
+              title="Seguro que quieres Eliminar?"
+              okText="Si"
+              cancelText="Cancelar"
+              onConfirm={deleteProductFront}
+              onCancel={(e) => {
                 e.stopPropagation()
               }}
-            />
-          </Popconfirm>
+            >
+              <DeleteFilled
+                onClick={(e) => {
+                  e.stopPropagation()
+                }}
+              />
+            </Popconfirm>
+            <Link href={`/productos/${product.typeProduct}/${product._id}`}>
+              <a style={{ margin: '.5em' }}>
+                <DeliveredProcedureOutlined />
+              </a>
+            </Link>
+          </>
         }
       >
         <Form
