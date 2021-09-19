@@ -20,7 +20,7 @@ const ProductToBuy = ({
         <Descriptions.Item label="unidades">{units}</Descriptions.Item>
         <Descriptions.Item label="precio Unitario">{price}$</Descriptions.Item>
         <Descriptions.Item label="precio final">
-          {Math.round(price * units)}$
+          {(price * units).toFixed(2)}$
         </Descriptions.Item>
       </Descriptions>
     </Card>

@@ -24,7 +24,7 @@ const PayPeru = ({ amount, img, qr, color }) => {
           <h3 className="name_color_pay">Paul Quiñones</h3>
           <h3 className="number_pay">923 383 923</h3>
           <h3>Total a pagar</h3>
-          <h3>S/{amount}</h3>
+          <h3>S/{amount.toFixed(2)}</h3>
 
           <h3>1. Ingrese el monto total del pedido y realice el pago.</h3>
           <h3>

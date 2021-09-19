@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 import Head from 'next/head'
 
 const LOGIN = gql`
-  mutation ($email: String!, $password: String!) {
+  mutation($email: String!, $password: String!) {
     loginUser(email: $email, password: $password) {
       user {
         _id
@@ -25,7 +25,7 @@ const LOGIN = gql`
 `
 
 const SIGNUPTHIRDSERVICES = gql`
-  mutation (
+  mutation(
     $name: String!
     $lastName: String
     $nickName: String
@@ -58,7 +58,7 @@ const login = ({ navNotSeeView }) => {
     navNotSeeView()
   }, [])
 
-  const responseFacebook = async response => {
+  const responseFacebook = async (response) => {
     try {
       const { email, name } = response
       const data = await loginThirdServices({
@@ -75,16 +75,21 @@ const login = ({ navNotSeeView }) => {
           { redux: 'thirdUser' },
           { _id: data.data.loginThirdServices.thirdServices._id },
         ],
-        '/'
+        '/',
       )
     } catch (error) {
       message.error(`${error}`)
     }
   }
-  const responseGoogle = async response => {
+  const responseGoogle = async (response) => {
     try {
-      const { name, familyName, givenName, email, imageUrl } =
-        response.profileObj
+      const {
+        name,
+        familyName,
+        givenName,
+        email,
+        imageUrl,
+      } = response.profileObj
       const data = await loginThirdServices({
         variables: {
           name,
@@ -101,17 +106,17 @@ const login = ({ navNotSeeView }) => {
           { redux: 'thirdUser' },
           { _id: data.data.loginThirdServices.thirdServices._id },
         ],
-        '/'
+        '/',
       )
     } catch (err) {
       message.error(`${err}`)
     }
   }
-  const failGoogle = response => {
+  const failGoogle = (response) => {
     response &&
       message.info('Las cookies no están habilitadas en el entorno actual')
   }
-  const onFinish = async values => {
+  const onFinish = async (values) => {
     if (values.password.length < 6)
       return message.error('contraseña incorrecta')
     const { email, password } = values
@@ -127,7 +132,7 @@ const login = ({ navNotSeeView }) => {
           { redux: typeUser.__typename.toLowerCase() },
           { _id: typeUser._id },
         ],
-        '/'
+        '/',
       )
     } catch (err) {
       message.error(`${err}`)
@@ -214,7 +219,7 @@ const login = ({ navNotSeeView }) => {
 
 const mapStateToProps = () => ({})
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     navNotSeeView() {
       dispatch(navMobileNotSee())

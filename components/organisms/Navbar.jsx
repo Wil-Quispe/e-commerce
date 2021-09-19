@@ -130,7 +130,7 @@ const Navbar = ({
         variables: { id: localStorage.getItem('_id') },
       })
       addUserInfoView(data)
-      const cartCounter = data?.user.cart.length
+      const cartCounter = data?.user[0].cart.length
       localStorage.setItem('cart', cartCounter && cartCounter)
     }
     if (localStorage.getItem('typeUser') === 'ADMIN') {
@@ -144,7 +144,7 @@ const Navbar = ({
         variables: { id: localStorage.getItem('_id') },
       })
       addUserInfoView(data)
-      const cartCounter = data?.thirdUser.cart.length
+      const cartCounter = data?.thirdUser[0].cart.length
       localStorage.setItem('cart', cartCounter && cartCounter)
     }
   }

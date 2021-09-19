@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 import Head from 'next/head'
 
 const SIGNUP = gql`
-  mutation ($name: String!, $email: String!, $password: String!) {
+  mutation($name: String!, $email: String!, $password: String!) {
     signUpUser(data: { name: $name, email: $email, password: $password }) {
       user {
         _id
@@ -24,7 +24,7 @@ const SIGNUP = gql`
 `
 
 const SIGNUPTHIRDSERVICES = gql`
-  mutation (
+  mutation(
     $name: String!
     $lastName: String
     $nickName: String
@@ -56,7 +56,7 @@ const signup = ({ navNotSeeView }) => {
   useEffect(() => {
     navNotSeeView()
   }, [])
-  const responseFacebook = async response => {
+  const responseFacebook = async (response) => {
     try {
       const { email, name } = response
       const data = await loginThirdServices({
@@ -73,16 +73,21 @@ const signup = ({ navNotSeeView }) => {
           { redux: 'thirdUser' },
           { _id: data.data.loginThirdServices.thirdServices._id },
         ],
-        '/'
+        '/',
       )
     } catch (error) {
       message.error(`${error}`)
     }
   }
-  const responseGoogle = async response => {
+  const responseGoogle = async (response) => {
     try {
-      const { name, familyName, givenName, email, imageUrl } =
-        response.profileObj
+      const {
+        name,
+        familyName,
+        givenName,
+        email,
+        imageUrl,
+      } = response.profileObj
       const data = await loginThirdServices({
         variables: {
           name,
@@ -99,19 +104,19 @@ const signup = ({ navNotSeeView }) => {
           { redux: 'thirdUser' },
           { _id: data.data.loginThirdServices.thirdServices._id },
         ],
-        '/'
+        '/',
       )
     } catch (err) {
       console.log('eroor bor')
       message.error(`${err}`)
     }
   }
-  const failGoogle = async response => {
+  const failGoogle = async (response) => {
     response &&
       message.info('Las cookies no están habilitadas en el entorno actual')
   }
 
-  const onFinish = async values => {
+  const onFinish = async (values) => {
     const { email, password, confirm, name } = values
     if (password.length < 6 && password !== confirm)
       return message.error('contraseña incorrecta')
@@ -125,7 +130,7 @@ const signup = ({ navNotSeeView }) => {
           { redux: 'user' },
           { _id: data.data.signUpUser.user._id },
         ],
-        '/'
+        '/',
       )
     } catch (err) {
       message.error(`${err}`)
@@ -137,19 +142,19 @@ const signup = ({ navNotSeeView }) => {
       <Head>
         <title>Registrarse | {process.env.SITE_NAME}</title>
       </Head>
-      <section className='section'>
-        <div className='container'>
-          <Row justify='center'>
+      <section className="section">
+        <div className="container">
+          <Row justify="center">
             <Col style={{ width: '300px' }}>
-              <Row justify='center'>
+              <Row justify="center">
                 <h3>Inicia Sesion con</h3>
               </Row>
-              <Row justify='center' style={{ margin: '0 0 1em' }}>
+              <Row justify="center" style={{ margin: '0 0 1em' }}>
                 <Col>
-                  <Row style={{ margin: '1em' }} justify='center'>
+                  <Row style={{ margin: '1em' }} justify="center">
                     <GoogleLogin
                       clientId={`${process.env.GOOGLE_ID}`}
-                      buttonText='Google'
+                      buttonText="Google"
                       onSuccess={responseGoogle}
                       onFailure={failGoogle}
                       cookiePolicy={'single_host_origin'}
@@ -158,17 +163,17 @@ const signup = ({ navNotSeeView }) => {
                   <Row style={{ margin: '1em' }}>
                     <FacebookLogin
                       appId={`${process.env.FACEBOOK_ID}`}
-                      fields='name,email,picture'
+                      fields="name,email,picture"
                       callback={responseFacebook}
-                      textButton='Facebook'
-                      cssClass='facebook_login'
+                      textButton="Facebook"
+                      cssClass="facebook_login"
                     />
                   </Row>
                 </Col>
               </Row>
-              <Form name='register' onFinish={onFinish}>
+              <Form name="register" onFinish={onFinish}>
                 <Form.Item
-                  name='name'
+                  name="name"
                   rules={[
                     {
                       required: true,
@@ -177,13 +182,13 @@ const signup = ({ navNotSeeView }) => {
                   ]}
                 >
                   <Input
-                    prefix={<UserOutlined className='site-form-item-icon' />}
-                    placeholder='Nombre de Usuario'
+                    prefix={<UserOutlined className="site-form-item-icon" />}
+                    placeholder="Nombre de Usuario"
                   />
                 </Form.Item>
 
                 <Form.Item
-                  name='email'
+                  name="email"
                   rules={[
                     {
                       required: true,
@@ -193,13 +198,13 @@ const signup = ({ navNotSeeView }) => {
                   ]}
                 >
                   <Input
-                    prefix={<UserOutlined className='site-form-item-icon' />}
-                    placeholder='correo electronico'
+                    prefix={<UserOutlined className="site-form-item-icon" />}
+                    placeholder="correo electronico"
                   />
                 </Form.Item>
 
                 <Form.Item
-                  name='password'
+                  name="password"
                   rules={[
                     {
                       required: true,
@@ -209,13 +214,13 @@ const signup = ({ navNotSeeView }) => {
                   hasFeedback
                 >
                   <Input.Password
-                    prefix={<LockOutlined className='site-form-item-icon' />}
-                    placeholder='contraseña'
+                    prefix={<LockOutlined className="site-form-item-icon" />}
+                    placeholder="contraseña"
                   />
                 </Form.Item>
 
                 <Form.Item
-                  name='confirm'
+                  name="confirm"
                   dependencies={['password']}
                   hasFeedback
                   rules={[
@@ -230,24 +235,24 @@ const signup = ({ navNotSeeView }) => {
                         }
 
                         return Promise.reject(
-                          new Error('las contraseñas no coinciden!')
+                          new Error('las contraseñas no coinciden!'),
                         )
                       },
                     }),
                   ]}
                 >
                   <Input.Password
-                    prefix={<LockOutlined className='site-form-item-icon' />}
-                    placeholder='confirmar contraseña'
+                    prefix={<LockOutlined className="site-form-item-icon" />}
+                    placeholder="confirmar contraseña"
                   />
                 </Form.Item>
 
-                <Row justify='center'>
+                <Row justify="center">
                   <Form.Item>
-                    <Button type='primary' htmlType='submit'>
+                    <Button type="primary" htmlType="submit">
                       Registrarse
                     </Button>
-                    {'  '} O <Link href='/login'>Iniciar Sesion</Link>
+                    {'  '} O <Link href="/login">Iniciar Sesion</Link>
                   </Form.Item>
                 </Row>
               </Form>
@@ -261,7 +266,7 @@ const signup = ({ navNotSeeView }) => {
 
 const mapStateToProps = () => ({})
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     navNotSeeView() {
       dispatch(navMobileNotSee())
